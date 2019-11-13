@@ -1,0 +1,39 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+    defaultConfig {
+        applicationId "agency.five.cu_it_rssfeedproject"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation project(':domain')
+    implementation project(':device')
+    implementation project(':data')
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation commonDependencies.kotlinStdlibJdk7
+    implementation commonDependencies.appcompat
+    implementation commonDependencies.androidCoreKtx
+    implementation commonDependencies.constraintlayout
+    testImplementation commonDependencies.junit
+    androidTestImplementation commonDependencies.androidTestJunit
+    androidTestImplementation commonDependencies.androidTestEspresso
+}
