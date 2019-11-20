@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+//apply annotation processor
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -36,4 +36,9 @@ dependencies {
     testImplementation commonDependencies.junit
     androidTestImplementation commonDependencies.androidTestJunit
     androidTestImplementation commonDependencies.androidTestEspresso
+
+    // Room dependencies
+    implementation roomDependencies.roomRuntime
+    implementation roomDependencies.roomKtx
+    kapt roomDependencies.roomCompiler
 }
