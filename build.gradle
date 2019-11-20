@@ -30,7 +30,7 @@ ext {
     targetSdkVersion = 29
     versionCode = 1
     versionName = "1.0"
-    javaVersion = "7"
+    javaVersion = "8"
 
     //dependency versions
     appcompatVersion = "1.1.0"
@@ -39,6 +39,7 @@ ext {
     junitVersion = "4.12"
     androidTestJunitVersion = "1.1.0"
     androidTestEspressoVersion = "3.1.1"
+    roomVersion = "2.2.1"
 
     //dependency definitions
     commonDependencies = [
@@ -49,6 +50,14 @@ ext {
             junit              : "junit:junit:${rootProject.junitVersion}",
             androidTestJunit   : "androidx.test.ext:junit:${rootProject.androidTestJunitVersion}",
             androidTestEspresso: "androidx.test.espresso:espresso-core:${rootProject.androidTestEspressoVersion}"
+    ]
+
+    //Room dependencies
+    roomDependencies = [
+            roomRuntime : "androidx.room:room-runtime:$rootProject.roomVersion",
+            roomKtx     : "androidx.room:room-ktx:$rootProject.roomVersion",
+            roomCompiler: "androidx.room:room-compiler:$rootProject.roomVersion",
+            roomTesting : "androidx.room:room-testing:$rootProject.roomVersion"
     ]
 }
 
