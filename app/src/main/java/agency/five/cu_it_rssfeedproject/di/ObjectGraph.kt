@@ -16,7 +16,7 @@ object ObjectGraph {
         val instance = Room.databaseBuilder(
             context.applicationContext,
             FeedDatabase::class.java,
-            "feed_database"
+            FeedDatabase.NAME
         ).build()
         database = instance
         return instance
