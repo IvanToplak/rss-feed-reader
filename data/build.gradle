@@ -1,6 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+//apply annotation processor
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
@@ -23,6 +26,10 @@ android {
         }
     }
 
+    //exclude the atomic functions module from the package and prevent warnings
+    packagingOptions {
+        exclude 'META-INF/atomicfu.kotlin_module'
+    }
 }
 
 dependencies {
@@ -35,4 +42,10 @@ dependencies {
     testImplementation commonDependencies.junit
     androidTestImplementation commonDependencies.androidTestJunit
     androidTestImplementation commonDependencies.androidTestEspresso
+
+    // Room dependencies
+    implementation roomDependencies.roomRuntime
+    implementation roomDependencies.roomKtx
+    kapt roomDependencies.roomCompiler
+    androidTestImplementation roomDependencies.roomTesting
 }
