@@ -1,24 +1,21 @@
 package agency.five.cu_it_rssfeedproject.di
 
-import agency.five.cu_it_rssfeedproject.data.db.database.FeedDatabase
-import android.content.Context
-import androidx.room.Room
+import agency.five.cu_it_rssfeedproject.app.FeedApplication
+import agency.five.cu_it_rssfeedproject.data.repository.FeedRepositoryImpl
+import agency.five.cu_it_rssfeedproject.data.service.FeedServiceImpl
+import agency.five.cu_it_rssfeedproject.data.service.parser.EarlFeedParserWrapper
+import agency.five.cu_it_rssfeedproject.data.service.parser.FeedParserImpl
 
 object ObjectGraph {
 
-    private var database: FeedDatabase? = null
+    private fun getFeedParserWrapper() = EarlFeedParserWrapper()
 
-    fun getDatabase(context: Context): FeedDatabase {
-        if (database != null) {
-            return database!!
-        }
+    private fun getFeedParser() = FeedParserImpl(getFeedParserWrapper())
 
-        val instance = Room.databaseBuilder(
-            context.applicationContext,
-            FeedDatabase::class.java,
-            FeedDatabase.NAME
-        ).build()
-        database = instance
-        return instance
-    }
+    private fun getFeedService() =
+        FeedServiceImpl(getFeedParser())
+
+    private fun getFeedDao() = FeedApplication.database.feedDao()
+
+    fun getFeedRepository() = FeedRepositoryImpl(getFeedDao(), getFeedService())
 }
