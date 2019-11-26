@@ -10,13 +10,11 @@ import android.os.AsyncTask
 import android.util.Log
 import java.lang.Exception
 
+private const val TAG = "FEED_REPOSITORY"
+private const val INSERT_ERROR_MESSAGE = "Error inserting feed"
+
 class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: FeedService) :
     FeedRepository {
-
-    companion object {
-        const val TAG = "FEED_REPOSITORY"
-        const val INSERT_ERROR_MESSAGE = "Error inserting feed"
-    }
 
     override fun insertFeed(feedUrl: String) {
         InsertFeedAsyncTask(feedDao, feedService).execute(feedUrl)
