@@ -1,27 +1,21 @@
 package agency.five.cu_it_rssfeedproject.app
 
-import agency.five.cu_it_rssfeedproject.data.db.database.FeedDatabase
+import agency.five.cu_it_rssfeedproject.di.ObjectGraph
 import android.app.Application
 import android.content.Context
-import androidx.room.Room
 
 class FeedApplication : Application() {
 
     companion object {
-        lateinit var database: FeedDatabase
+        private lateinit var instance: FeedApplication
+
+        fun getAppContext(): Context = instance.applicationContext
     }
 
     override fun onCreate() {
+        instance = this
         super.onCreate()
 
-        database = getDatabase(this)
-    }
-
-    private fun getDatabase(context: Context): FeedDatabase {
-        return Room.databaseBuilder(
-            context.applicationContext,
-            FeedDatabase::class.java,
-            FeedDatabase.NAME
-        ).build()
+        ObjectGraph.getDatabase(getAppContext())
     }
 }

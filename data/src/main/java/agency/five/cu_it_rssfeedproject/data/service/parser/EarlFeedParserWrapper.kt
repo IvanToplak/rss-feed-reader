@@ -7,7 +7,7 @@ import com.einmalfel.earl.Feed
 import java.net.URL
 
 
-class EarlFeedParserWrapper : FeedParserWrapper {
+class EarlFeedParserWrapper : FeedParser {
 
     override fun parseFeed(feedUrl: String): ApiFeed {
         val inputStream = URL(feedUrl).openConnection().getInputStream()
