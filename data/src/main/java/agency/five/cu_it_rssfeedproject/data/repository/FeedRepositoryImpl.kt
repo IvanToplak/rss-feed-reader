@@ -8,7 +8,6 @@ import agency.five.cu_it_rssfeedproject.domain.model.Feed
 import agency.five.cu_it_rssfeedproject.domain.repository.FeedRepository
 import android.os.AsyncTask
 import android.util.Log
-import java.lang.Exception
 
 private const val TAG = "FEED_REPOSITORY"
 private const val INSERT_ERROR_MESSAGE = "Error inserting feed"
@@ -20,8 +19,8 @@ class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: 
         InsertFeedAsyncTask(feedDao, feedService).execute(feedUrl)
     }
 
-    override fun getFeeds(): List<Feed> {
-        return GetFeedsAsyncTask(feedDao).execute().get()
+    override fun getFeeds(callback: FeedRepository.FeedsResultCallback) {
+        GetFeedsAsyncTask(feedDao, callback).execute()
     }
 
     private class InsertFeedAsyncTask(
@@ -44,11 +43,16 @@ class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: 
     }
 
     private class GetFeedsAsyncTask(
-        private val feedDao: FeedDao
+        private val feedDao: FeedDao,
+        private val callback: FeedRepository.FeedsResultCallback
     ) :
         AsyncTask<Void, Void, List<Feed>>() {
         override fun doInBackground(vararg params: Void): List<Feed> {
             return feedDao.getFeeds().map { feed -> mapDbFeedToFeed(feed) }
+        }
+
+        override fun onPostExecute(result: List<Feed>) {
+            callback.onGetFeedsResponse(result)
         }
     }
 }
