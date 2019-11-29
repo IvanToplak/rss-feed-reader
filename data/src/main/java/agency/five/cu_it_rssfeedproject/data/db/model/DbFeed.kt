@@ -1,5 +1,6 @@
 package agency.five.cu_it_rssfeedproject.data.db.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -14,5 +15,5 @@ data class DbFeed(
     val title: String = "",
     val description: String = "",
     val url: String = "",
-    val imageUrl: String = ""
+    @ColumnInfo(name = "image_url") val imageUrl: String = ""
 )

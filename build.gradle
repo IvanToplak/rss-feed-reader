@@ -40,10 +40,12 @@ ext {
     androidTestJunitVersion = "1.1.0"
     androidTestEspressoVersion = "3.1.1"
     roomVersion = "2.2.1"
+    earlVersion = "1.2.0"
 
     //dependency definitions
     commonDependencies = [
             kotlinStdlibJdk7   : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
+            kotlinStdlibJdk8   : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
             appcompat          : "androidx.appcompat:appcompat:${rootProject.appcompatVersion}",
             androidCoreKtx     : "androidx.core:core-ktx:${rootProject.androidCoreKtxVersion}",
             constraintlayout   : "androidx.constraintlayout:constraintlayout:${rootProject.constraintlayoutVersion}",
@@ -58,6 +60,10 @@ ext {
             roomKtx     : "androidx.room:room-ktx:$rootProject.roomVersion",
             roomCompiler: "androidx.room:room-compiler:$rootProject.roomVersion",
             roomTesting : "androidx.room:room-testing:$rootProject.roomVersion"
+    ]
+
+    feedParserDependencies = [
+            earl: "com.einmalfel:earl:$rootProject.earlVersion"
     ]
 }
 
