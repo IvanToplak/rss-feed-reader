@@ -6,6 +6,9 @@ import agency.five.cu_it_rssfeedproject.data.repository.FeedRepositoryImpl
 import agency.five.cu_it_rssfeedproject.data.service.FeedServiceImpl
 import agency.five.cu_it_rssfeedproject.data.service.parser.EarlFeedParserWrapper
 import agency.five.cu_it_rssfeedproject.data.service.parser.FeedParserImpl
+import agency.five.cu_it_rssfeedproject.domain.interactor.GetFeedsUseCase
+import agency.five.cu_it_rssfeedproject.ui.feed.FeedsContract
+import agency.five.cu_it_rssfeedproject.ui.feed.FeedsPresenter
 import android.content.Context
 import androidx.room.Room
 
@@ -36,4 +39,8 @@ object ObjectGraph {
     private fun getFeedDao() = getDatabase(FeedApplication.getAppContext()).feedDao()
 
     fun getFeedRepository() = FeedRepositoryImpl(getFeedDao(), getFeedService())
+
+    private fun getGetFeedsUseCase() = GetFeedsUseCase(getFeedRepository())
+
+    fun getFeedsPresenter(view: FeedsContract.View) = FeedsPresenter(view, getGetFeedsUseCase())
 }

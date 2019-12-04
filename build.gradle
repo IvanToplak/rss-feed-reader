@@ -41,17 +41,25 @@ ext {
     androidTestEspressoVersion = "3.1.1"
     roomVersion = "2.2.1"
     earlVersion = "1.2.0"
+    legacySupportVersion = "1.0.0"
+    recyclerViewVersion = "1.1.0"
+    materialComponentsVersion = "1.0.0"
+    picassoVersion = "2.71828"
 
     //dependency definitions
     commonDependencies = [
             kotlinStdlibJdk7   : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
             kotlinStdlibJdk8   : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
-            appcompat          : "androidx.appcompat:appcompat:${rootProject.appcompatVersion}",
-            androidCoreKtx     : "androidx.core:core-ktx:${rootProject.androidCoreKtxVersion}",
-            constraintlayout   : "androidx.constraintlayout:constraintlayout:${rootProject.constraintlayoutVersion}",
-            junit              : "junit:junit:${rootProject.junitVersion}",
-            androidTestJunit   : "androidx.test.ext:junit:${rootProject.androidTestJunitVersion}",
-            androidTestEspresso: "androidx.test.espresso:espresso-core:${rootProject.androidTestEspressoVersion}"
+            appcompat          : "androidx.appcompat:appcompat:$rootProject.appcompatVersion",
+            androidCoreKtx     : "androidx.core:core-ktx:$rootProject.androidCoreKtxVersion",
+            constraintlayout   : "androidx.constraintlayout:constraintlayout:$rootProject.constraintlayoutVersion",
+            legacySupport      : "androidx.legacy:legacy-support-v4:$rootProject.legacySupportVersion",
+            recyclerView       : "androidx.recyclerview:recyclerview:$rootProject.recyclerViewVersion",
+            junit              : "junit:junit:$rootProject.junitVersion",
+            androidTestJunit   : "androidx.test.ext:junit:$rootProject.androidTestJunitVersion",
+            androidTestEspresso: "androidx.test.espresso:espresso-core:$rootProject.androidTestEspressoVersion",
+            materialComponents : "com.google.android.material:material:$rootProject.materialComponentsVersion",
+            picasso            : "com.squareup.picasso:picasso:$rootProject.picassoVersion"
     ]
 
     //Room dependencies
