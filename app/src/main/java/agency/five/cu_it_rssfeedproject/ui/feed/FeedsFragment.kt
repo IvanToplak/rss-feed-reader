@@ -1,6 +1,7 @@
 package agency.five.cu_it_rssfeedproject.ui.feed
 
 import agency.five.cu_it_rssfeedproject.R
+import agency.five.cu_it_rssfeedproject.app.show
 import agency.five.cu_it_rssfeedproject.di.ObjectGraph
 import agency.five.cu_it_rssfeedproject.ui.model.FeedViewModel
 import android.os.Bundle
@@ -13,13 +14,11 @@ import kotlinx.android.synthetic.main.fragment_feeds.*
 
 class FeedsFragment : Fragment(), FeedsContract.View {
 
-    private lateinit var layoutManager: LinearLayoutManager
     private lateinit var feedsAdapter: FeedsAdapter
     private lateinit var presenter: FeedsContract.Presenter
 
     companion object {
 
-        @JvmStatic
         fun newInstance() = FeedsFragment()
     }
 
@@ -44,9 +43,8 @@ class FeedsFragment : Fragment(), FeedsContract.View {
 
     private fun setupRecyclerView() {
         feedsAdapter = FeedsAdapter(mutableListOf())
-        layoutManager = LinearLayoutManager(activity)
 
-        feeds_recycler_view.layoutManager = layoutManager
+        feeds_recycler_view.layoutManager = LinearLayoutManager(context)
         feeds_recycler_view.adapter = feedsAdapter
     }
 
@@ -57,10 +55,6 @@ class FeedsFragment : Fragment(), FeedsContract.View {
 
     override fun showFeeds(feeds: List<FeedViewModel>) {
         feedsAdapter.updateFeeds(feeds)
-        setEmptyStateMessageVisibility(feeds.isEmpty())
-    }
-
-    private fun setEmptyStateMessageVisibility(isVisible: Boolean) {
-        empty_state_message_text_view.visibility = if (isVisible) View.VISIBLE else View.GONE
+        empty_state_message_text_view.show(feeds.isEmpty())
     }
 }
