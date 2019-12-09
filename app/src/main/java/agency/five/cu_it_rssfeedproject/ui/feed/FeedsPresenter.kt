@@ -18,6 +18,10 @@ class FeedsPresenter(
         })
     }
 
+    override fun onViewCreated(view: FeedsContract.View) {
+        this.view = view
+    }
+
     override fun onDestroy() {
         view = null
     }

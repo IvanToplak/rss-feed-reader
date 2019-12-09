@@ -10,6 +10,7 @@ interface FeedsContract {
 
     interface Presenter {
         fun getFeeds()
+        fun onViewCreated(view: View)
         fun onDestroy()
     }
 }

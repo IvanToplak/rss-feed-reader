@@ -22,6 +22,11 @@ class FeedsFragment : Fragment(), FeedsContract.View {
         fun newInstance() = FeedsFragment()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setupPresenter()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,7 +38,7 @@ class FeedsFragment : Fragment(), FeedsContract.View {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        setupPresenter()
+        presenter.onViewCreated(this)
         presenter.getFeeds()
     }
 
