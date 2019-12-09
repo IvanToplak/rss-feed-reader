@@ -60,6 +60,6 @@ class FeedsFragment : Fragment(), FeedsContract.View {
 
     override fun showFeeds(feeds: List<FeedViewModel>) {
         feedsAdapter.updateFeeds(feeds)
-        empty_state_message_text_view.show(feeds.isEmpty())
+        empty_state_message_text_view?.show(feeds.isEmpty())
     }
 }
