@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">CU-IT - RSS Feed project</string>
+    <string name="app_name">RSS Feed Reader</string>
+    <string name="content_description_rss_feed_image">RSS feed image</string>
+    <string name="empty_state_message">Looks like you need a feed to read</string>
 </resources>

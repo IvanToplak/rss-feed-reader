@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list_item_feed_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/margin_quarter"
+    android:layout_marginTop="@dimen/margin_quarter"
+    android:layout_marginEnd="@dimen/margin_quarter"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:cardCornerRadius="@dimen/card_corner_radius"
+    tools:cardElevation="@dimen/card_elevation">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/list_item_feed_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/feed_image"
+            android:layout_width="@dimen/feed_image_size"
+            android:layout_height="@dimen/feed_image_size"
+            android:layout_marginStart="@dimen/margin_standard"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:contentDescription="@string/content_description_rss_feed_image"
+            android:scaleType="centerInside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@drawable/baseline_rss_feed_black_48" />
+
+        <TextView
+            android:id="@+id/feed_title_text_view"
+            android:layout_width="@dimen/feed_title_width"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_standard"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:layout_marginEnd="@dimen/margin_standard"
+            android:textSize="@dimen/feed_title_text_size"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/feed_image"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Developing Android Apps" />
+
+        <TextView
+            android:id="@+id/feed_description_text_view"
+            android:layout_width="@dimen/feed_description_width"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_standard"
+            android:layout_marginTop="@dimen/margin_half"
+            android:layout_marginEnd="@dimen/margin_standard"
+            android:layout_marginBottom="@dimen/margin_standard"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/feed_image"
+            app:layout_constraintTop_toBottomOf="@+id/feed_title_text_view"
+            tools:text="Spicy jalapeno bacon ipsum dolor amet flank jerky shoulder tri-tip, sirloin ribeye frankfurter pork belly ball tip prosciutto tenderloin tongue pork loin. Porchetta sirloin chuck cow, turducken drumstick tail. Doner drumstick leberkas beef ribs shoulder tenderloin alcatra ham filet mignon cupim bacon." />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
+
