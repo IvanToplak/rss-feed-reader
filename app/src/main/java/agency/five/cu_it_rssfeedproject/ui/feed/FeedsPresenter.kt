@@ -1,5 +1,6 @@
 package agency.five.cu_it_rssfeedproject.ui.feed
 
+import agency.five.cu_it_rssfeedproject.R
 import agency.five.cu_it_rssfeedproject.domain.interactor.GetFeedsUseCase
 import agency.five.cu_it_rssfeedproject.domain.model.Feed
 import agency.five.cu_it_rssfeedproject.domain.repository.FeedRepository
@@ -20,6 +21,12 @@ class FeedsPresenter(
 
     override fun onViewCreated(view: FeedsContract.View) {
         this.view = view
+    }
+
+    override fun showAddNewFeed() {
+        view?.getFragManager()?.beginTransaction()
+            ?.add(R.id.container_layout, NewFeedFragment.newInstance(), NewFeedFragment.TAG)
+            ?.commit()
     }
 
     override fun onDestroy() {

@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_feeds.*
 
@@ -18,7 +19,7 @@ class FeedsFragment : Fragment(), FeedsContract.View {
     private lateinit var presenter: FeedsContract.Presenter
 
     companion object {
-
+        const val TAG = "feeds"
         fun newInstance() = FeedsFragment()
     }
 
@@ -38,12 +39,17 @@ class FeedsFragment : Fragment(), FeedsContract.View {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
+        setupButtons()
         presenter.onViewCreated(this)
         presenter.getFeeds()
     }
 
     private fun setupPresenter() {
         presenter = ObjectGraph.getFeedsPresenter(this)
+    }
+
+    private fun setupButtons() {
+        add_new_feed_button.setOnClickListener { presenter.showAddNewFeed() }
     }
 
     private fun setupRecyclerView() {
@@ -62,4 +68,6 @@ class FeedsFragment : Fragment(), FeedsContract.View {
         feedsAdapter.updateFeeds(feeds)
         empty_state_message_text_view?.show(feeds.isEmpty())
     }
+
+    override fun getFragManager(): FragmentManager? = fragmentManager
 }
