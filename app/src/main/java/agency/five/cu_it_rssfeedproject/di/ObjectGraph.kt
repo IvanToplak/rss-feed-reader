@@ -12,12 +12,20 @@ import agency.five.cu_it_rssfeedproject.ui.feed.FeedsContract
 import agency.five.cu_it_rssfeedproject.ui.feed.FeedsPresenter
 import agency.five.cu_it_rssfeedproject.ui.feed.NewFeedContract
 import agency.five.cu_it_rssfeedproject.ui.feed.NewFeedPresenter
+import agency.five.cu_it_rssfeedproject.ui.router.Router
+import agency.five.cu_it_rssfeedproject.ui.router.RouterImpl
 import android.content.Context
+import androidx.fragment.app.FragmentManager
 import androidx.room.Room
 
 object ObjectGraph {
 
+    //create Scope enum if there is more than one scope
+    const val mainActivityScope = "mainActivity"
+
     private var database: FeedDatabase? = null
+
+    private var scopedRouter: MutableMap<String, Router> = mutableMapOf()
 
     fun getDatabase(context: Context): FeedDatabase {
         if (database != null) {
@@ -30,6 +38,19 @@ object ObjectGraph {
         ).build()
         database = instance
         return instance
+    }
+
+    fun setScopedRouter(scope: String, fragmentManager: FragmentManager) {
+        //use when expression if there is more than one activity (scope)
+        scopedRouter[scope] = RouterImpl(fragmentManager)
+    }
+
+    fun getScopedRouter(scope: String): Router? {
+        return scopedRouter[scope]
+    }
+
+    fun removeScopedRouter(scope: String) {
+        scopedRouter.remove(scope)
     }
 
     private fun getFeedParserWrapper() = EarlFeedParserWrapper()
@@ -49,5 +70,6 @@ object ObjectGraph {
 
     fun getFeedsPresenter(view: FeedsContract.View) = FeedsPresenter(view, getGetFeedsUseCase())
 
-    fun getNewFeedPresenter(view: NewFeedContract.View) = NewFeedPresenter(view, getAddNewFeedUseCase())
+    fun getNewFeedPresenter(view: NewFeedContract.View) =
+        NewFeedPresenter(view, getAddNewFeedUseCase())
 }

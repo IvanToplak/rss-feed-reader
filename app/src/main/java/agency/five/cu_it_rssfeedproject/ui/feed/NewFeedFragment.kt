@@ -37,9 +37,7 @@ class NewFeedFragment : Fragment(), NewFeedContract.View {
         presenter.onViewCreated(this)
         setupBackground()
         setupButtons()
-        showErrorMessage(false)
-        showProgressBar(false)
-        enableAddButton(true)
+        showLoadingState(false)
     }
 
     override fun onDestroy() {
@@ -63,15 +61,14 @@ class NewFeedFragment : Fragment(), NewFeedContract.View {
         }
     }
 
-    override fun showErrorMessage(show: Boolean) {
-        new_feed_error_message_text_view?.show(show)
+    override fun showErrorMessage(isError: Boolean) {
+        new_feed_error_message_text_view?.show(isError)
     }
 
-    override fun showProgressBar(show: Boolean) {
-        new_feed_progress_bar?.show(show)
-    }
-
-    override fun enableAddButton(enable: Boolean) {
-        new_feed_add_button?.isEnabled = enable
+    override fun showLoadingState(isLoading: Boolean) {
+        new_feed_progress_bar?.show(isLoading)
+        new_feed_error_message_text_view?.show(!isLoading)
+        new_feed_add_button?.isEnabled = !isLoading
+        new_feed_url_edit_text?.isEnabled = !isLoading
     }
 }

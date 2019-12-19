@@ -3,9 +3,8 @@ package agency.five.cu_it_rssfeedproject.ui.feed
 interface NewFeedContract {
 
     interface View {
-        fun showErrorMessage(show: Boolean)
-        fun showProgressBar(show: Boolean)
-        fun enableAddButton(enable: Boolean)
+        fun showErrorMessage(isError: Boolean)
+        fun showLoadingState(isLoading: Boolean)
     }
 
     interface Presenter {

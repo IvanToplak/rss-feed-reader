@@ -1,6 +1,6 @@
 package agency.five.cu_it_rssfeedproject.ui.feed
 
-import agency.five.cu_it_rssfeedproject.R
+import agency.five.cu_it_rssfeedproject.di.ObjectGraph
 import agency.five.cu_it_rssfeedproject.domain.interactor.GetFeedsUseCase
 import agency.five.cu_it_rssfeedproject.domain.model.Feed
 import agency.five.cu_it_rssfeedproject.domain.repository.FeedRepository
@@ -10,6 +10,8 @@ class FeedsPresenter(
     private var view: FeedsContract.View?,
     private val getFeedsUseCase: GetFeedsUseCase
 ) : FeedsContract.Presenter {
+
+    private val router = ObjectGraph.getScopedRouter(ObjectGraph.mainActivityScope)
 
     override fun getFeeds() {
         getFeedsUseCase.execute(object : FeedRepository.FeedsResultCallback {
@@ -24,9 +26,7 @@ class FeedsPresenter(
     }
 
     override fun showAddNewFeed() {
-        view?.getFragManager()?.beginTransaction()
-            ?.add(R.id.container_layout, NewFeedFragment.newInstance(), NewFeedFragment.TAG)
-            ?.commit()
+        router?.showAddNewFeedScreen()
     }
 
     override fun onDestroy() {

@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_feeds.*
 
@@ -69,5 +68,7 @@ class FeedsFragment : Fragment(), FeedsContract.View {
         empty_state_message_text_view?.show(feeds.isEmpty())
     }
 
-    override fun getFragManager(): FragmentManager? = fragmentManager
+    override fun updateFeeds() {
+        presenter.getFeeds()
+    }
 }
