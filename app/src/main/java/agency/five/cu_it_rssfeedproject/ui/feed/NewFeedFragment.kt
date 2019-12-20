@@ -38,6 +38,7 @@ class NewFeedFragment : Fragment(), NewFeedContract.View {
         setupBackground()
         setupButtons()
         showLoadingState(false)
+        showErrorMessage(false)
     }
 
     override fun onDestroy() {
