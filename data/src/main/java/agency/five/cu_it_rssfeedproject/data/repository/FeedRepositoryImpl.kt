@@ -15,8 +15,8 @@ private const val INSERT_ERROR_MESSAGE = "Error inserting feed"
 class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: FeedService) :
     FeedRepository {
 
-    override fun insertFeed(feedUrl: String) {
-        InsertFeedAsyncTask(feedDao, feedService).execute(feedUrl)
+    override fun insertFeed(feedUrl: String, callback: FeedRepository.NewFeedResultCallback) {
+        InsertFeedAsyncTask(feedDao, feedService, callback).execute(feedUrl)
     }
 
     override fun getFeeds(callback: FeedRepository.FeedsResultCallback) {
@@ -25,20 +25,24 @@ class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: 
 
     private class InsertFeedAsyncTask(
         private val feedDao: FeedDao,
-        private val feedService: FeedService
+        private val feedService: FeedService,
+        private val callback: FeedRepository.NewFeedResultCallback
     ) :
-        AsyncTask<String, Void, Void>() {
-        override fun doInBackground(vararg params: String): Void? {
+        AsyncTask<String, Void, Boolean>() {
+        override fun doInBackground(vararg params: String): Boolean {
             val apiFeed = feedService.getFeed(params[0])
-            //fail gracefully for now
-            if (apiFeed.title.isBlank()) return null
+            if (apiFeed.title.isBlank()) return false
             val bdFeed = mapApiFeedToDbFeed(apiFeed)
             try {
                 feedDao.insert(bdFeed)
             } catch (e: Exception) {
                 Log.e(TAG, "$INSERT_ERROR_MESSAGE: $params[0]", e)
             }
-            return null
+            return true
+        }
+
+        override fun onPostExecute(result: Boolean) {
+            callback.onInsertFeedResponse(result)
         }
     }
 

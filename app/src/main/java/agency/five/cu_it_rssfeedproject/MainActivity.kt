@@ -1,10 +1,8 @@
 package agency.five.cu_it_rssfeedproject
 
-import agency.five.cu_it_rssfeedproject.ui.feed.FeedsFragment
+import agency.five.cu_it_rssfeedproject.di.ObjectGraph
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-
-private const val FEEDS_FRAGMENT_TAG = "feeds"
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,10 +11,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
-            supportFragmentManager
-                .beginTransaction()
-                .add(R.id.container_layout, FeedsFragment.newInstance(), FEEDS_FRAGMENT_TAG)
-                .commit()
+            ObjectGraph.setScopedRouter(ObjectGraph.mainActivityScope, supportFragmentManager)
+            ObjectGraph.getScopedRouter(ObjectGraph.mainActivityScope)?.showAllFeedsScreen()
         }
+    }
+
+    override fun onDestroy() {
+        ObjectGraph.removeScopedRouter(ObjectGraph.mainActivityScope)
+        super.onDestroy()
     }
 }

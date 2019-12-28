@@ -6,11 +6,13 @@ interface FeedsContract {
 
     interface View {
         fun showFeeds(feeds: List<FeedViewModel>)
+        fun updateFeeds()
     }
 
     interface Presenter {
         fun getFeeds()
         fun onViewCreated(view: View)
+        fun showAddNewFeed()
         fun onDestroy()
     }
 }

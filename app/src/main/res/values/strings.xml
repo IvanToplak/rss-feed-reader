@@ -2,4 +2,8 @@
     <string name="app_name">RSS Feed Reader</string>
     <string name="content_description_rss_feed_image">RSS feed image</string>
     <string name="empty_state_message">Looks like you need a feed to read</string>
+    <string name="new_feed_url_label">Feed URL</string>
+    <string name="new_feed_add_button_text">Add</string>
+    <string name="new_feed_error_message">Incorrect feed URL, please check and try again</string>
+    <string name="new_feed_title">Add new Feed</string>
 </resources>

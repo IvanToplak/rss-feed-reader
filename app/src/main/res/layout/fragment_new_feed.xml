@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/new_feed_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/addNewFeedBackground"
+    android:clickable="true">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/new_feed_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/margin_double"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:cardCornerRadius="@dimen/card_corner_radius"
+        tools:cardElevation="@dimen/card_elevation">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/new_feed_card_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/new_feed_title_text_view"
+                android:layout_width="@dimen/new_feed_title_width"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:text="@string/new_feed_title"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/new_feed_title_text_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/new_feed_url_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:layout_marginEnd="@dimen/margin_large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/new_feed_title_text_view">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/new_feed_url_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/new_feed_url_label"
+                    android:inputType="textUri"
+                    android:singleLine="true"
+                    android:textAlignment="viewStart"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/new_feed_url_text_size"
+                    tools:text="Input URL goes here" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/new_feed_add_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="@dimen/new_feed_add_button_size"
+                android:layout_height="@dimen/new_feed_add_button_size"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_standard"
+                android:background="@android:drawable/screen_background_light_transparent"
+                android:text="@string/new_feed_add_button_text"
+                android:textColor="@color/new_feed_add_button_text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/new_feed_url_layout" />
+
+            <ProgressBar
+                android:id="@+id/new_feed_progress_bar"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_double"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_standard"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/new_feed_url_layout" />
+
+            <TextView
+                android:id="@+id/new_feed_error_message_text_view"
+                android:layout_width="@dimen/new_feed_error_message_width"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_half"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:text="@string/new_feed_error_message"
+                android:textColor="@color/colorErrorMessage"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/new_feed_add_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/new_feed_url_layout" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>

@@ -3,4 +3,6 @@
     <color name="colorPrimary">#785BB9</color>
     <color name="colorPrimaryDark">#673AB7</color>
     <color name="colorAccent">#EE00FF</color>
+    <color name="colorErrorMessage">#FE0069</color>
+    <color name="addNewFeedBackground">#88676767</color>
 </resources>

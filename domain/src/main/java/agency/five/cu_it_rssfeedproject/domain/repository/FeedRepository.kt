@@ -8,7 +8,11 @@ interface FeedRepository {
         fun onGetFeedsResponse(feeds: List<Feed>)
     }
 
-    fun insertFeed(feedUrl: String)
+    interface NewFeedResultCallback {
+        fun onInsertFeedResponse(success: Boolean)
+    }
+
+    fun insertFeed(feedUrl: String, callback: NewFeedResultCallback)
 
     fun getFeeds(callback: FeedsResultCallback)
 }
