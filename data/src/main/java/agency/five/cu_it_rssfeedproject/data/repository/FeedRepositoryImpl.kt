@@ -3,6 +3,7 @@ package agency.five.cu_it_rssfeedproject.data.repository
 import agency.five.cu_it_rssfeedproject.data.db.dao.FeedDao
 import agency.five.cu_it_rssfeedproject.data.mappings.mapApiFeedToDbFeed
 import agency.five.cu_it_rssfeedproject.data.mappings.mapDbFeedToFeed
+import agency.five.cu_it_rssfeedproject.data.mappings.mapFeedToDbFeed
 import agency.five.cu_it_rssfeedproject.data.service.FeedService
 import agency.five.cu_it_rssfeedproject.domain.model.Feed
 import agency.five.cu_it_rssfeedproject.domain.repository.FeedRepository
@@ -11,6 +12,7 @@ import android.util.Log
 
 private const val TAG = "FEED_REPOSITORY"
 private const val INSERT_ERROR_MESSAGE = "Error inserting feed"
+private const val DELETE_ERROR_MESSAGE = "Error deleting feed"
 
 class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: FeedService) :
     FeedRepository {
@@ -21,6 +23,10 @@ class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: 
 
     override fun getFeeds(callback: FeedRepository.FeedsResultCallback) {
         GetFeedsAsyncTask(feedDao, callback).execute()
+    }
+
+    override fun deleteFeed(feed: Feed, callback: FeedRepository.DeleteFeedResultCallback) {
+        DeleteFeedAsyncTask(feedDao, callback).execute(feed)
     }
 
     private class InsertFeedAsyncTask(
@@ -57,6 +63,26 @@ class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: 
 
         override fun onPostExecute(result: List<Feed>) {
             callback.onGetFeedsResponse(result)
+        }
+    }
+
+    private class DeleteFeedAsyncTask(
+        private val feedDao: FeedDao,
+        private val callback: FeedRepository.DeleteFeedResultCallback
+    ) :
+        AsyncTask<Feed, Void, Boolean>() {
+        override fun doInBackground(vararg params: Feed): Boolean {
+            try {
+                feedDao.delete(mapFeedToDbFeed(params[0]))
+            } catch (e: Exception) {
+                Log.e(TAG, "$DELETE_ERROR_MESSAGE: $params[0]", e)
+                return false
+            }
+            return true
+        }
+
+        override fun onPostExecute(result: Boolean) {
+            callback.onDeleteFeedResponse(result)
         }
     }
 }

@@ -1,10 +1,7 @@
 package agency.five.cu_it_rssfeedproject.data.db.dao
 
 import agency.five.cu_it_rssfeedproject.data.db.model.DbFeed
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface FeedDao {
@@ -14,4 +11,7 @@ interface FeedDao {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insert(feed: DbFeed)
+
+    @Delete
+    fun delete(feed: DbFeed)
 }

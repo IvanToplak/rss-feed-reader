@@ -12,10 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_feeds.*
 
-class FeedsFragment : Fragment(), FeedsContract.View {
+class FeedsFragment : Fragment(), FeedsContract.View, FeedsAdapter.ListItemOnLongClickListener {
 
     private lateinit var feedsAdapter: FeedsAdapter
     private lateinit var presenter: FeedsContract.Presenter
+    private var selectedFeed: FeedViewModel = FeedViewModel()
 
     companion object {
         const val TAG = "feeds"
@@ -48,14 +49,29 @@ class FeedsFragment : Fragment(), FeedsContract.View {
     }
 
     private fun setupButtons() {
-        add_new_feed_button.setOnClickListener { presenter.showAddNewFeed() }
+        add_new_or_delete_feed_button.setOnClickListener {
+            if (selectedFeed.isSelected) {
+                feedsAdapter.clearSelection()
+                presenter.deleteFeed(selectedFeed)
+            } else {
+                presenter.showAddNewFeed()
+            }
+        }
     }
 
     private fun setupRecyclerView() {
-        feedsAdapter = FeedsAdapter(mutableListOf())
+        feedsAdapter = FeedsAdapter(mutableListOf(), this)
 
         feeds_recycler_view.layoutManager = LinearLayoutManager(context)
         feeds_recycler_view.adapter = feedsAdapter
+    }
+
+    private fun setAddNewFeedButton() {
+        add_new_or_delete_feed_button.setImageResource(R.drawable.baseline_add_white_18)
+    }
+
+    private fun setDeleteFeedButton() {
+        add_new_or_delete_feed_button.setImageResource(R.drawable.baseline_delete_white_18)
     }
 
     override fun onDestroy() {
@@ -66,9 +82,17 @@ class FeedsFragment : Fragment(), FeedsContract.View {
     override fun showFeeds(feeds: List<FeedViewModel>) {
         feedsAdapter.updateFeeds(feeds)
         empty_state_message_text_view?.show(feeds.isEmpty())
+        setAddNewFeedButton()
     }
 
     override fun updateFeeds() {
         presenter.getFeeds()
+    }
+
+    override fun onFeedSelected(selectedFeed: FeedViewModel) {
+        this.selectedFeed = selectedFeed
+        feedsAdapter.clearSelection()
+        feedsAdapter.selectFeed(selectedFeed)
+        setDeleteFeedButton()
     }
 }

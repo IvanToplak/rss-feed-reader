@@ -12,7 +12,13 @@ interface FeedRepository {
         fun onInsertFeedResponse(success: Boolean)
     }
 
+    interface DeleteFeedResultCallback {
+        fun onDeleteFeedResponse(success: Boolean)
+    }
+
     fun insertFeed(feedUrl: String, callback: NewFeedResultCallback)
 
     fun getFeeds(callback: FeedsResultCallback)
+
+    fun deleteFeed(feed: Feed, callback: DeleteFeedResultCallback)
 }

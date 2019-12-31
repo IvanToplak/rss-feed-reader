@@ -5,5 +5,22 @@ data class FeedViewModel(
     val title: String = "",
     val description: String = "",
     val url: String = "",
-    val imageUrl: String = ""
+    val imageUrl: String = "",
+    var isSelected: Boolean = false
 )
+{
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as FeedViewModel
+
+        if (id != other.id) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return id
+    }
+}

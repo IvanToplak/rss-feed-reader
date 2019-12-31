@@ -10,3 +10,11 @@ fun mapFeedToFeedViewModel(feed: Feed) = FeedViewModel(
     feed.url,
     feed.imageUrl
 )
+
+fun mapFeedViewModelToFeed(feedViewModel: FeedViewModel) = Feed(
+    feedViewModel.id,
+    feedViewModel.title,
+    feedViewModel.description,
+    feedViewModel.url,
+    feedViewModel.imageUrl
+)
