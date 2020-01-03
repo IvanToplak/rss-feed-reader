@@ -7,8 +7,7 @@ data class FeedViewModel(
     val url: String = "",
     val imageUrl: String = "",
     var isSelected: Boolean = false
-)
-{
+) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -22,5 +21,9 @@ data class FeedViewModel(
 
     override fun hashCode(): Int {
         return id
+    }
+
+    fun isEmpty(): Boolean {
+        return id == 0 && title.isEmpty() && description.isEmpty() && url.isEmpty() && imageUrl.isEmpty()
     }
 }

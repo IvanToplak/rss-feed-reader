@@ -36,19 +36,22 @@ class FeedsAdapter(
         notifyDataSetChanged()
     }
 
-    fun clearSelection() {
-        for (feed in feeds) {
-            if (feed.isSelected) {
-                feed.isSelected = false
-                notifyItemChanged(feeds.indexOf(feed))
-            }
-        }
+    fun toggleSelection(selectedFeed: FeedViewModel) {
+        if (selectedFeed.isEmpty()) return
+        val position = feeds.indexOf(selectedFeed)
+        if (position == -1) return
+        feeds[position].isSelected = !feeds[position].isSelected
+        notifyItemChanged(position)
     }
 
-    fun selectFeed(selectedFeed: FeedViewModel) {
-        val position = feeds.indexOf(selectedFeed)
-        feeds[position].isSelected = true
-        notifyItemChanged(position)
+    fun selectFeed(feedId: Int): FeedViewModel {
+        val feed = feeds.firstOrNull { it.id == feedId }
+        return if (feed != null) {
+            if (!feed.isSelected) {
+                toggleSelection(feed)
+            }
+            feed
+        } else FeedViewModel()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
