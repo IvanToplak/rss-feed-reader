@@ -7,6 +7,7 @@ import agency.five.cu_it_rssfeedproject.data.service.FeedServiceImpl
 import agency.five.cu_it_rssfeedproject.data.service.parser.EarlFeedParserWrapper
 import agency.five.cu_it_rssfeedproject.data.service.parser.FeedParserImpl
 import agency.five.cu_it_rssfeedproject.domain.interactor.AddNewFeedUseCase
+import agency.five.cu_it_rssfeedproject.domain.interactor.DeleteFeedUseCase
 import agency.five.cu_it_rssfeedproject.domain.interactor.GetFeedsUseCase
 import agency.five.cu_it_rssfeedproject.ui.feed.FeedsContract
 import agency.five.cu_it_rssfeedproject.ui.feed.FeedsPresenter
@@ -68,7 +69,10 @@ object ObjectGraph {
 
     private fun getAddNewFeedUseCase() = AddNewFeedUseCase(getFeedRepository())
 
-    fun getFeedsPresenter(view: FeedsContract.View) = FeedsPresenter(view, getGetFeedsUseCase())
+    private fun getDeleteFeedUseCase() = DeleteFeedUseCase(getFeedRepository())
+
+    fun getFeedsPresenter(view: FeedsContract.View) =
+        FeedsPresenter(view, getGetFeedsUseCase(), getDeleteFeedUseCase())
 
     fun getNewFeedPresenter(view: NewFeedContract.View) =
         NewFeedPresenter(view, getAddNewFeedUseCase())

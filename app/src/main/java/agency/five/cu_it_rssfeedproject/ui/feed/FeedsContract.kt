@@ -13,6 +13,7 @@ interface FeedsContract {
         fun getFeeds()
         fun onViewCreated(view: View)
         fun showAddNewFeed()
+        fun deleteFeed(feedViewModel: FeedViewModel)
         fun onDestroy()
     }
 }

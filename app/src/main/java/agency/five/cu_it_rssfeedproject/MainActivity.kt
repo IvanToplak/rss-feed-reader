@@ -7,11 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ObjectGraph.setScopedRouter(ObjectGraph.mainActivityScope, supportFragmentManager)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
-            ObjectGraph.setScopedRouter(ObjectGraph.mainActivityScope, supportFragmentManager)
             ObjectGraph.getScopedRouter(ObjectGraph.mainActivityScope)?.showAllFeedsScreen()
         }
     }

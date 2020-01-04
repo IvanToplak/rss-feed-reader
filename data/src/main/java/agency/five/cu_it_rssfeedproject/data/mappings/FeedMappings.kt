@@ -18,3 +18,11 @@ fun mapDbFeedToFeed(dbFeed: DbFeed) = Feed(
     dbFeed.url,
     dbFeed.imageUrl
 )
+
+fun mapFeedToDbFeed(feed: Feed) = DbFeed(
+    feed.id,
+    feed.title,
+    feed.description,
+    feed.url,
+    feed.imageUrl
+)

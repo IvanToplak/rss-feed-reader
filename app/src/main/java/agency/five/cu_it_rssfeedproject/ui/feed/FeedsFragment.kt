@@ -12,13 +12,16 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_feeds.*
 
-class FeedsFragment : Fragment(), FeedsContract.View {
+class FeedsFragment : Fragment(), FeedsContract.View, FeedsAdapter.ListItemOnLongClickListener {
 
     private lateinit var feedsAdapter: FeedsAdapter
     private lateinit var presenter: FeedsContract.Presenter
+    private var selectedFeed: FeedViewModel = FeedViewModel()
+    private var savedSelectedFeedId: Int? = null
 
     companion object {
         const val TAG = "feeds"
+        const val FEED_ID_KEY = "feedId"
         fun newInstance() = FeedsFragment()
     }
 
@@ -43,19 +46,47 @@ class FeedsFragment : Fragment(), FeedsContract.View {
         presenter.getFeeds()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (!selectedFeed.isEmpty()) {
+            outState.putInt(FEED_ID_KEY, selectedFeed.id)
+        }
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        savedSelectedFeedId = savedInstanceState?.getInt(FEED_ID_KEY)
+    }
+
     private fun setupPresenter() {
         presenter = ObjectGraph.getFeedsPresenter(this)
     }
 
     private fun setupButtons() {
-        add_new_feed_button.setOnClickListener { presenter.showAddNewFeed() }
+        add_new_or_delete_feed_button.setOnClickListener {
+            if (!selectedFeed.isEmpty()) {
+                feedsAdapter.toggleSelection(selectedFeed)
+                presenter.deleteFeed(selectedFeed)
+                selectedFeed = FeedViewModel()
+            } else {
+                presenter.showAddNewFeed()
+            }
+        }
     }
 
     private fun setupRecyclerView() {
-        feedsAdapter = FeedsAdapter(mutableListOf())
+        feedsAdapter = FeedsAdapter(mutableListOf(), this)
 
         feeds_recycler_view.layoutManager = LinearLayoutManager(context)
         feeds_recycler_view.adapter = feedsAdapter
+    }
+
+    private fun setAddNewFeedButton() {
+        add_new_or_delete_feed_button.setImageResource(R.drawable.baseline_add_white_18)
+    }
+
+    private fun setDeleteFeedButton() {
+        add_new_or_delete_feed_button.setImageResource(R.drawable.baseline_delete_white_18)
     }
 
     override fun onDestroy() {
@@ -66,9 +97,34 @@ class FeedsFragment : Fragment(), FeedsContract.View {
     override fun showFeeds(feeds: List<FeedViewModel>) {
         feedsAdapter.updateFeeds(feeds)
         empty_state_message_text_view?.show(feeds.isEmpty())
+        if (savedSelectedFeedId != null) {
+            onFeedSelected(feedsAdapter.selectFeed(savedSelectedFeedId ?: 0))
+            savedSelectedFeedId = null
+        } else {
+            setAddNewFeedButton()
+        }
     }
 
     override fun updateFeeds() {
         presenter.getFeeds()
+    }
+
+    override fun onFeedSelected(selectedFeed: FeedViewModel) {
+        when {
+            selectedFeed.isEmpty() -> setAddNewFeedButton()
+            this.selectedFeed == selectedFeed -> {
+                feedsAdapter.toggleSelection(this.selectedFeed)
+                this.selectedFeed = FeedViewModel()
+                setAddNewFeedButton()
+            }
+            else -> {
+                feedsAdapter.toggleSelection(this.selectedFeed)
+                if (!selectedFeed.isSelected) {
+                    feedsAdapter.toggleSelection(selectedFeed)
+                }
+                this.selectedFeed = selectedFeed
+                setDeleteFeedButton()
+            }
+        }
     }
 }
