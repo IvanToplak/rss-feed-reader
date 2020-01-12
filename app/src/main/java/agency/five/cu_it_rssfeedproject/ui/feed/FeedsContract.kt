@@ -10,9 +10,10 @@ interface FeedsContract {
     }
 
     interface Presenter {
-        fun getFeeds()
+        fun getFeeds(getFeedItems: Boolean)
         fun onViewCreated(view: View)
         fun showAddNewFeed()
+        fun showFeedItems(feedViewModel: FeedViewModel)
         fun deleteFeed(feedViewModel: FeedViewModel)
         fun onDestroy()
     }

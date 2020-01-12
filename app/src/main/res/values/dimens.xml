@@ -19,4 +19,7 @@
     <dimen name="new_feed_url_text_size">14sp</dimen>
     <dimen name="new_feed_add_button_size">50dp</dimen>
     <dimen name="new_feed_error_message_width">0dp</dimen>
+    <dimen name="feed_item_title_width">0dp</dimen>
+    <dimen name="feed_item_title_text_size">18sp</dimen>
+    <dimen name="feed_item_date_width">0dp</dimen>
 </resources>
