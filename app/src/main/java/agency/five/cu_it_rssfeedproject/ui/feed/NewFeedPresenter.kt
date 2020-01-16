@@ -3,11 +3,12 @@ package agency.five.cu_it_rssfeedproject.ui.feed
 import agency.five.cu_it_rssfeedproject.di.ObjectGraph
 import agency.five.cu_it_rssfeedproject.domain.interactor.AddNewFeedUseCase
 import agency.five.cu_it_rssfeedproject.domain.repository.FeedRepository
+import agency.five.cu_it_rssfeedproject.ui.common.BasePresenter
 
 class NewFeedPresenter(
     private var view: NewFeedContract.View?,
     private val addNewFeedUseCase: AddNewFeedUseCase
-) : NewFeedContract.Presenter {
+) : BasePresenter<NewFeedContract.View>(view), NewFeedContract.Presenter {
 
     private val router = ObjectGraph.getScopedRouter(ObjectGraph.mainActivityScope)
 
@@ -26,16 +27,8 @@ class NewFeedPresenter(
         })
     }
 
-    override fun onViewCreated(view: NewFeedContract.View) {
-        this.view = view
-    }
-
     override fun back() {
         onDestroy()
         router?.hideAddNewFeedScreen()
-    }
-
-    override fun onDestroy() {
-        view = null
     }
 }

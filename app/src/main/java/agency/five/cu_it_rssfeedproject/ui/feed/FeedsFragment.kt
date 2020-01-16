@@ -44,7 +44,7 @@ class FeedsFragment : Fragment(), FeedsContract.View, FeedsAdapter.ListItemOnLon
         setupRecyclerView()
         setupButtons()
         presenter.onViewCreated(this)
-        presenter.getFeeds(true)
+        updateFeeds()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -107,7 +107,7 @@ class FeedsFragment : Fragment(), FeedsContract.View, FeedsAdapter.ListItemOnLon
     }
 
     override fun updateFeeds() {
-        presenter.getFeeds(true)
+        presenter.getFeeds()
     }
 
     override fun onFeedSelected(selectedFeed: FeedViewModel) {

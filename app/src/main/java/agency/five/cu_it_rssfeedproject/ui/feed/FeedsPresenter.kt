@@ -6,6 +6,7 @@ import agency.five.cu_it_rssfeedproject.domain.interactor.DeleteFeedUseCase
 import agency.five.cu_it_rssfeedproject.domain.interactor.GetFeedsUseCase
 import agency.five.cu_it_rssfeedproject.domain.model.Feed
 import agency.five.cu_it_rssfeedproject.domain.repository.FeedRepository
+import agency.five.cu_it_rssfeedproject.ui.common.BasePresenter
 import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedToFeedViewModel
 import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedViewModelToFeed
 import agency.five.cu_it_rssfeedproject.ui.model.FeedViewModel
@@ -15,11 +16,15 @@ class FeedsPresenter(
     private val getFeedsUseCase: GetFeedsUseCase,
     private val deleteFeedUseCase: DeleteFeedUseCase,
     private val addFeedItemsToFeedUseCase: AddFeedItemsToFeedUseCase
-) : FeedsContract.Presenter {
+) : BasePresenter<FeedsContract.View>(view), FeedsContract.Presenter {
 
     private val router = ObjectGraph.getScopedRouter(ObjectGraph.mainActivityScope)
 
-    override fun getFeeds(getFeedItems: Boolean) {
+    override fun getFeeds() {
+        getFeedsInternal()
+    }
+
+    private fun getFeedsInternal(getFeedItems: Boolean = true) {
         getFeedsUseCase.execute(object : FeedRepository.FeedsResultCallback {
             override fun onGetFeedsResponse(feeds: List<Feed>) {
                 if (getFeedItems) {
@@ -36,10 +41,6 @@ class FeedsPresenter(
         }
     }
 
-    override fun onViewCreated(view: FeedsContract.View) {
-        this.view = view
-    }
-
     override fun showAddNewFeed() {
         router?.showAddNewFeedScreen()
     }
@@ -54,13 +55,9 @@ class FeedsPresenter(
             object : FeedRepository.DeleteFeedResultCallback {
                 override fun onDeleteFeedResponse(success: Boolean) {
                     if (success) {
-                        getFeeds(false)
+                        getFeedsInternal(false)
                     }
                 }
             })
-    }
-
-    override fun onDestroy() {
-        view = null
     }
 }

@@ -4,7 +4,6 @@ package agency.five.cu_it_rssfeedproject.ui.feeditem
 import agency.five.cu_it_rssfeedproject.R
 import agency.five.cu_it_rssfeedproject.di.ObjectGraph
 import agency.five.cu_it_rssfeedproject.ui.model.FeedItemViewModel
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,11 +19,6 @@ class FeedItemsFragment : Fragment(), FeedItemsContract.View {
 
     private lateinit var feedItemsAdapter: FeedItemsAdapter
     private lateinit var presenter: FeedItemsContract.Presenter
-    private var onFragmentInteractionListener: OnFragmentInteractionListener? = null
-
-    interface OnFragmentInteractionListener {
-        fun setActionBarTitle(title: String)
-    }
 
     private var feedId: Int? = null
     private var feedTitle: String? = null
@@ -38,13 +32,6 @@ class FeedItemsFragment : Fragment(), FeedItemsContract.View {
                     putString(FEED_TITLE_KEY, feedTitle)
                 }
             }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            onFragmentInteractionListener = context
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,21 +62,16 @@ class FeedItemsFragment : Fragment(), FeedItemsContract.View {
     }
 
     override fun onDestroy() {
-        onFragmentInteractionListener?.setActionBarTitle(getString(R.string.app_name))
+        ObjectGraph.getScreenTitleProvider().removeTitle()
         presenter.onDestroy()
         super.onDestroy()
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        onFragmentInteractionListener = null
     }
 
     override fun updateFeed(feedId: Int, feedTitle: String) {
         this.feedId = feedId
         this.feedTitle = if (feedTitle.isNotEmpty()) feedTitle else getString(R.string.app_name)
 
-        onFragmentInteractionListener?.setActionBarTitle(feedTitle)
+        ObjectGraph.getScreenTitleProvider().addTitle(feedTitle)
         presenter.getFeedItems(feedId)
     }
 
@@ -107,5 +89,4 @@ class FeedItemsFragment : Fragment(), FeedItemsContract.View {
     override fun showFeedItems(feedItems: List<FeedItemViewModel>) {
         feedItemsAdapter.updateFeedItems(feedItems)
     }
-
 }

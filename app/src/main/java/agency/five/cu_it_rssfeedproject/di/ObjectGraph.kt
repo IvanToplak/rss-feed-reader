@@ -7,6 +7,8 @@ import agency.five.cu_it_rssfeedproject.data.service.FeedServiceImpl
 import agency.five.cu_it_rssfeedproject.data.service.parser.EarlFeedParserWrapper
 import agency.five.cu_it_rssfeedproject.data.service.parser.FeedParserImpl
 import agency.five.cu_it_rssfeedproject.domain.interactor.*
+import agency.five.cu_it_rssfeedproject.ui.common.ScreenTitleProvider
+import agency.five.cu_it_rssfeedproject.ui.common.ScreenTitleProviderImpl
 import agency.five.cu_it_rssfeedproject.ui.feed.FeedsContract
 import agency.five.cu_it_rssfeedproject.ui.feed.FeedsPresenter
 import agency.five.cu_it_rssfeedproject.ui.feed.NewFeedContract
@@ -88,4 +90,6 @@ object ObjectGraph {
 
     fun getFeedItemsPresenter(view: FeedItemsContract.View) =
         FeedItemsPresenter(view, getFeedItemsUseCase())
+
+    fun getScreenTitleProvider(): ScreenTitleProvider = ScreenTitleProviderImpl
 }

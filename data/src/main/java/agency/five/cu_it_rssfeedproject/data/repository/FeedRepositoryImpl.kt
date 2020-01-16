@@ -7,6 +7,7 @@ import agency.five.cu_it_rssfeedproject.domain.model.Feed
 import agency.five.cu_it_rssfeedproject.domain.model.FeedItem
 import agency.five.cu_it_rssfeedproject.domain.repository.FeedRepository
 import android.os.AsyncTask
+import android.os.AsyncTask.THREAD_POOL_EXECUTOR
 import android.util.Log
 
 private const val TAG = "FEED_REPOSITORY"
@@ -34,7 +35,7 @@ class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: 
     }
 
     override fun addFeedItemsToFeed(feed: Feed) {
-        AddFeedItemsToFeedAsyncTask(feedDao, feedService).execute(feed)
+        AddFeedItemsToFeedAsyncTask(feedDao, feedService).executeOnExecutor(THREAD_POOL_EXECUTOR, feed)
     }
 
     private class InsertFeedAsyncTask(
