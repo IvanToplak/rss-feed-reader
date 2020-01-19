@@ -9,6 +9,7 @@ object ScreenTitleProviderImpl : ScreenTitleProvider {
 
     override fun addTitle(title: String) {
         if (titles.peek() != title) {
+            titles.remove(title)
             titles.push(title)
             setTitle?.invoke(title)
         }

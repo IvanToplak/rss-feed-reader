@@ -61,8 +61,12 @@ class FeedItemsFragment : Fragment(), FeedItemsContract.View {
         }
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
         ObjectGraph.getScreenTitleProvider().removeTitle()
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
         presenter.onDestroy()
         super.onDestroy()
     }
