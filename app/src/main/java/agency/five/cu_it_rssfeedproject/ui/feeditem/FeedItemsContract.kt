@@ -12,5 +12,6 @@ interface FeedItemsContract {
 
     interface Presenter : ViewPresenter<View> {
         fun getFeedItems(feedId: Int)
+        fun showFeedItemDetails(feedItemViewModel: FeedItemViewModel)
     }
 }

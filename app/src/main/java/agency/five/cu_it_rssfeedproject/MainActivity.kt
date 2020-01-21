@@ -12,6 +12,15 @@ class MainActivity : AppCompatActivity() {
             .registerSetTitleFunction { title ->
                 supportActionBar?.title = title
             }
+        ObjectGraph.getScreenTitleProvider()
+            .registerSetTitleVisibilityFunction { show ->
+                if (show) {
+                    supportActionBar?.show()
+                } else {
+                    supportActionBar?.hide()
+                }
+            }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 

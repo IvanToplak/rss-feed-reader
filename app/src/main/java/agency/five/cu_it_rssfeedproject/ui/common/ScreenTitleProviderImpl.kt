@@ -6,6 +6,7 @@ object ScreenTitleProviderImpl : ScreenTitleProvider {
 
     private val titles: Deque<String> = ArrayDeque<String>()
     private var setTitle: ((String) -> Unit)? = null
+    private var setTitleVisibility: ((Boolean) -> Unit)? = null
 
     override fun addTitle(title: String) {
         if (titles.peek() != title) {
@@ -24,7 +25,15 @@ object ScreenTitleProviderImpl : ScreenTitleProvider {
         }
     }
 
+    override fun setTitleVisibility(show: Boolean) {
+        setTitleVisibility?.invoke(show)
+    }
+
     override fun registerSetTitleFunction(setTitle: (String) -> Unit) {
         this.setTitle = setTitle
+    }
+
+    override fun registerSetTitleVisibilityFunction(setTitleVisibility: (Boolean) -> Unit) {
+        this.setTitleVisibility = setTitleVisibility
     }
 }

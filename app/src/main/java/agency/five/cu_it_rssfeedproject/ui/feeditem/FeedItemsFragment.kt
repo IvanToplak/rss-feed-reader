@@ -15,7 +15,8 @@ import kotlinx.android.synthetic.main.fragment_feed_items.*
 private const val FEED_ID_KEY = "feedId"
 private const val FEED_TITLE_KEY = "feedTitle"
 
-class FeedItemsFragment : Fragment(), FeedItemsContract.View {
+class FeedItemsFragment : Fragment(), FeedItemsContract.View,
+    FeedItemsAdapter.ListItemOnClickListener {
 
     private lateinit var feedItemsAdapter: FeedItemsAdapter
     private lateinit var presenter: FeedItemsContract.Presenter
@@ -84,7 +85,7 @@ class FeedItemsFragment : Fragment(), FeedItemsContract.View {
     }
 
     private fun setupRecyclerView() {
-        feedItemsAdapter = FeedItemsAdapter(mutableListOf())
+        feedItemsAdapter = FeedItemsAdapter(mutableListOf(), this)
 
         feed_items_recycler_view.layoutManager = LinearLayoutManager(context)
         feed_items_recycler_view.adapter = feedItemsAdapter
@@ -92,5 +93,10 @@ class FeedItemsFragment : Fragment(), FeedItemsContract.View {
 
     override fun showFeedItems(feedItems: List<FeedItemViewModel>) {
         feedItemsAdapter.updateFeedItems(feedItems)
+    }
+
+    override fun onFeedItemClicked(clickedFeedItem: FeedItemViewModel) {
+        if (clickedFeedItem.link.isEmpty()) return
+        presenter.showFeedItemDetails(clickedFeedItem)
     }
 }

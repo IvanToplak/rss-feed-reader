@@ -11,8 +11,14 @@ import kotlinx.android.synthetic.main.list_item_feed_item_card.view.*
 
 private const val DATE_PATTERN = "MMM d"
 
-class FeedItemsAdapter(private val feedItems: MutableList<FeedItemViewModel>) :
-    RecyclerView.Adapter<FeedItemsAdapter.ViewHolder>() {
+class FeedItemsAdapter(
+    private val feedItems: MutableList<FeedItemViewModel>,
+    private val listItemOnClickListener: ListItemOnClickListener
+) : RecyclerView.Adapter<FeedItemsAdapter.ViewHolder>() {
+
+    interface ListItemOnClickListener {
+        fun onFeedItemClicked(clickedFeedItem: FeedItemViewModel)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(parent.inflate(R.layout.list_item_feed_item_card))
@@ -39,6 +45,9 @@ class FeedItemsAdapter(private val feedItems: MutableList<FeedItemViewModel>) :
             itemView.feed_item_title_text_view.text = feedItem.title
             itemView.feed_item_date_text_view.text =
                 feedItem.publicationDate?.toString(DATE_PATTERN)
+            itemView.setOnClickListener {
+                listItemOnClickListener.onFeedItemClicked(feedItem)
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ import agency.five.cu_it_rssfeedproject.R
 import agency.five.cu_it_rssfeedproject.ui.feed.FeedsFragment
 import agency.five.cu_it_rssfeedproject.ui.feed.NewFeedFragment
 import agency.five.cu_it_rssfeedproject.ui.feeditem.FeedItemsFragment
+import agency.five.cu_it_rssfeedproject.ui.feeditemdetails.FeedItemDetailsFragment
 import androidx.fragment.app.FragmentManager
 
 class RouterImpl(private val fragmentManager: FragmentManager) : Router {
@@ -50,6 +51,22 @@ class RouterImpl(private val fragmentManager: FragmentManager) : Router {
                 .commit()
         } else {
             feedItemsFrag.updateFeed(feedId, feedTitle)
+        }
+    }
+
+    override fun showFeedItemDetailsScreen(feedItemUrl: String) {
+        val feedItemDetailsFrag =
+            fragmentManager.findFragmentByTag(FeedItemDetailsFragment.TAG) as? FeedItemDetailsFragment
+        if (feedItemDetailsFrag == null) {
+            fragmentManager
+                .beginTransaction()
+                .addToBackStack(null)
+                .add(
+                    R.id.container_layout,
+                    FeedItemDetailsFragment.newInstance(feedItemUrl),
+                    FeedItemDetailsFragment.TAG
+                )
+                .commit()
         }
     }
 }
