@@ -1,5 +1,7 @@
 package agency.five.cu_it_rssfeedproject.ui.feed
 
+import agency.five.cu_it_rssfeedproject.ui.common.ViewPresenter
+
 interface NewFeedContract {
 
     interface View {
@@ -7,10 +9,8 @@ interface NewFeedContract {
         fun showLoadingState(isLoading: Boolean)
     }
 
-    interface Presenter {
+    interface Presenter : ViewPresenter<View> {
         fun addNewFeed(feedUrl: String)
-        fun onViewCreated(view: View)
         fun back()
-        fun onDestroy()
     }
 }

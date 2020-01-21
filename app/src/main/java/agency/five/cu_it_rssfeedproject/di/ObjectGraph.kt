@@ -6,13 +6,15 @@ import agency.five.cu_it_rssfeedproject.data.repository.FeedRepositoryImpl
 import agency.five.cu_it_rssfeedproject.data.service.FeedServiceImpl
 import agency.five.cu_it_rssfeedproject.data.service.parser.EarlFeedParserWrapper
 import agency.five.cu_it_rssfeedproject.data.service.parser.FeedParserImpl
-import agency.five.cu_it_rssfeedproject.domain.interactor.AddNewFeedUseCase
-import agency.five.cu_it_rssfeedproject.domain.interactor.DeleteFeedUseCase
-import agency.five.cu_it_rssfeedproject.domain.interactor.GetFeedsUseCase
+import agency.five.cu_it_rssfeedproject.domain.interactor.*
+import agency.five.cu_it_rssfeedproject.ui.common.ScreenTitleProvider
+import agency.five.cu_it_rssfeedproject.ui.common.ScreenTitleProviderImpl
 import agency.five.cu_it_rssfeedproject.ui.feed.FeedsContract
 import agency.five.cu_it_rssfeedproject.ui.feed.FeedsPresenter
 import agency.five.cu_it_rssfeedproject.ui.feed.NewFeedContract
 import agency.five.cu_it_rssfeedproject.ui.feed.NewFeedPresenter
+import agency.five.cu_it_rssfeedproject.ui.feeditem.FeedItemsContract
+import agency.five.cu_it_rssfeedproject.ui.feeditem.FeedItemsPresenter
 import agency.five.cu_it_rssfeedproject.ui.router.Router
 import agency.five.cu_it_rssfeedproject.ui.router.RouterImpl
 import android.content.Context
@@ -71,9 +73,23 @@ object ObjectGraph {
 
     private fun getDeleteFeedUseCase() = DeleteFeedUseCase(getFeedRepository())
 
+    private fun getFeedItemsUseCase() = GetFeedItemsUseCase(getFeedRepository())
+
+    private fun getAddFeedItemsToFeedUseCase() = AddFeedItemsToFeedUseCase(getFeedRepository())
+
     fun getFeedsPresenter(view: FeedsContract.View) =
-        FeedsPresenter(view, getGetFeedsUseCase(), getDeleteFeedUseCase())
+        FeedsPresenter(
+            view,
+            getGetFeedsUseCase(),
+            getDeleteFeedUseCase(),
+            getAddFeedItemsToFeedUseCase()
+        )
 
     fun getNewFeedPresenter(view: NewFeedContract.View) =
         NewFeedPresenter(view, getAddNewFeedUseCase())
+
+    fun getFeedItemsPresenter(view: FeedItemsContract.View) =
+        FeedItemsPresenter(view, getFeedItemsUseCase())
+
+    fun getScreenTitleProvider(): ScreenTitleProvider = ScreenTitleProviderImpl
 }

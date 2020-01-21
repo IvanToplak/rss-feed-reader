@@ -12,7 +12,8 @@ import java.util.*
         childColumns = ["feed_id"],
         onDelete = CASCADE
     )],
-    indices = [Index("feed_id", "link", unique = true)]
+    indices = [Index("feed_id", "link", unique = true),
+    Index("publication_date")]
 )
 data class DbFeedItem(
     @PrimaryKey(autoGenerate = true)

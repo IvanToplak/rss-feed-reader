@@ -12,7 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_feeds.*
 
-class FeedsFragment : Fragment(), FeedsContract.View, FeedsAdapter.ListItemOnLongClickListener {
+class FeedsFragment : Fragment(), FeedsContract.View, FeedsAdapter.ListItemOnLongClickListener,
+    FeedsAdapter.ListItemOnClickListener {
 
     private lateinit var feedsAdapter: FeedsAdapter
     private lateinit var presenter: FeedsContract.Presenter
@@ -43,7 +44,7 @@ class FeedsFragment : Fragment(), FeedsContract.View, FeedsAdapter.ListItemOnLon
         setupRecyclerView()
         setupButtons()
         presenter.onViewCreated(this)
-        presenter.getFeeds()
+        updateFeeds()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -75,7 +76,7 @@ class FeedsFragment : Fragment(), FeedsContract.View, FeedsAdapter.ListItemOnLon
     }
 
     private fun setupRecyclerView() {
-        feedsAdapter = FeedsAdapter(mutableListOf(), this)
+        feedsAdapter = FeedsAdapter(mutableListOf(), this, this)
 
         feeds_recycler_view.layoutManager = LinearLayoutManager(context)
         feeds_recycler_view.adapter = feedsAdapter
@@ -113,9 +114,7 @@ class FeedsFragment : Fragment(), FeedsContract.View, FeedsAdapter.ListItemOnLon
         when {
             selectedFeed.isEmpty() -> setAddNewFeedButton()
             this.selectedFeed == selectedFeed -> {
-                feedsAdapter.toggleSelection(this.selectedFeed)
-                this.selectedFeed = FeedViewModel()
-                setAddNewFeedButton()
+                clearSelection()
             }
             else -> {
                 feedsAdapter.toggleSelection(this.selectedFeed)
@@ -126,5 +125,19 @@ class FeedsFragment : Fragment(), FeedsContract.View, FeedsAdapter.ListItemOnLon
                 setDeleteFeedButton()
             }
         }
+    }
+
+    override fun onFeedClicked(clickedFeed: FeedViewModel) {
+        if (clickedFeed.isEmpty()) return
+        if (this.selectedFeed == clickedFeed) {
+            clearSelection()
+        }
+        presenter.showFeedItems(clickedFeed)
+    }
+
+    private fun clearSelection() {
+        feedsAdapter.toggleSelection(this.selectedFeed)
+        this.selectedFeed = FeedViewModel()
+        setAddNewFeedButton()
     }
 }

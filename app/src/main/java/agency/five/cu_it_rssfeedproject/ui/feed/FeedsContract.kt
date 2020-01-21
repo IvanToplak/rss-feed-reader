@@ -1,5 +1,6 @@
 package agency.five.cu_it_rssfeedproject.ui.feed
 
+import agency.five.cu_it_rssfeedproject.ui.common.ViewPresenter
 import agency.five.cu_it_rssfeedproject.ui.model.FeedViewModel
 
 interface FeedsContract {
@@ -9,11 +10,10 @@ interface FeedsContract {
         fun updateFeeds()
     }
 
-    interface Presenter {
+    interface Presenter : ViewPresenter<View> {
         fun getFeeds()
-        fun onViewCreated(view: View)
         fun showAddNewFeed()
+        fun showFeedItems(feedViewModel: FeedViewModel)
         fun deleteFeed(feedViewModel: FeedViewModel)
-        fun onDestroy()
     }
 }

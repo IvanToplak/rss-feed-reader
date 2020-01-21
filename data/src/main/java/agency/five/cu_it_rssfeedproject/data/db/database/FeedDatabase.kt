@@ -3,11 +3,12 @@ package agency.five.cu_it_rssfeedproject.data.db.database
 import agency.five.cu_it_rssfeedproject.data.db.dao.FeedDao
 import agency.five.cu_it_rssfeedproject.data.db.database.FeedDatabase.Companion.VERSION
 import agency.five.cu_it_rssfeedproject.data.db.model.DbFeed
+import agency.five.cu_it_rssfeedproject.data.db.model.DbFeedItem
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [DbFeed::class], version = VERSION, exportSchema = false)
+@Database(entities = [DbFeed::class, DbFeedItem::class], version = VERSION, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class FeedDatabase : RoomDatabase() {
 

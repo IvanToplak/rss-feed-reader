@@ -13,12 +13,17 @@ import kotlinx.android.synthetic.main.list_item_feed_card.view.*
 
 class FeedsAdapter(
     private val feeds: MutableList<FeedViewModel>,
-    private val listItemOnLongClickListener: ListItemOnLongClickListener
+    private val listItemOnLongClickListener: ListItemOnLongClickListener,
+    private val listItemOnClickListener: ListItemOnClickListener
 ) :
     RecyclerView.Adapter<FeedsAdapter.ViewHolder>() {
 
     interface ListItemOnLongClickListener {
         fun onFeedSelected(selectedFeed: FeedViewModel)
+    }
+
+    interface ListItemOnClickListener {
+        fun onFeedClicked(clickedFeed: FeedViewModel)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
@@ -77,6 +82,9 @@ class FeedsAdapter(
             itemView.setOnLongClickListener {
                 listItemOnLongClickListener.onFeedSelected(feed)
                 false
+            }
+            itemView.setOnClickListener {
+                listItemOnClickListener.onFeedClicked(feed)
             }
             val backgroundColor = if (feed.isSelected) ContextCompat.getColor(
                 itemView.context,

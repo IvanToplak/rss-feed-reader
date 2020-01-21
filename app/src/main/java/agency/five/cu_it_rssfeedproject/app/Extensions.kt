@@ -6,6 +6,8 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import java.text.SimpleDateFormat
+import java.util.*
 
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
@@ -20,4 +22,8 @@ fun View.show(show: Boolean = true) {
 fun View.hide() {
     if (visibility == GONE) return
     visibility = GONE
+}
+
+fun Date.toString(pattern: String): String {
+    return SimpleDateFormat(pattern, Locale.getDefault()).format(this)
 }

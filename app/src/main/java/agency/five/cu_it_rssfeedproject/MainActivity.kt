@@ -8,11 +8,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ObjectGraph.setScopedRouter(ObjectGraph.mainActivityScope, supportFragmentManager)
+        ObjectGraph.getScreenTitleProvider()
+            .registerSetTitleFunction { title ->
+                supportActionBar?.title = title
+            }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
             ObjectGraph.getScopedRouter(ObjectGraph.mainActivityScope)?.showAllFeedsScreen()
+            ObjectGraph.getScreenTitleProvider().addTitle(getString(R.string.app_name))
         }
     }
 
