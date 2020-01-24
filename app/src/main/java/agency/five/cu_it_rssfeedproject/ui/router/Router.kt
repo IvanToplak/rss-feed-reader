@@ -9,4 +9,6 @@ interface Router {
     fun hideAddNewFeedScreen()
 
     fun showFeedItemsScreen(feedId: Int, feedTitle: String)
+
+    fun showFeedItemDetailsScreen(feedItemUrl: String)
 }
