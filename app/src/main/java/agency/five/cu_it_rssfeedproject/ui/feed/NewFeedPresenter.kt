@@ -1,16 +1,16 @@
 package agency.five.cu_it_rssfeedproject.ui.feed
 
-import agency.five.cu_it_rssfeedproject.di.ObjectGraph
+import agency.five.cu_it_rssfeedproject.di.MAIN_ACTIVITY_SCOPE_ID
 import agency.five.cu_it_rssfeedproject.domain.interactor.AddNewFeedUseCase
 import agency.five.cu_it_rssfeedproject.domain.repository.FeedRepository
 import agency.five.cu_it_rssfeedproject.ui.common.BasePresenter
+import agency.five.cu_it_rssfeedproject.ui.router.Router
+import org.koin.core.KoinComponent
 
-class NewFeedPresenter(
-    private var view: NewFeedContract.View?,
-    private val addNewFeedUseCase: AddNewFeedUseCase
-) : BasePresenter<NewFeedContract.View>(view), NewFeedContract.Presenter {
+class NewFeedPresenter(private val addNewFeedUseCase: AddNewFeedUseCase) :
+    BasePresenter<NewFeedContract.View>(), NewFeedContract.Presenter, KoinComponent {
 
-    private val router = ObjectGraph.getScopedRouter(ObjectGraph.mainActivityScope)
+    private val router: Router by getKoin().getScope(MAIN_ACTIVITY_SCOPE_ID).inject()
 
     override fun addNewFeed(feedUrl: String) {
         if (view == null) return
@@ -21,7 +21,7 @@ class NewFeedPresenter(
                 view?.showErrorMessage(!success)
                 if (success) {
                     back()
-                    router?.showAllFeedsScreen()
+                    router.showAllFeedsScreen()
                 }
             }
         })
@@ -29,6 +29,6 @@ class NewFeedPresenter(
 
     override fun back() {
         onDestroy()
-        router?.hideAddNewFeedScreen()
+        router.hideAddNewFeedScreen()
     }
 }

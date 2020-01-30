@@ -2,7 +2,7 @@ package agency.five.cu_it_rssfeedproject.ui.feeditem
 
 
 import agency.five.cu_it_rssfeedproject.R
-import agency.five.cu_it_rssfeedproject.di.ObjectGraph
+import agency.five.cu_it_rssfeedproject.ui.common.ScreenTitleProvider
 import agency.five.cu_it_rssfeedproject.ui.model.FeedItemViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_feed_items.*
+import org.koin.android.ext.android.inject
+import org.koin.androidx.scope.currentScope
 
 private const val FEED_ID_KEY = "feedId"
 private const val FEED_TITLE_KEY = "feedTitle"
@@ -18,9 +20,10 @@ private const val FEED_TITLE_KEY = "feedTitle"
 class FeedItemsFragment : Fragment(), FeedItemsContract.View,
     FeedItemsAdapter.ListItemOnClickListener {
 
-    private lateinit var feedItemsAdapter: FeedItemsAdapter
-    private lateinit var presenter: FeedItemsContract.Presenter
+    private val presenter: FeedItemsContract.Presenter by currentScope.inject()
+    private val screenTitleProvider: ScreenTitleProvider by inject()
 
+    private lateinit var feedItemsAdapter: FeedItemsAdapter
     private var feedId: Int? = null
     private var feedTitle: String? = null
 
@@ -63,7 +66,7 @@ class FeedItemsFragment : Fragment(), FeedItemsContract.View,
     }
 
     override fun onDestroyView() {
-        ObjectGraph.getScreenTitleProvider().removeTitle()
+        screenTitleProvider.removeTitle()
         super.onDestroyView()
     }
 
@@ -76,12 +79,12 @@ class FeedItemsFragment : Fragment(), FeedItemsContract.View,
         this.feedId = feedId
         this.feedTitle = if (feedTitle.isNotEmpty()) feedTitle else getString(R.string.app_name)
 
-        ObjectGraph.getScreenTitleProvider().addTitle(feedTitle)
+        screenTitleProvider.addTitle(feedTitle)
         presenter.getFeedItems(feedId)
     }
 
     private fun setupPresenter() {
-        presenter = ObjectGraph.getFeedItemsPresenter(this)
+        presenter.onViewCreated(this)
     }
 
     private fun setupRecyclerView() {

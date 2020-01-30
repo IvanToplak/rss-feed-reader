@@ -45,6 +45,7 @@ ext {
     recyclerViewVersion = "1.1.0"
     materialComponentsVersion = "1.0.0"
     picassoVersion = "2.71828"
+    koinVersion = "2.0.1"
 
     //dependency definitions
     commonDependencies = [
@@ -72,6 +73,13 @@ ext {
 
     feedParserDependencies = [
             earl: "com.einmalfel:earl:$rootProject.earlVersion"
+    ]
+
+    //Koin dependencies
+    koinDependencies = [
+             koinAndroid : "org.koin:koin-android:$koinVersion",
+             koinAndroidScope : "org.koin:koin-androidx-scope:$koinVersion",
+             koinTest : "org.koin:koin-test:$koinVersion"
     ]
 }
 

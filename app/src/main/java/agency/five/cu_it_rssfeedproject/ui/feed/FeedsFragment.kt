@@ -2,7 +2,6 @@ package agency.five.cu_it_rssfeedproject.ui.feed
 
 import agency.five.cu_it_rssfeedproject.R
 import agency.five.cu_it_rssfeedproject.app.show
-import agency.five.cu_it_rssfeedproject.di.ObjectGraph
 import agency.five.cu_it_rssfeedproject.ui.model.FeedViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,12 +10,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_feeds.*
+import org.koin.androidx.scope.currentScope
 
 class FeedsFragment : Fragment(), FeedsContract.View, FeedsAdapter.ListItemOnLongClickListener,
     FeedsAdapter.ListItemOnClickListener {
 
     private lateinit var feedsAdapter: FeedsAdapter
-    private lateinit var presenter: FeedsContract.Presenter
+    private val presenter: FeedsContract.Presenter by currentScope.inject()
     private var selectedFeed: FeedViewModel = FeedViewModel()
     private var savedSelectedFeedId: Int? = null
 
@@ -60,7 +60,7 @@ class FeedsFragment : Fragment(), FeedsContract.View, FeedsAdapter.ListItemOnLon
     }
 
     private fun setupPresenter() {
-        presenter = ObjectGraph.getFeedsPresenter(this)
+        presenter.onViewCreated(this)
     }
 
     private fun setupButtons() {
