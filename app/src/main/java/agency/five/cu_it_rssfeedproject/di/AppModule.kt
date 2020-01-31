@@ -24,14 +24,31 @@ val appModule = module {
     }
 
     scope(named<FeedsFragment>()) {
-        scoped<FeedsContract.Presenter> { FeedsPresenter(get(), get(), get()) }
+        scoped<FeedsContract.Presenter> {
+            FeedsPresenter(
+                getScope(MAIN_ACTIVITY_SCOPE_ID).get(),
+                get(),
+                get(),
+                get()
+            )
+        }
     }
 
     scope(named<NewFeedFragment>()) {
-        scoped<NewFeedContract.Presenter> { NewFeedPresenter(get()) }
+        scoped<NewFeedContract.Presenter> {
+            NewFeedPresenter(
+                getScope(MAIN_ACTIVITY_SCOPE_ID).get(),
+                get()
+            )
+        }
     }
 
     scope(named<FeedItemsFragment>()) {
-        scoped<FeedItemsContract.Presenter> { FeedItemsPresenter(get()) }
+        scoped<FeedItemsContract.Presenter> {
+            FeedItemsPresenter(
+                getScope(MAIN_ACTIVITY_SCOPE_ID).get(),
+                get()
+            )
+        }
     }
 }

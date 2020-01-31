@@ -1,6 +1,5 @@
 package agency.five.cu_it_rssfeedproject.ui.feed
 
-import agency.five.cu_it_rssfeedproject.di.MAIN_ACTIVITY_SCOPE_ID
 import agency.five.cu_it_rssfeedproject.domain.interactor.AddFeedItemsToFeedUseCase
 import agency.five.cu_it_rssfeedproject.domain.interactor.DeleteFeedUseCase
 import agency.five.cu_it_rssfeedproject.domain.interactor.GetFeedsUseCase
@@ -11,15 +10,13 @@ import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedToFeedViewModel
 import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedViewModelToFeed
 import agency.five.cu_it_rssfeedproject.ui.model.FeedViewModel
 import agency.five.cu_it_rssfeedproject.ui.router.Router
-import org.koin.core.KoinComponent
 
 class FeedsPresenter(
+    private val router: Router,
     private val getFeedsUseCase: GetFeedsUseCase,
     private val deleteFeedUseCase: DeleteFeedUseCase,
     private val addFeedItemsToFeedUseCase: AddFeedItemsToFeedUseCase
-) : BasePresenter<FeedsContract.View>(), FeedsContract.Presenter, KoinComponent {
-
-    private val router: Router by getKoin().getScope(MAIN_ACTIVITY_SCOPE_ID).inject()
+) : BasePresenter<FeedsContract.View>(), FeedsContract.Presenter {
 
     override fun getFeeds() {
         getFeedsInternal()
