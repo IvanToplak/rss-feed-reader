@@ -1,6 +1,5 @@
 package agency.five.cu_it_rssfeedproject.ui.feed
 
-import agency.five.cu_it_rssfeedproject.di.ObjectGraph
 import agency.five.cu_it_rssfeedproject.domain.interactor.AddFeedItemsToFeedUseCase
 import agency.five.cu_it_rssfeedproject.domain.interactor.DeleteFeedUseCase
 import agency.five.cu_it_rssfeedproject.domain.interactor.GetFeedsUseCase
@@ -10,15 +9,14 @@ import agency.five.cu_it_rssfeedproject.ui.common.BasePresenter
 import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedToFeedViewModel
 import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedViewModelToFeed
 import agency.five.cu_it_rssfeedproject.ui.model.FeedViewModel
+import agency.five.cu_it_rssfeedproject.ui.router.Router
 
 class FeedsPresenter(
-    private var view: FeedsContract.View?,
+    private val router: Router,
     private val getFeedsUseCase: GetFeedsUseCase,
     private val deleteFeedUseCase: DeleteFeedUseCase,
     private val addFeedItemsToFeedUseCase: AddFeedItemsToFeedUseCase
-) : BasePresenter<FeedsContract.View>(view), FeedsContract.Presenter {
-
-    private val router = ObjectGraph.getScopedRouter(ObjectGraph.mainActivityScope)
+) : BasePresenter<FeedsContract.View>(), FeedsContract.Presenter {
 
     override fun getFeeds() {
         getFeedsInternal()
@@ -42,11 +40,11 @@ class FeedsPresenter(
     }
 
     override fun showAddNewFeed() {
-        router?.showAddNewFeedScreen()
+        router.showAddNewFeedScreen()
     }
 
     override fun showFeedItems(feedViewModel: FeedViewModel) {
-        router?.showFeedItemsScreen(feedViewModel.id, feedViewModel.title)
+        router.showFeedItemsScreen(feedViewModel.id, feedViewModel.title)
     }
 
     override fun deleteFeed(feedViewModel: FeedViewModel) {

@@ -51,4 +51,9 @@ dependencies {
 
     //Feed parser
     implementation feedParserDependencies.earl
+
+    // Koin dependencies
+    implementation koinDependencies.koinAndroid
+    implementation koinDependencies.koinAndroidScope
+    testImplementation koinDependencies.koinTest
 }

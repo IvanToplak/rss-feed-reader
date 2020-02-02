@@ -45,4 +45,9 @@ dependencies {
     implementation roomDependencies.roomRuntime
     implementation roomDependencies.roomKtx
     kapt roomDependencies.roomCompiler
+
+    // Koin dependencies
+    implementation koinDependencies.koinAndroid
+    implementation koinDependencies.koinAndroidScope
+    testImplementation koinDependencies.koinTest
 }

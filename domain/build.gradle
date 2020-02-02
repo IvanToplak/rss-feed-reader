@@ -3,6 +3,11 @@ apply plugin: 'kotlin'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation commonDependencies.kotlinStdlibJdk8
+
+    // Koin dependencies
+    implementation koinDependencies.koinAndroid
+    implementation koinDependencies.koinAndroidScope
+    testImplementation koinDependencies.koinTest
 }
 
 sourceCompatibility = rootProject.javaVersion

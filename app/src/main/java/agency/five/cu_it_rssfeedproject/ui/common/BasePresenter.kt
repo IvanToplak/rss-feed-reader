@@ -1,6 +1,8 @@
 package agency.five.cu_it_rssfeedproject.ui.common
 
-open class BasePresenter<T>(private var view: T?) : ViewPresenter<T> {
+open class BasePresenter<T> : ViewPresenter<T> {
+
+    protected var view: T? = null
 
     override fun onViewCreated(view: T?) {
         this.view = view

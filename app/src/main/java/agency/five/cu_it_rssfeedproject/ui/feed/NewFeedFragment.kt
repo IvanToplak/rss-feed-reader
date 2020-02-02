@@ -2,17 +2,17 @@ package agency.five.cu_it_rssfeedproject.ui.feed
 
 import agency.five.cu_it_rssfeedproject.R
 import agency.five.cu_it_rssfeedproject.app.show
-import agency.five.cu_it_rssfeedproject.di.ObjectGraph
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_new_feed.*
+import org.koin.androidx.scope.currentScope
 
 class NewFeedFragment : Fragment(), NewFeedContract.View {
 
-    private lateinit var presenter: NewFeedContract.Presenter
+    private val presenter: NewFeedContract.Presenter by currentScope.inject()
 
     companion object {
         const val TAG = "newFeed"
@@ -47,7 +47,7 @@ class NewFeedFragment : Fragment(), NewFeedContract.View {
     }
 
     private fun setupPresenter() {
-        presenter = ObjectGraph.getNewFeedPresenter(this)
+        presenter.onViewCreated(this)
     }
 
     private fun setupBackground() {

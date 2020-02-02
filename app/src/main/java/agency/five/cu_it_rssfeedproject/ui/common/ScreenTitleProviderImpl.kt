@@ -2,7 +2,7 @@ package agency.five.cu_it_rssfeedproject.ui.common
 
 import java.util.*
 
-object ScreenTitleProviderImpl : ScreenTitleProvider {
+class ScreenTitleProviderImpl : ScreenTitleProvider {
 
     private val titles: Deque<String> = ArrayDeque<String>()
     private var setTitle: ((String) -> Unit)? = null

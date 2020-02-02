@@ -6,6 +6,7 @@ import com.einmalfel.earl.EarlParser
 import com.einmalfel.earl.Feed
 import java.net.URL
 
+const val EARL_FEED_PARSER_TAG = "EarlFeedParser"
 
 class EarlFeedParserWrapper : FeedParser {
 
