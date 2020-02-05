@@ -4,12 +4,20 @@ import agency.five.cu_it_rssfeedproject.domain.interactor.AddFeedItemsToFeedUseC
 import agency.five.cu_it_rssfeedproject.domain.interactor.DeleteFeedUseCase
 import agency.five.cu_it_rssfeedproject.domain.interactor.GetFeedsUseCase
 import agency.five.cu_it_rssfeedproject.domain.model.Feed
-import agency.five.cu_it_rssfeedproject.domain.repository.FeedRepository
 import agency.five.cu_it_rssfeedproject.ui.common.BasePresenter
 import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedToFeedViewModel
 import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedViewModelToFeed
 import agency.five.cu_it_rssfeedproject.ui.model.FeedViewModel
 import agency.five.cu_it_rssfeedproject.ui.router.Router
+import android.util.Log
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
+
+private const val TAG = "FeedsPresenter"
+private const val GET_FEEDS_ERROR_MESSAGE = "Error retrieving feeds"
+private const val DELETE_ERROR_MESSAGE = "Error deleting feed"
+private const val INSERT_FEED_ITEMS_ERROR_MESSAGE = "Error inserting feed items for feed"
 
 class FeedsPresenter(
     private val router: Router,
@@ -23,19 +31,40 @@ class FeedsPresenter(
     }
 
     private fun getFeedsInternal(getFeedItems: Boolean = true) {
-        getFeedsUseCase.execute(object : FeedRepository.FeedsResultCallback {
-            override fun onGetFeedsResponse(feeds: List<Feed>) {
+        val subscription = getFeedsUseCase.execute()
+            .doOnSuccess { feeds ->
                 if (getFeedItems) {
                     addFeedItemsToFeeds(feeds)
                 }
-                view?.showFeeds(feeds.map { feed -> mapFeedToFeedViewModel(feed) })
             }
-        })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onSuccess = { feeds ->
+                    view?.showFeeds(feeds.map { feed -> mapFeedToFeedViewModel(feed) })
+                },
+                onError = { error ->
+                    Log.e(
+                        TAG,
+                        GET_FEEDS_ERROR_MESSAGE,
+                        error
+                    )
+                })
+        compositeDisposable?.add(subscription)
     }
 
     private fun addFeedItemsToFeeds(feeds: List<Feed>) {
         feeds.forEach { feed ->
-            addFeedItemsToFeedUseCase.execute(feed)
+            val subscription = addFeedItemsToFeedUseCase.execute(feed)
+                .subscribeOn(Schedulers.io())
+                .subscribeBy(onError = { error ->
+                    Log.e(
+                        TAG,
+                        INSERT_FEED_ITEMS_ERROR_MESSAGE,
+                        error
+                    )
+                })
+            compositeDisposable?.add(subscription)
         }
     }
 
@@ -48,14 +77,18 @@ class FeedsPresenter(
     }
 
     override fun deleteFeed(feedViewModel: FeedViewModel) {
-        deleteFeedUseCase.execute(
-            mapFeedViewModelToFeed(feedViewModel),
-            object : FeedRepository.DeleteFeedResultCallback {
-                override fun onDeleteFeedResponse(success: Boolean) {
-                    if (success) {
-                        getFeedsInternal(false)
-                    }
-                }
-            })
+        val subscription = deleteFeedUseCase.execute(
+            mapFeedViewModelToFeed(feedViewModel)
+        ).subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onComplete = { getFeedsInternal(false) },
+                onError = { error ->
+                    Log.e(
+                        TAG,
+                        DELETE_ERROR_MESSAGE,
+                        error
+                    )
+                })
+        compositeDisposable?.add(subscription)
     }
 }

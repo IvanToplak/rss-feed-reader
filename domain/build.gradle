@@ -8,6 +8,10 @@ dependencies {
     implementation koinDependencies.koinAndroid
     implementation koinDependencies.koinAndroidScope
     testImplementation koinDependencies.koinTest
+
+    //Rx dependencies
+    implementation rxDependencies.rxKotlin
+    implementation rxDependencies.rxAndroid
 }
 
 sourceCompatibility = rootProject.javaVersion

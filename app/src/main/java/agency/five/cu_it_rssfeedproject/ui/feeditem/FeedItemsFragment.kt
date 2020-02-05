@@ -44,7 +44,7 @@ class FeedItemsFragment : Fragment(), FeedItemsContract.View,
             feedId = it.getInt(FEED_ID_KEY)
             feedTitle = it.getString(FEED_TITLE_KEY)
         }
-        setupPresenter()
+        presenter.onCreate()
     }
 
     override fun onCreateView(
@@ -57,8 +57,8 @@ class FeedItemsFragment : Fragment(), FeedItemsContract.View,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupRecyclerView()
         presenter.onViewCreated(this)
+        setupRecyclerView()
 
         if (feedId != null && feedTitle != null) {
             updateFeed(feedId!!, feedTitle!!)
@@ -66,6 +66,7 @@ class FeedItemsFragment : Fragment(), FeedItemsContract.View,
     }
 
     override fun onDestroyView() {
+        presenter.onDestroyView()
         screenTitleProvider.removeTitle()
         super.onDestroyView()
     }
@@ -81,10 +82,6 @@ class FeedItemsFragment : Fragment(), FeedItemsContract.View,
 
         screenTitleProvider.addTitle(feedTitle)
         presenter.getFeedItems(feedId)
-    }
-
-    private fun setupPresenter() {
-        presenter.onViewCreated(this)
     }
 
     private fun setupRecyclerView() {

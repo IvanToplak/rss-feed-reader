@@ -21,7 +21,7 @@ class NewFeedFragment : Fragment(), NewFeedContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupPresenter()
+        presenter.onCreate()
     }
 
     override fun onCreateView(
@@ -41,13 +41,14 @@ class NewFeedFragment : Fragment(), NewFeedContract.View {
         showErrorMessage(false)
     }
 
+    override fun onDestroyView() {
+        presenter.onDestroyView()
+        super.onDestroyView()
+    }
+
     override fun onDestroy() {
         presenter.onDestroy()
         super.onDestroy()
-    }
-
-    private fun setupPresenter() {
-        presenter.onViewCreated(this)
     }
 
     private fun setupBackground() {

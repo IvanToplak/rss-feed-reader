@@ -28,7 +28,7 @@ class FeedsFragment : Fragment(), FeedsContract.View, FeedsAdapter.ListItemOnLon
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupPresenter()
+        presenter.onCreate()
     }
 
     override fun onCreateView(
@@ -41,9 +41,9 @@ class FeedsFragment : Fragment(), FeedsContract.View, FeedsAdapter.ListItemOnLon
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        presenter.onViewCreated(this)
         setupRecyclerView()
         setupButtons()
-        presenter.onViewCreated(this)
         updateFeeds()
     }
 
@@ -59,8 +59,14 @@ class FeedsFragment : Fragment(), FeedsContract.View, FeedsAdapter.ListItemOnLon
         savedSelectedFeedId = savedInstanceState?.getInt(FEED_ID_KEY)
     }
 
-    private fun setupPresenter() {
-        presenter.onViewCreated(this)
+    override fun onDestroyView() {
+        presenter.onDestroyView()
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        presenter.onDestroy()
+        super.onDestroy()
     }
 
     private fun setupButtons() {
@@ -88,11 +94,6 @@ class FeedsFragment : Fragment(), FeedsContract.View, FeedsAdapter.ListItemOnLon
 
     private fun setDeleteFeedButton() {
         add_new_or_delete_feed_button.setImageResource(R.drawable.baseline_delete_white_18)
-    }
-
-    override fun onDestroy() {
-        presenter.onDestroy()
-        super.onDestroy()
     }
 
     override fun showFeeds(feeds: List<FeedViewModel>) {
