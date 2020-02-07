@@ -2,13 +2,13 @@ package agency.five.cu_it_rssfeedproject.ui.feeditem
 
 
 import agency.five.cu_it_rssfeedproject.R
+import agency.five.cu_it_rssfeedproject.ui.common.BaseFragment
 import agency.five.cu_it_rssfeedproject.ui.common.ScreenTitleProvider
 import agency.five.cu_it_rssfeedproject.ui.model.FeedItemViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_feed_items.*
 import org.koin.android.ext.android.inject
@@ -17,7 +17,7 @@ import org.koin.androidx.scope.currentScope
 private const val FEED_ID_KEY = "feedId"
 private const val FEED_TITLE_KEY = "feedTitle"
 
-class FeedItemsFragment : Fragment(), FeedItemsContract.View,
+class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
     FeedItemsAdapter.ListItemOnClickListener {
 
     private val presenter: FeedItemsContract.Presenter by currentScope.inject()
@@ -38,8 +38,7 @@ class FeedItemsFragment : Fragment(), FeedItemsContract.View,
             }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun doOnCreate(savedInstanceState: Bundle?) {
         arguments?.let {
             feedId = it.getInt(FEED_ID_KEY)
             feedTitle = it.getString(FEED_TITLE_KEY)
@@ -50,13 +49,9 @@ class FeedItemsFragment : Fragment(), FeedItemsContract.View,
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_feed_items, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_feed_items, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun doOnViewCreated(view: View, savedInstanceState: Bundle?) {
         presenter.onViewCreated(this)
         setupRecyclerView()
 
@@ -65,15 +60,13 @@ class FeedItemsFragment : Fragment(), FeedItemsContract.View,
         }
     }
 
-    override fun onDestroyView() {
+    override fun doOnDestroyView() {
         presenter.onDestroyView()
         screenTitleProvider.removeTitle()
-        super.onDestroyView()
     }
 
-    override fun onDestroy() {
+    override fun doOnDestroy() {
         presenter.onDestroy()
-        super.onDestroy()
     }
 
     override fun updateFeed(feedId: Int, feedTitle: String) {

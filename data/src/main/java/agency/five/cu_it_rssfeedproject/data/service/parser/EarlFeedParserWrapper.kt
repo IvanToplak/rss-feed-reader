@@ -13,16 +13,14 @@ const val ERROR_MESSAGE = "Error retrieving feed"
 
 class EarlFeedParserWrapper : FeedParser {
 
-    override fun parseFeed(feedUrl: String): Single<ApiFeed> {
-        return Single.create<ApiFeed> { emitter ->
-            try {
-                val inputStream = URL(feedUrl).openConnection().getInputStream()
-                val feed = EarlParser.parseOrThrow(inputStream, 0)
-                emitter.onSuccess(mapFeedToApiFeed(feed, feedUrl))
-            } catch (e: Exception) {
-                Log.e(EARL_FEED_PARSER_TAG, "$ERROR_MESSAGE: $feedUrl", e)
-                emitter.onError(e)
-            }
+    override fun parseFeed(feedUrl: String) = Single.create<ApiFeed> { emitter ->
+        try {
+            val inputStream = URL(feedUrl).openConnection().getInputStream()
+            val feed = EarlParser.parseOrThrow(inputStream, 0)
+            emitter.onSuccess(mapFeedToApiFeed(feed, feedUrl))
+        } catch (e: Exception) {
+            Log.e(EARL_FEED_PARSER_TAG, "$ERROR_MESSAGE: $feedUrl", e)
+            emitter.onError(e)
         }
     }
 

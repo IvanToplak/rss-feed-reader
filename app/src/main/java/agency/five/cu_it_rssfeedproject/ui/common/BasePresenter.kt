@@ -1,11 +1,20 @@
 package agency.five.cu_it_rssfeedproject.ui.common
 
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
-open class BasePresenter<T> : ViewPresenter<T> {
+abstract class BasePresenter<T> : ViewPresenter<T> {
 
-    protected var view: T? = null
-    protected var compositeDisposable: CompositeDisposable? = null
+    private var view: T? = null
+    private var compositeDisposable: CompositeDisposable? = null
+
+    protected fun getView(): T? {
+        return view
+    }
+
+    protected fun addDisposable(disposable: Disposable) {
+        compositeDisposable?.add(disposable)
+    }
 
     override fun onCreate() {
         compositeDisposable = CompositeDisposable()
