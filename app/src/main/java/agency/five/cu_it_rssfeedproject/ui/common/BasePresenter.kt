@@ -8,9 +8,9 @@ abstract class BasePresenter<T> : ViewPresenter<T> {
     private var view: T? = null
     private var compositeDisposable: CompositeDisposable? = null
 
-    protected fun getView(): T? {
-        return view
-    }
+    protected fun hasView() = view != null
+
+    protected fun withView(action: T.() -> Unit) = view?.let(action)
 
     protected fun addDisposable(disposable: Disposable) {
         compositeDisposable?.add(disposable)

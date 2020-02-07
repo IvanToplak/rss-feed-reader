@@ -1,12 +1,10 @@
 package agency.five.cu_it_rssfeedproject.ui.feed
 
-import agency.five.cu_it_rssfeedproject.di.BACKGROUND_THREAD
-import agency.five.cu_it_rssfeedproject.di.MAIN_THREAD
 import agency.five.cu_it_rssfeedproject.domain.interactor.AddNewFeedUseCase
+import agency.five.cu_it_rssfeedproject.ui.common.AppSchedulers
 import agency.five.cu_it_rssfeedproject.ui.common.BasePresenter
 import agency.five.cu_it_rssfeedproject.ui.router.Router
 import android.util.Log
-import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.subscribeBy
 
 private const val TAG = "NewFeedPresenter"
@@ -15,26 +13,30 @@ private const val INSERT_ERROR_MESSAGE = "Error inserting feed"
 class NewFeedPresenter(
     private val router: Router,
     private val addNewFeedUseCase: AddNewFeedUseCase,
-    private val schedulers: Map<String, Scheduler>
+    private val schedulers: AppSchedulers
 ) :
     BasePresenter<NewFeedContract.View>(), NewFeedContract.Presenter {
 
     override fun addNewFeed(feedUrl: String) {
-        if (getView() == null) return
-        getView()?.showLoadingState(true)
+        if (!hasView()) return
+        withView { showLoadingState() }
         val subscription = addNewFeedUseCase.execute(feedUrl)
-            .subscribeOn(schedulers[BACKGROUND_THREAD])
-            .observeOn(schedulers[MAIN_THREAD])
+            .subscribeOn(schedulers.background())
+            .observeOn(schedulers.main())
             .subscribeBy(
                 onComplete = {
-                    getView()?.showLoadingState(false)
-                    getView()?.showErrorMessage(false)
+                    withView {
+                        showLoadingState(false)
+                        showErrorMessage(false)
+                    }
                     back()
                     router.showAllFeedsScreen()
                 },
                 onError = { error ->
-                    getView()?.showLoadingState(false)
-                    getView()?.showErrorMessage(true)
+                    withView {
+                        showLoadingState(false)
+                        showErrorMessage()
+                    }
                     Log.e(
                         TAG,
                         INSERT_ERROR_MESSAGE,

@@ -30,8 +30,7 @@ class FeedItemDetailsFragment : BaseFragment(), FeedItemDetailsWebViewClient.Loa
             }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun doOnCreate(savedInstanceState: Bundle?) {
         arguments?.let {
             feedItemUrl = it.getString(FEED_ITEM_URL_KEY)
         }
@@ -42,13 +41,16 @@ class FeedItemDetailsFragment : BaseFragment(), FeedItemDetailsWebViewClient.Loa
         savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_feed_item_details, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun doOnViewCreated(view: View, savedInstanceState: Bundle?) {
         screenTitleProvider.setTitleVisibility(false)
         if (!feedItemUrl.isNullOrEmpty()) {
             setupWebView(feedItemUrl!!)
         }
+    }
+
+    override fun onDestroyView() {
+        screenTitleProvider.setTitleVisibility(true)
+        super.onDestroyView()
     }
 
     private fun setupWebView(feedItemUrl: String) {
@@ -57,11 +59,6 @@ class FeedItemDetailsFragment : BaseFragment(), FeedItemDetailsWebViewClient.Loa
             settings.javaScriptEnabled = true
             loadUrl(feedItemUrl)
         }
-    }
-
-    override fun onDestroyView() {
-        screenTitleProvider.setTitleVisibility(true)
-        super.onDestroyView()
     }
 
     override fun setLoadingState(isLoading: Boolean) {

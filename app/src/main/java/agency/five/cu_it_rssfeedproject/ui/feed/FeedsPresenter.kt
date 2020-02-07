@@ -1,18 +1,16 @@
 package agency.five.cu_it_rssfeedproject.ui.feed
 
-import agency.five.cu_it_rssfeedproject.di.BACKGROUND_THREAD
-import agency.five.cu_it_rssfeedproject.di.MAIN_THREAD
 import agency.five.cu_it_rssfeedproject.domain.interactor.AddFeedItemsToFeedUseCase
 import agency.five.cu_it_rssfeedproject.domain.interactor.DeleteFeedUseCase
 import agency.five.cu_it_rssfeedproject.domain.interactor.GetFeedsUseCase
 import agency.five.cu_it_rssfeedproject.domain.model.Feed
+import agency.five.cu_it_rssfeedproject.ui.common.AppSchedulers
 import agency.five.cu_it_rssfeedproject.ui.common.BasePresenter
 import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedToFeedViewModel
 import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedViewModelToFeed
 import agency.five.cu_it_rssfeedproject.ui.model.FeedViewModel
 import agency.five.cu_it_rssfeedproject.ui.router.Router
 import android.util.Log
-import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.subscribeBy
 
 private const val TAG = "FeedsPresenter"
@@ -25,7 +23,7 @@ class FeedsPresenter(
     private val getFeedsUseCase: GetFeedsUseCase,
     private val deleteFeedUseCase: DeleteFeedUseCase,
     private val addFeedItemsToFeedUseCase: AddFeedItemsToFeedUseCase,
-    private val schedulers: Map<String, Scheduler>
+    private val schedulers: AppSchedulers
 ) : BasePresenter<FeedsContract.View>(), FeedsContract.Presenter {
 
     override fun getFeeds() {
@@ -39,11 +37,11 @@ class FeedsPresenter(
                     addFeedItemsToFeeds(feeds)
                 }
             }
-            .subscribeOn(schedulers[BACKGROUND_THREAD])
-            .observeOn(schedulers[MAIN_THREAD])
+            .subscribeOn(schedulers.background())
+            .observeOn(schedulers.main())
             .subscribeBy(
                 onSuccess = { feeds ->
-                    getView()?.showFeeds(feeds.map { feed -> mapFeedToFeedViewModel(feed) })
+                    withView { showFeeds(feeds.map { feed -> mapFeedToFeedViewModel(feed) }) }
                 },
                 onError = { error ->
                     Log.e(
@@ -58,7 +56,7 @@ class FeedsPresenter(
     private fun addFeedItemsToFeeds(feeds: List<Feed>) {
         feeds.forEach { feed ->
             val subscription = addFeedItemsToFeedUseCase.execute(feed)
-                .subscribeOn(schedulers[BACKGROUND_THREAD])
+                .subscribeOn(schedulers.background())
                 .subscribeBy(onError = { error ->
                     Log.e(
                         TAG,
@@ -81,7 +79,7 @@ class FeedsPresenter(
     override fun deleteFeed(feedViewModel: FeedViewModel) {
         val subscription = deleteFeedUseCase.execute(
             mapFeedViewModelToFeed(feedViewModel)
-        ).subscribeOn(schedulers[BACKGROUND_THREAD])
+        ).subscribeOn(schedulers.background())
             .subscribeBy(
                 onComplete = { getFeedsInternal(false) },
                 onError = { error ->
