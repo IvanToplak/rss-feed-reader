@@ -5,7 +5,5 @@ import agency.five.cu_it_rssfeedproject.domain.repository.FeedRepository
 
 class DeleteFeedUseCase(private val feedRepository: FeedRepository) {
 
-    fun execute(feed: Feed, callback: FeedRepository.DeleteFeedResultCallback) {
-        feedRepository.deleteFeed(feed, callback)
-    }
+    fun execute(feed: Feed) = feedRepository.deleteFeed(feed)
 }

@@ -9,9 +9,8 @@ import androidx.annotation.LayoutRes
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View {
-    return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
-}
+fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View =
+    LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 
 fun View.show(show: Boolean = true) {
     if (visibility == VISIBLE && show) return
@@ -24,6 +23,4 @@ fun View.hide() {
     visibility = GONE
 }
 
-fun Date.toString(pattern: String): String {
-    return SimpleDateFormat(pattern, Locale.getDefault()).format(this)
-}
+fun Date.toString(pattern: String): String = SimpleDateFormat(pattern, Locale.getDefault()).format(this)

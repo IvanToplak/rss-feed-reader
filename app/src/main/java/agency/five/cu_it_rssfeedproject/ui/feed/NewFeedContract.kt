@@ -5,8 +5,8 @@ import agency.five.cu_it_rssfeedproject.ui.common.ViewPresenter
 interface NewFeedContract {
 
     interface View {
-        fun showErrorMessage(isError: Boolean)
-        fun showLoadingState(isLoading: Boolean)
+        fun showErrorMessage(isError: Boolean = true)
+        fun showLoadingState(isLoading: Boolean = true)
     }
 
     interface Presenter : ViewPresenter<View> {

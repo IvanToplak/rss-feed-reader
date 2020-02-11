@@ -2,15 +2,15 @@ package agency.five.cu_it_rssfeedproject.ui.feed
 
 import agency.five.cu_it_rssfeedproject.R
 import agency.five.cu_it_rssfeedproject.app.show
+import agency.five.cu_it_rssfeedproject.ui.common.BaseFragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_new_feed.*
 import org.koin.androidx.scope.currentScope
 
-class NewFeedFragment : Fragment(), NewFeedContract.View {
+class NewFeedFragment : BaseFragment(), NewFeedContract.View {
 
     private val presenter: NewFeedContract.Presenter by currentScope.inject()
 
@@ -19,21 +19,16 @@ class NewFeedFragment : Fragment(), NewFeedContract.View {
         fun newInstance() = NewFeedFragment()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setupPresenter()
+    override fun doOnCreate(savedInstanceState: Bundle?) {
+        presenter.onCreate()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_new_feed, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_new_feed, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun doOnViewCreated(view: View, savedInstanceState: Bundle?) {
         presenter.onViewCreated(this)
         setupBackground()
         setupButtons()
@@ -41,13 +36,12 @@ class NewFeedFragment : Fragment(), NewFeedContract.View {
         showErrorMessage(false)
     }
 
-    override fun onDestroy() {
-        presenter.onDestroy()
-        super.onDestroy()
+    override fun doOnDestroyView() {
+        presenter.onDestroyView()
     }
 
-    private fun setupPresenter() {
-        presenter.onViewCreated(this)
+    override fun doOnDestroy() {
+        presenter.onDestroy()
     }
 
     private fun setupBackground() {

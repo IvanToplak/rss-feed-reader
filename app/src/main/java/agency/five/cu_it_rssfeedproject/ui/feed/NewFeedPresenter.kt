@@ -1,29 +1,50 @@
 package agency.five.cu_it_rssfeedproject.ui.feed
 
 import agency.five.cu_it_rssfeedproject.domain.interactor.AddNewFeedUseCase
-import agency.five.cu_it_rssfeedproject.domain.repository.FeedRepository
+import agency.five.cu_it_rssfeedproject.ui.common.AppSchedulers
 import agency.five.cu_it_rssfeedproject.ui.common.BasePresenter
 import agency.five.cu_it_rssfeedproject.ui.router.Router
+import android.util.Log
+import io.reactivex.rxkotlin.subscribeBy
+
+private const val TAG = "NewFeedPresenter"
+private const val INSERT_ERROR_MESSAGE = "Error inserting feed"
 
 class NewFeedPresenter(
     private val router: Router,
-    private val addNewFeedUseCase: AddNewFeedUseCase
+    private val addNewFeedUseCase: AddNewFeedUseCase,
+    private val schedulers: AppSchedulers
 ) :
     BasePresenter<NewFeedContract.View>(), NewFeedContract.Presenter {
 
     override fun addNewFeed(feedUrl: String) {
-        if (view == null) return
-        view?.showLoadingState(true)
-        addNewFeedUseCase.execute(feedUrl, object : FeedRepository.NewFeedResultCallback {
-            override fun onInsertFeedResponse(success: Boolean) {
-                view?.showLoadingState(false)
-                view?.showErrorMessage(!success)
-                if (success) {
+        if (!hasView()) return
+        withView { showLoadingState() }
+        val subscription = addNewFeedUseCase.execute(feedUrl)
+            .subscribeOn(schedulers.background())
+            .observeOn(schedulers.main())
+            .subscribeBy(
+                onComplete = {
+                    withView {
+                        showLoadingState(false)
+                        showErrorMessage(false)
+                    }
                     back()
                     router.showAllFeedsScreen()
+                },
+                onError = { error ->
+                    withView {
+                        showLoadingState(false)
+                        showErrorMessage()
+                    }
+                    Log.e(
+                        TAG,
+                        INSERT_ERROR_MESSAGE,
+                        error
+                    )
                 }
-            }
-        })
+            )
+        addDisposable(subscription)
     }
 
     override fun back() {
