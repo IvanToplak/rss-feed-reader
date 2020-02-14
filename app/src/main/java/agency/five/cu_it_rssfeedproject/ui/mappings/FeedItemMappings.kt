@@ -8,5 +8,6 @@ fun mapFeedItemToFeedItemViewModel(feedItem: FeedItem) = FeedItemViewModel(
     feedItem.feedId,
     feedItem.title,
     feedItem.publicationDate,
-    feedItem.link
+    feedItem.link,
+    feedItem.isNew
 )

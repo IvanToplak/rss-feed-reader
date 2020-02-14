@@ -35,6 +35,7 @@ val appModule = module {
                 get(),
                 get(),
                 get(),
+                get(),
                 get()
             )
         }
@@ -54,6 +55,7 @@ val appModule = module {
         scoped<FeedItemsContract.Presenter> {
             FeedItemsPresenter(
                 getScope(MAIN_ACTIVITY_SCOPE_ID).get(),
+                get(),
                 get(),
                 get()
             )

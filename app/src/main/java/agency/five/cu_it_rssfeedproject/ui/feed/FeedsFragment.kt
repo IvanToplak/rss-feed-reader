@@ -132,4 +132,8 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
         this.selectedFeed = FeedViewModel()
         setAddNewFeedButton()
     }
+
+    override fun setNewFeedItemsIndicator(feedViewModel: FeedViewModel, hasUnreadItems: Boolean) {
+        feedsAdapter.setNewFeedItemsIndicator(feedViewModel, hasUnreadItems)
+    }
 }

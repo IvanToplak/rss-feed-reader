@@ -6,4 +6,5 @@
     <string name="new_feed_add_button_text">Add</string>
     <string name="new_feed_error_message">Incorrect feed URL, please check and try again</string>
     <string name="new_feed_title">Add new Feed</string>
+    <string name="feed_item_new_item_indicator_text">NEW</string>
 </resources>

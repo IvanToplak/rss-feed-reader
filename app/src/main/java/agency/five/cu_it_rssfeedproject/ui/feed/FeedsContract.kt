@@ -8,6 +8,7 @@ interface FeedsContract {
     interface View {
         fun showFeeds(feeds: List<FeedViewModel>)
         fun updateFeeds()
+        fun setNewFeedItemsIndicator(feedViewModel: FeedViewModel, hasUnreadItems: Boolean)
     }
 
     interface Presenter : ViewPresenter<View> {

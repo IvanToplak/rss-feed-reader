@@ -6,7 +6,8 @@ data class FeedViewModel(
     val description: String = "",
     val url: String = "",
     val imageUrl: String = "",
-    var isSelected: Boolean = false
+    var isSelected: Boolean = false,
+    var hasUnreadItems: Boolean = false
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -2,6 +2,7 @@ package agency.five.cu_it_rssfeedproject.ui.feed
 
 import agency.five.cu_it_rssfeedproject.R
 import agency.five.cu_it_rssfeedproject.app.inflate
+import agency.five.cu_it_rssfeedproject.app.show
 import agency.five.cu_it_rssfeedproject.ui.model.FeedViewModel
 import android.graphics.Color
 import android.view.View
@@ -59,6 +60,13 @@ class FeedsAdapter(
         } else FeedViewModel()
     }
 
+    fun setNewFeedItemsIndicator(feedViewModel: FeedViewModel, hasUnreadItems: Boolean) {
+        val position = feeds.indexOf(feedViewModel)
+        if (position == -1) return
+        feeds[position].hasUnreadItems = hasUnreadItems
+        notifyItemChanged(position)
+    }
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private lateinit var feed: FeedViewModel
@@ -91,6 +99,7 @@ class FeedsAdapter(
                 R.color.selectedFeed
             ) else Color.TRANSPARENT
             itemView.list_item_feed_container.setBackgroundColor(backgroundColor)
+            itemView.feed_new_feed_items_indicator_text_view.show(feed.hasUnreadItems)
         }
     }
 }

@@ -90,6 +90,13 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
 
     override fun onFeedItemClicked(clickedFeedItem: FeedItemViewModel) {
         if (clickedFeedItem.link.isEmpty()) return
+        if (clickedFeedItem.isNew) {
+            presenter.updateFeedItemIsNewStatus(clickedFeedItem, false)
+        }
         presenter.showFeedItemDetails(clickedFeedItem)
+    }
+
+    override fun toggleIsNewStatus(feedItemViewModel: FeedItemViewModel) {
+        feedItemsAdapter.toggleIsNewStatus(feedItemViewModel)
     }
 }

@@ -16,4 +16,8 @@ interface FeedRepository {
     fun getFeedItems(feedId: Int): Single<List<FeedItem>>
 
     fun addFeedItemsToFeed(feed: Feed): Completable
+
+    fun updateFeedItemIsNewStatus(feedItemId: Int, isNew: Boolean): Completable
+
+    fun getFeedHasUnreadItemsStatus(feedId: Int): Single<Boolean>
 }
