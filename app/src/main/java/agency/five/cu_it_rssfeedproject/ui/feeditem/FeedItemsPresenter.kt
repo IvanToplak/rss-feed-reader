@@ -57,7 +57,10 @@ class FeedItemsPresenter(
                 .subscribeOn(schedulers.background())
                 .subscribeBy(
                     onComplete = {
-                        withView { toggleIsNewStatus(feedItemViewModel) }
+                        withView {
+                            toggleIsNewStatus(feedItemViewModel)
+                            refreshFeeds()
+                        }
                     },
                     onError = { error ->
                         Log.e(

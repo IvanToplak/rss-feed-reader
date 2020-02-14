@@ -43,6 +43,8 @@ class FeedItemsAdapter(
         notifyItemChanged(position)
     }
 
+    fun allItemsRead() = feedItems.all { item -> !item.isNew }
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private lateinit var feedItem: FeedItemViewModel

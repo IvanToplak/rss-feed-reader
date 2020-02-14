@@ -1,13 +1,20 @@
 package agency.five.cu_it_rssfeedproject.ui.feed
 
 import agency.five.cu_it_rssfeedproject.R
+import agency.five.cu_it_rssfeedproject.app.ALL_FEED_ITEMS_READ
+import agency.five.cu_it_rssfeedproject.app.FeedApplication
 import agency.five.cu_it_rssfeedproject.app.show
 import agency.five.cu_it_rssfeedproject.ui.common.BaseFragment
 import agency.five.cu_it_rssfeedproject.ui.model.FeedViewModel
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_feeds.*
 import org.koin.androidx.scope.currentScope
@@ -20,15 +27,23 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
     private var selectedFeed: FeedViewModel = FeedViewModel()
     private var savedSelectedFeedId: Int? = null
 
+    private val broadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.action) {
+                ALL_FEED_ITEMS_READ -> {
+                    updateFeeds()
+                }
+            }
+        }
+    }
+
     companion object {
         const val TAG = "feeds"
         const val FEED_ID_KEY = "feedId"
         fun newInstance() = FeedsFragment()
     }
 
-    override fun doOnCreate(savedInstanceState: Bundle?) {
-        presenter.onCreate()
-    }
+    override fun doOnCreate(savedInstanceState: Bundle?) = presenter.onCreate()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +55,7 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
         setupRecyclerView()
         setupButtons()
         updateFeeds()
+        registerBroadcasts()
     }
 
     override fun doOnSaveInstanceState(outState: Bundle) {
@@ -53,12 +69,11 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
     }
 
     override fun doOnDestroyView() {
+        unregisterBroadcasts()
         presenter.onDestroyView()
     }
 
-    override fun doOnDestroy() {
-        presenter.onDestroy()
-    }
+    override fun doOnDestroy() = presenter.onDestroy()
 
     private fun setupButtons() {
         add_new_or_delete_feed_button.setOnClickListener {
@@ -79,13 +94,11 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
         feeds_recycler_view.adapter = feedsAdapter
     }
 
-    private fun setAddNewFeedButton() {
+    private fun setAddNewFeedButton() =
         add_new_or_delete_feed_button.setImageResource(R.drawable.baseline_add_white_18)
-    }
 
-    private fun setDeleteFeedButton() {
+    private fun setDeleteFeedButton() =
         add_new_or_delete_feed_button.setImageResource(R.drawable.baseline_delete_white_18)
-    }
 
     override fun showFeeds(feeds: List<FeedViewModel>) {
         feedsAdapter.updateFeeds(feeds)
@@ -98,9 +111,7 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
         }
     }
 
-    override fun updateFeeds() {
-        presenter.getFeeds()
-    }
+    override fun updateFeeds() = presenter.getFeeds()
 
     override fun onFeedSelected(selectedFeed: FeedViewModel) {
         when {
@@ -133,7 +144,14 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
         setAddNewFeedButton()
     }
 
-    override fun setNewFeedItemsIndicator(feedViewModel: FeedViewModel, hasUnreadItems: Boolean) {
+    override fun setNewFeedItemsIndicator(feedViewModel: FeedViewModel, hasUnreadItems: Boolean) =
         feedsAdapter.setNewFeedItemsIndicator(feedViewModel, hasUnreadItems)
-    }
+
+    private fun registerBroadcasts() =
+        LocalBroadcastManager.getInstance(FeedApplication.getAppContext())
+            .registerReceiver(broadcastReceiver, IntentFilter(ALL_FEED_ITEMS_READ))
+
+    private fun unregisterBroadcasts() =
+        LocalBroadcastManager.getInstance(FeedApplication.getAppContext())
+            .unregisterReceiver(broadcastReceiver)
 }

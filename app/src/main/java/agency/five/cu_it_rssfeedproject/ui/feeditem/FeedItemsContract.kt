@@ -9,6 +9,7 @@ interface FeedItemsContract {
         fun showFeedItems(feedItems: List<FeedItemViewModel>)
         fun updateFeed(feedId: Int, feedTitle: String)
         fun toggleIsNewStatus(feedItemViewModel: FeedItemViewModel)
+        fun refreshFeeds()
     }
 
     interface Presenter : ViewPresenter<View> {
