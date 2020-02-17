@@ -7,6 +7,7 @@ import agency.five.cu_it_rssfeedproject.domain.interactor.GetFeedsUseCase
 import agency.five.cu_it_rssfeedproject.domain.model.Feed
 import agency.five.cu_it_rssfeedproject.ui.common.AppSchedulers
 import agency.five.cu_it_rssfeedproject.ui.common.BasePresenter
+import agency.five.cu_it_rssfeedproject.ui.common.FeedIsNewStatusChangedEvent
 import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedToFeedViewModel
 import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedViewModelToFeed
 import agency.five.cu_it_rssfeedproject.ui.model.FeedViewModel
@@ -18,7 +19,8 @@ private const val TAG = "FeedsPresenter"
 private const val GET_FEEDS_ERROR_MESSAGE = "Error retrieving feeds"
 private const val DELETE_ERROR_MESSAGE = "Error deleting feed"
 private const val INSERT_FEED_ITEMS_ERROR_MESSAGE = "Error inserting feed items for feed"
-private const val GET_FEED_ITEMS_UNREAD_STATUS_ERROR_MESSAGE = "Error while retrieving feed items unread status"
+private const val GET_FEED_ITEMS_UNREAD_STATUS_ERROR_MESSAGE =
+    "Error while retrieving feed items unread status"
 
 class FeedsPresenter(
     private val router: Router,
@@ -26,7 +28,8 @@ class FeedsPresenter(
     private val deleteFeedUseCase: DeleteFeedUseCase,
     private val addFeedItemsToFeedUseCase: AddFeedItemsToFeedUseCase,
     private val getFeedHasUnreadItemsStatusUseCase: GetFeedHasUnreadItemsStatusUseCase,
-    private val schedulers: AppSchedulers
+    private val schedulers: AppSchedulers,
+    private val feedIsNewStatusChangedEvent: FeedIsNewStatusChangedEvent
 ) : BasePresenter<FeedsContract.View>(), FeedsContract.Presenter {
 
     override fun getFeeds() {
@@ -118,6 +121,16 @@ class FeedsPresenter(
                         error
                     )
                 })
+        addDisposable(subscription)
+    }
+
+    override fun subscribeToFeedIsNewStatusChangedEvent() {
+        val subscription = feedIsNewStatusChangedEvent.subscribe()
+            .observeOn(schedulers.background())
+            .subscribeOn(schedulers.background())
+            .subscribe {
+                getFeeds()
+            }
         addDisposable(subscription)
     }
 }

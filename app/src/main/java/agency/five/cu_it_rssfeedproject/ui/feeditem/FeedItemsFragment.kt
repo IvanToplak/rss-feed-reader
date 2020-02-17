@@ -1,18 +1,13 @@
 package agency.five.cu_it_rssfeedproject.ui.feeditem
 
-
 import agency.five.cu_it_rssfeedproject.R
-import agency.five.cu_it_rssfeedproject.app.ALL_FEED_ITEMS_READ
-import agency.five.cu_it_rssfeedproject.app.FeedApplication
 import agency.five.cu_it_rssfeedproject.ui.common.BaseFragment
 import agency.five.cu_it_rssfeedproject.ui.common.ScreenTitleProvider
 import agency.five.cu_it_rssfeedproject.ui.model.FeedItemViewModel
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_feed_items.*
 import org.koin.android.ext.android.inject
@@ -102,8 +97,7 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
 
     override fun refreshFeeds() {
         if (feedItemsAdapter.allItemsRead()) {
-            LocalBroadcastManager.getInstance(FeedApplication.getAppContext())
-                .sendBroadcast(Intent(ALL_FEED_ITEMS_READ))
+            presenter.publishFeedIsNewStatusChangedEvent()
         }
     }
 }

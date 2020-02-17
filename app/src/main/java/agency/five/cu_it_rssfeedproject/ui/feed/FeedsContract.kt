@@ -16,5 +16,6 @@ interface FeedsContract {
         fun showAddNewFeed()
         fun showFeedItems(feedViewModel: FeedViewModel)
         fun deleteFeed(feedViewModel: FeedViewModel)
+        fun subscribeToFeedIsNewStatusChangedEvent()
     }
 }

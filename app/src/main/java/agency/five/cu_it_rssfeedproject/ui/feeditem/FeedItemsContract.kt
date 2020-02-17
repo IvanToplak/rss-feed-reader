@@ -16,5 +16,6 @@ interface FeedItemsContract {
         fun getFeedItems(feedId: Int)
         fun showFeedItemDetails(feedItemViewModel: FeedItemViewModel)
         fun updateFeedItemIsNewStatus(feedItemViewModel: FeedItemViewModel, isNew: Boolean)
+        fun publishFeedIsNewStatusChangedEvent()
     }
 }
