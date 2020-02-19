@@ -1,6 +1,7 @@
 package agency.five.cu_it_rssfeedproject.data.repository
 
 import agency.five.cu_it_rssfeedproject.data.db.dao.FeedDao
+import agency.five.cu_it_rssfeedproject.data.db.partialentities.DbFeedItemIsNew
 import agency.five.cu_it_rssfeedproject.data.mappings.*
 import agency.five.cu_it_rssfeedproject.data.service.FeedService
 import agency.five.cu_it_rssfeedproject.domain.model.Feed
@@ -41,4 +42,10 @@ class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: 
             }
             feedDao.insert(bdFeedItems)
         }
+
+    override fun updateFeedItemIsNewStatus(feedItemId: Int, isNew: Boolean) =
+        feedDao.updateFeedItemIsNewStatus(DbFeedItemIsNew(feedItemId, isNew))
+
+    override fun getFeedHasUnreadItemsStatus(feedId: Int) =
+        feedDao.getUnreadFeedItemsCount(feedId).map { count -> count > 0 }
 }

@@ -19,7 +19,8 @@ data class DbFeedItem(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     @ColumnInfo(name = "feed_id") val feedId: Int = 0,
-    val title: String = "",
+    @ColumnInfo(defaultValue = "") val title: String = "",
     @ColumnInfo(name = "publication_date") val publicationDate: Date?,
-    val link: String = ""
+    @ColumnInfo(defaultValue = "") val link: String = "",
+    @ColumnInfo(defaultValue = "1") val isNew: Boolean = true
 )

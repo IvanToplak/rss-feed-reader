@@ -1,6 +1,5 @@
 package agency.five.cu_it_rssfeedproject.ui.feeditem
 
-
 import agency.five.cu_it_rssfeedproject.R
 import agency.five.cu_it_rssfeedproject.ui.common.BaseFragment
 import agency.five.cu_it_rssfeedproject.ui.common.ScreenTitleProvider
@@ -65,9 +64,7 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
         screenTitleProvider.removeTitle()
     }
 
-    override fun doOnDestroy() {
-        presenter.onDestroy()
-    }
+    override fun doOnDestroy() = presenter.onDestroy()
 
     override fun updateFeed(feedId: Int, feedTitle: String) {
         this.feedId = feedId
@@ -84,12 +81,23 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
         feed_items_recycler_view.adapter = feedItemsAdapter
     }
 
-    override fun showFeedItems(feedItems: List<FeedItemViewModel>) {
+    override fun showFeedItems(feedItems: List<FeedItemViewModel>) =
         feedItemsAdapter.updateFeedItems(feedItems)
-    }
 
     override fun onFeedItemClicked(clickedFeedItem: FeedItemViewModel) {
         if (clickedFeedItem.link.isEmpty()) return
+        if (clickedFeedItem.isNew) {
+            presenter.updateFeedItemIsNewStatus(clickedFeedItem, false)
+        }
         presenter.showFeedItemDetails(clickedFeedItem)
+    }
+
+    override fun toggleIsNewStatus(feedItemViewModel: FeedItemViewModel) =
+        feedItemsAdapter.toggleIsNewStatus(feedItemViewModel)
+
+    override fun refreshFeeds() {
+        if (feedItemsAdapter.allItemsRead()) {
+            presenter.publishFeedIsNewStatusChangedEvent()
+        }
     }
 }

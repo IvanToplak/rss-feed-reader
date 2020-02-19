@@ -28,6 +28,7 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
 
     override fun doOnCreate(savedInstanceState: Bundle?) {
         presenter.onCreate()
+        presenter.subscribeToFeedIsNewStatusChangedEvent()
     }
 
     override fun onCreateView(
@@ -52,13 +53,9 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
         savedSelectedFeedId = savedInstanceState?.getInt(FEED_ID_KEY)
     }
 
-    override fun doOnDestroyView() {
-        presenter.onDestroyView()
-    }
+    override fun doOnDestroyView() = presenter.onDestroyView()
 
-    override fun doOnDestroy() {
-        presenter.onDestroy()
-    }
+    override fun doOnDestroy() = presenter.onDestroy()
 
     private fun setupButtons() {
         add_new_or_delete_feed_button.setOnClickListener {
@@ -79,13 +76,11 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
         feeds_recycler_view.adapter = feedsAdapter
     }
 
-    private fun setAddNewFeedButton() {
+    private fun setAddNewFeedButton() =
         add_new_or_delete_feed_button.setImageResource(R.drawable.baseline_add_white_18)
-    }
 
-    private fun setDeleteFeedButton() {
+    private fun setDeleteFeedButton() =
         add_new_or_delete_feed_button.setImageResource(R.drawable.baseline_delete_white_18)
-    }
 
     override fun showFeeds(feeds: List<FeedViewModel>) {
         feedsAdapter.updateFeeds(feeds)
@@ -98,9 +93,7 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
         }
     }
 
-    override fun updateFeeds() {
-        presenter.getFeeds()
-    }
+    override fun updateFeeds() = presenter.getFeeds()
 
     override fun onFeedSelected(selectedFeed: FeedViewModel) {
         when {
@@ -132,4 +125,7 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
         this.selectedFeed = FeedViewModel()
         setAddNewFeedButton()
     }
+
+    override fun setNewFeedItemsIndicator(feedViewModel: FeedViewModel, hasUnreadItems: Boolean) =
+        feedsAdapter.setNewFeedItemsIndicator(feedViewModel, hasUnreadItems)
 }

@@ -2,6 +2,7 @@ package agency.five.cu_it_rssfeedproject.ui.feeditem
 
 import agency.five.cu_it_rssfeedproject.R
 import agency.five.cu_it_rssfeedproject.app.inflate
+import agency.five.cu_it_rssfeedproject.app.show
 import agency.five.cu_it_rssfeedproject.app.toString
 import agency.five.cu_it_rssfeedproject.ui.model.FeedItemViewModel
 import android.view.View
@@ -35,6 +36,15 @@ class FeedItemsAdapter(
         notifyDataSetChanged()
     }
 
+    fun toggleIsNewStatus(clickedFeedItem: FeedItemViewModel) {
+        val position = feedItems.indexOf(clickedFeedItem)
+        if (position == -1) return
+        feedItems[position].isNew = !feedItems[position].isNew
+        notifyItemChanged(position)
+    }
+
+    fun allItemsRead() = feedItems.all { item -> !item.isNew }
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private lateinit var feedItem: FeedItemViewModel
@@ -45,6 +55,7 @@ class FeedItemsAdapter(
             itemView.feed_item_title_text_view.text = feedItem.title
             itemView.feed_item_date_text_view.text =
                 feedItem.publicationDate?.toString(DATE_PATTERN)
+            itemView.feed_item_new_item_indicator_text_view.show(feedItem.isNew)
             itemView.setOnClickListener {
                 listItemOnClickListener.onFeedItemClicked(feedItem)
             }

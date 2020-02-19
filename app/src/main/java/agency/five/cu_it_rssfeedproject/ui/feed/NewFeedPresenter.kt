@@ -21,8 +21,8 @@ class NewFeedPresenter(
         if (!hasView()) return
         withView { showLoadingState() }
         val subscription = addNewFeedUseCase.execute(feedUrl)
-            .subscribeOn(schedulers.background())
             .observeOn(schedulers.main())
+            .subscribeOn(schedulers.background())
             .subscribeBy(
                 onComplete = {
                     withView {

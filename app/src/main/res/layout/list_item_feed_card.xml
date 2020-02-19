@@ -58,7 +58,26 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/feed_image"
             app:layout_constraintTop_toBottomOf="@+id/feed_title_text_view"
+            app:layout_constraintVertical_bias="0.0"
             tools:text="Spicy jalapeno bacon ipsum dolor amet flank jerky shoulder tri-tip, sirloin ribeye frankfurter pork belly ball tip prosciutto tenderloin tongue pork loin. Porchetta sirloin chuck cow, turducken drumstick tail. Doner drumstick leberkas beef ribs shoulder tenderloin alcatra ham filet mignon cupim bacon." />
+
+        <TextView
+            android:id="@+id/feed_new_feed_items_indicator_text_view"
+            android:layout_width="@dimen/feed_new_item_indicator_width"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_standard"
+            android:layout_marginTop="@dimen/margin_half"
+            android:layout_marginEnd="@dimen/margin_standard"
+            android:layout_marginBottom="@dimen/margin_standard"
+            android:text="@string/feed_item_new_item_indicator_text"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/feed_description_text_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/feed_image"
+            app:layout_constraintVertical_bias="0.0"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

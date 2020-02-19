@@ -1,6 +1,7 @@
 package agency.five.cu_it_rssfeedproject.di
 
 import agency.five.cu_it_rssfeedproject.ui.common.AppSchedulers
+import agency.five.cu_it_rssfeedproject.ui.common.FeedIsNewStatusChangedEvent
 import agency.five.cu_it_rssfeedproject.ui.common.ScreenTitleProvider
 import agency.five.cu_it_rssfeedproject.ui.common.ScreenTitleProviderImpl
 import agency.five.cu_it_rssfeedproject.ui.feed.*
@@ -26,6 +27,7 @@ val appModule = module {
 
     scope(named(MAIN_ACTIVITY_SCOPE)) {
         scoped<Router> { (fragmentManager: FragmentManager) -> RouterImpl(fragmentManager) }
+        scoped { FeedIsNewStatusChangedEvent() }
     }
 
     scope(named<FeedsFragment>()) {
@@ -35,7 +37,9 @@ val appModule = module {
                 get(),
                 get(),
                 get(),
-                get()
+                get(),
+                get(),
+                getScope(MAIN_ACTIVITY_SCOPE_ID).get()
             )
         }
     }
@@ -55,7 +59,9 @@ val appModule = module {
             FeedItemsPresenter(
                 getScope(MAIN_ACTIVITY_SCOPE_ID).get(),
                 get(),
-                get()
+                get(),
+                get(),
+                getScope(MAIN_ACTIVITY_SCOPE_ID).get()
             )
         }
     }

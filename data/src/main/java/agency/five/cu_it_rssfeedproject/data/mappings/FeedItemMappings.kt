@@ -16,5 +16,6 @@ fun mapDbFeedItemToFeedItem(dbFeedItem: DbFeedItem) = FeedItem(
     dbFeedItem.feedId,
     dbFeedItem.title,
     dbFeedItem.publicationDate,
-    dbFeedItem.link
+    dbFeedItem.link,
+    dbFeedItem.isNew
 )
