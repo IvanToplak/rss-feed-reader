@@ -4,7 +4,6 @@ import agency.five.cu_it_rssfeedproject.domain.interactor.GetFeedItemsUseCase
 import agency.five.cu_it_rssfeedproject.domain.interactor.UpdateFeedItemIsNewStatusUseCase
 import agency.five.cu_it_rssfeedproject.ui.common.AppSchedulers
 import agency.five.cu_it_rssfeedproject.ui.common.BasePresenter
-import agency.five.cu_it_rssfeedproject.ui.common.FeedIsNewStatusChangedEvent
 import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedItemToFeedItemViewModel
 import agency.five.cu_it_rssfeedproject.ui.model.FeedItemViewModel
 import agency.five.cu_it_rssfeedproject.ui.router.Router
@@ -20,8 +19,7 @@ class FeedItemsPresenter(
     private val router: Router,
     private val getFeedItemsUseCase: GetFeedItemsUseCase,
     private val updateFeedItemIsNewStatusUseCase: UpdateFeedItemIsNewStatusUseCase,
-    private val schedulers: AppSchedulers,
-    private val feedIsNewStatusChangedEvent: FeedIsNewStatusChangedEvent
+    private val schedulers: AppSchedulers
 ) :
     BasePresenter<FeedItemsContract.View>(), FeedItemsContract.Presenter {
 
@@ -30,7 +28,7 @@ class FeedItemsPresenter(
             .observeOn(schedulers.main())
             .subscribeOn(schedulers.background())
             .subscribeBy(
-                onSuccess = { feedItems ->
+                onNext = { feedItems ->
                     withView {
                         showFeedItems(feedItems.map { feedItem ->
                             mapFeedItemToFeedItemViewModel(feedItem)
@@ -61,7 +59,6 @@ class FeedItemsPresenter(
                     onComplete = {
                         withView {
                             toggleIsNewStatus(feedItemViewModel)
-                            refreshFeeds()
                         }
                     },
                     onError = { error ->
@@ -72,9 +69,5 @@ class FeedItemsPresenter(
                         )
                     })
         addDisposable(subscription)
-    }
-
-    override fun publishFeedIsNewStatusChangedEvent() {
-        feedIsNewStatusChangedEvent.publish()
     }
 }

@@ -26,10 +26,7 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
         fun newInstance() = FeedsFragment()
     }
 
-    override fun doOnCreate(savedInstanceState: Bundle?) {
-        presenter.onCreate()
-        presenter.subscribeToFeedIsNewStatusChangedEvent()
-    }
+    override fun doOnCreate(savedInstanceState: Bundle?) = presenter.onCreate()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -125,7 +122,4 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
         this.selectedFeed = FeedViewModel()
         setAddNewFeedButton()
     }
-
-    override fun setNewFeedItemsIndicator(feedViewModel: FeedViewModel, hasUnreadItems: Boolean) =
-        feedsAdapter.setNewFeedItemsIndicator(feedViewModel, hasUnreadItems)
 }

@@ -5,5 +5,6 @@ data class Feed(
     val title: String = "",
     val description: String = "",
     val url: String = "",
-    val imageUrl: String = ""
+    val imageUrl: String = "",
+    val hasUnreadItems: Boolean = false
 )

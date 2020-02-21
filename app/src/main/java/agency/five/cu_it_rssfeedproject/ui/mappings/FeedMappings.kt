@@ -8,7 +8,8 @@ fun mapFeedToFeedViewModel(feed: Feed) = FeedViewModel(
     feed.title,
     feed.description,
     feed.url,
-    feed.imageUrl
+    feed.imageUrl,
+    hasUnreadItems = feed.hasUnreadItems
 )
 
 fun mapFeedViewModelToFeed(feedViewModel: FeedViewModel) = Feed(
@@ -16,5 +17,6 @@ fun mapFeedViewModelToFeed(feedViewModel: FeedViewModel) = Feed(
     feedViewModel.title,
     feedViewModel.description,
     feedViewModel.url,
-    feedViewModel.imageUrl
+    feedViewModel.imageUrl,
+    feedViewModel.hasUnreadItems
 )

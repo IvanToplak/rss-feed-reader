@@ -16,8 +16,6 @@ class RouterImpl(private val fragmentManager: FragmentManager) : Router {
                 .beginTransaction()
                 .add(R.id.container_layout, FeedsFragment.newInstance(), FeedsFragment.TAG)
                 .commit()
-        } else {
-            fragment.updateFeeds()
         }
     }
 
@@ -49,8 +47,6 @@ class RouterImpl(private val fragmentManager: FragmentManager) : Router {
                     FeedItemsFragment.TAG
                 )
                 .commit()
-        } else {
-            feedItemsFrag.updateFeed(feedId, feedTitle)
         }
     }
 

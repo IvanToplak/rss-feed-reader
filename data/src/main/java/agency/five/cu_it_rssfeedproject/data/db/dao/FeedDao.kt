@@ -6,7 +6,6 @@ import agency.five.cu_it_rssfeedproject.data.db.partialentities.DbFeedItemIsNew
 import androidx.room.*
 import io.reactivex.Completable
 import io.reactivex.Flowable
-import io.reactivex.Single
 
 @Dao
 interface FeedDao {
@@ -30,5 +29,8 @@ interface FeedDao {
     fun updateFeedItemIsNewStatus(isNew: DbFeedItemIsNew): Completable
 
     @Query("SELECT COUNT(*) FROM feed_item WHERE feed_id = :feedId AND isNew = 1")
-    fun getUnreadFeedItemsCount(feedId: Int): Single<Long>
+    fun getUnreadFeedItemsCount(feedId: Int): Long
+
+    @Query("SELECT feed_id FROM feed_item WHERE isNew = 1 GROUP BY feed_id ORDER BY feed_id ASC")
+    fun getFeedIdsWithNewFeedItems(): Flowable<List<Int>>
 }
