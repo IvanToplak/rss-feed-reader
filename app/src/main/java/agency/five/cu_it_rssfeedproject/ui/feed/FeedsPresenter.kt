@@ -1,6 +1,9 @@
 package agency.five.cu_it_rssfeedproject.ui.feed
 
-import agency.five.cu_it_rssfeedproject.domain.interactor.*
+import agency.five.cu_it_rssfeedproject.domain.interactor.AddFeedItemsToFeedUseCase
+import agency.five.cu_it_rssfeedproject.domain.interactor.DeleteFeedUseCase
+import agency.five.cu_it_rssfeedproject.domain.interactor.GetFeedIdsWithNewFeedItemsUseCase
+import agency.five.cu_it_rssfeedproject.domain.interactor.GetFeedsUseCase
 import agency.five.cu_it_rssfeedproject.domain.model.Feed
 import agency.five.cu_it_rssfeedproject.ui.common.AppSchedulers
 import agency.five.cu_it_rssfeedproject.ui.common.BasePresenter
@@ -27,6 +30,8 @@ class FeedsPresenter(
     private val schedulers: AppSchedulers
 ) : BasePresenter<FeedsContract.View>(), FeedsContract.Presenter {
 
+    private var currentFeedCount = 0
+
     override fun getFeeds() {
         fetchFeedItems()
         getFeedsInternal()
@@ -36,7 +41,10 @@ class FeedsPresenter(
         val subscription = getFeedsUseCase.execute()
             .subscribeOn(schedulers.background())
             .subscribe { feeds ->
-                addFeedItemsToFeeds(feeds)
+                if (feeds.isNotEmpty() && currentFeedCount <= feeds.count()) {
+                    addFeedItemsToFeeds(feeds)
+                }
+                currentFeedCount = feeds.count()
             }
         addDisposable(subscription)
     }
