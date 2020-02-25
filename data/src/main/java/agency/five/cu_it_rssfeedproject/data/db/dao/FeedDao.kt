@@ -31,6 +31,6 @@ interface FeedDao {
     @Query("SELECT COUNT(*) FROM feed_item WHERE feed_id = :feedId AND isNew = 1")
     fun getUnreadFeedItemsCount(feedId: Int): Long
 
-    @Query("SELECT feed_id FROM feed_item WHERE isNew = 1 GROUP BY feed_id ORDER BY feed_id ASC")
+    @Query("SELECT feed_id FROM feed_item WHERE isNew = 1 GROUP BY feed_id")
     fun getFeedIdsWithNewFeedItems(): Flowable<List<Int>>
 }

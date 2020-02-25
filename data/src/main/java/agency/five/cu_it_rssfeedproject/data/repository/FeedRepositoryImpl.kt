@@ -47,5 +47,5 @@ class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: 
         feedDao.updateFeedItemIsNewStatus(DbFeedItemIsNew(feedItemId, isNew))
 
     override fun getFeedIdsWithNewFeedItems(): Flowable<Set<Int>> =
-        feedDao.getFeedIdsWithNewFeedItems().distinctUntilChanged().map { feedIds -> feedIds.toSortedSet() }
+        feedDao.getFeedIdsWithNewFeedItems().distinctUntilChanged().map { feedIds -> feedIds.toSet() }
 }

@@ -51,12 +51,12 @@ class FeedsPresenter(
 
     private fun getFeedsInternal() {
         val subscription =
-            getFeedsFlowable()
+            getFeedViewModelsFlowable()
                 .observeOn(schedulers.main())
                 .subscribeOn(schedulers.background())
                 .subscribeBy(
-                    onNext = { feeds ->
-                        withView { showFeeds(feeds.map { feed -> mapFeedToFeedViewModel(feed) }) }
+                    onNext = { feedViewModels ->
+                        withView { showFeeds(feedViewModels) }
                     },
                     onError = { error ->
                         Log.e(
@@ -68,15 +68,15 @@ class FeedsPresenter(
         addDisposable(subscription)
     }
 
-
-    private fun getFeedsFlowable() = Flowable.combineLatest<List<Feed>, Set<Int>, List<Feed>>(
-        getFeedsUseCase.execute(),
-        getFeedIdsWithNewFeedItemsUseCase.execute(),
-        BiFunction<List<Feed>, Set<Int>, List<Feed>> { feeds, feedIdsWithNewFeed ->
-            feeds.map { feed ->
-                if (feedIdsWithNewFeed.contains(feed.id)) feed.copy(hasUnreadItems = true) else feed
-            }
-        })
+    private fun getFeedViewModelsFlowable() =
+        Flowable.combineLatest<List<Feed>, Set<Int>, List<FeedViewModel>>(
+            getFeedsUseCase.execute(),
+            getFeedIdsWithNewFeedItemsUseCase.execute(),
+            BiFunction<List<Feed>, Set<Int>, List<FeedViewModel>> { feeds, feedIdsWithNewFeed ->
+                feeds.map { feed ->
+                    mapFeedToFeedViewModel(feed, feedIdsWithNewFeed.contains(feed.id))
+                }
+            })
 
     private fun addFeedItemsToFeeds(feeds: List<Feed>) {
         feeds.forEach { feed ->
