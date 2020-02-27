@@ -7,7 +7,7 @@ import agency.five.cu_it_rssfeedproject.data.service.FeedService
 import agency.five.cu_it_rssfeedproject.domain.model.Feed
 import agency.five.cu_it_rssfeedproject.domain.model.FeedItem
 import agency.five.cu_it_rssfeedproject.domain.repository.FeedRepository
-import io.reactivex.Single
+import io.reactivex.Flowable
 
 class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: FeedService) :
     FeedRepository {
@@ -17,20 +17,20 @@ class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: 
             feedDao.insert(mapApiFeedToDbFeed(apiFeed))
         }
 
-    override fun getFeeds(): Single<List<Feed>> = feedDao.getFeeds().map { feeds ->
+    override fun getFeeds(): Flowable<List<Feed>> = feedDao.getFeeds().map { feeds ->
         feeds.map { feed ->
             mapDbFeedToFeed(feed)
         }
-    }.first(emptyList())
+    }
 
     override fun deleteFeed(feed: Feed) = feedDao.delete(mapFeedToDbFeed(feed))
 
-    override fun getFeedItems(feedId: Int): Single<List<FeedItem>> =
+    override fun getFeedItems(feedId: Int): Flowable<List<FeedItem>> =
         feedDao.getFeedItems(feedId).map { feedItems ->
             feedItems.map { feedItem ->
                 mapDbFeedItemToFeedItem(feedItem)
             }
-        }.first(emptyList())
+        }
 
     override fun addFeedItemsToFeed(feed: Feed) =
         feedService.getFeed(feed.url).flatMapCompletable { apiFeed ->
@@ -46,6 +46,6 @@ class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: 
     override fun updateFeedItemIsNewStatus(feedItemId: Int, isNew: Boolean) =
         feedDao.updateFeedItemIsNewStatus(DbFeedItemIsNew(feedItemId, isNew))
 
-    override fun getFeedHasUnreadItemsStatus(feedId: Int) =
-        feedDao.getUnreadFeedItemsCount(feedId).map { count -> count > 0 }
+    override fun getFeedIdsWithNewFeedItems(): Flowable<Set<Int>> =
+        feedDao.getFeedIdsWithNewFeedItems().distinctUntilChanged().map { feedIds -> feedIds.toSet() }
 }

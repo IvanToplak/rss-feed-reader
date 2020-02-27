@@ -60,13 +60,6 @@ class FeedsAdapter(
         } else FeedViewModel()
     }
 
-    fun setNewFeedItemsIndicator(feedViewModel: FeedViewModel, hasUnreadItems: Boolean) {
-        val position = feeds.indexOf(feedViewModel)
-        if (position == -1) return
-        feeds[position].hasUnreadItems = hasUnreadItems
-        notifyItemChanged(position)
-    }
-
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private lateinit var feed: FeedViewModel

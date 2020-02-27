@@ -94,10 +94,4 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
 
     override fun toggleIsNewStatus(feedItemViewModel: FeedItemViewModel) =
         feedItemsAdapter.toggleIsNewStatus(feedItemViewModel)
-
-    override fun refreshFeeds() {
-        if (feedItemsAdapter.allItemsRead()) {
-            presenter.publishFeedIsNewStatusChangedEvent()
-        }
-    }
 }
