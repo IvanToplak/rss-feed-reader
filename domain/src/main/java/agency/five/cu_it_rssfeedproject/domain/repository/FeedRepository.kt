@@ -20,4 +20,6 @@ interface FeedRepository {
     fun updateFeedItemIsNewStatus(feedItemId: Int, isNew: Boolean): Completable
 
     fun getFeedIdsWithNewFeedItems(): Flowable<Set<Int>>
+
+    fun updateFeedItemIsFavoriteStatus(feedItemId: Int, isFavorite: Boolean): Completable
 }

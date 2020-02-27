@@ -1,6 +1,7 @@
 package agency.five.cu_it_rssfeedproject.data.repository
 
 import agency.five.cu_it_rssfeedproject.data.db.dao.FeedDao
+import agency.five.cu_it_rssfeedproject.data.db.partialentities.DbFeedItemIsFavorite
 import agency.five.cu_it_rssfeedproject.data.db.partialentities.DbFeedItemIsNew
 import agency.five.cu_it_rssfeedproject.data.mappings.*
 import agency.five.cu_it_rssfeedproject.data.service.FeedService
@@ -48,4 +49,7 @@ class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: 
 
     override fun getFeedIdsWithNewFeedItems(): Flowable<Set<Int>> =
         feedDao.getFeedIdsWithNewFeedItems().distinctUntilChanged().map { feedIds -> feedIds.toSet() }
+
+    override fun updateFeedItemIsFavoriteStatus(feedItemId: Int, isFavorite: Boolean) =
+        feedDao.updateFeedItemIsFavoriteStatus(DbFeedItemIsFavorite(feedItemId, isFavorite))
 }

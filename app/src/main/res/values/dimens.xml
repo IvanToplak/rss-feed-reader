@@ -24,4 +24,6 @@
     <dimen name="feed_item_date_width">0dp</dimen>
     <dimen name="feed_item_new_item_indicator_width">0dp</dimen>
     <dimen name="feed_new_item_indicator_width">0dp</dimen>
+    <dimen name="feed_item_favorite_item_button_width">0dp</dimen>
+    <dimen name="feed_item_favorite_item_image_size">24dp</dimen>
 </resources>

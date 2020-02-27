@@ -17,7 +17,8 @@ private const val FEED_ID_KEY = "feedId"
 private const val FEED_TITLE_KEY = "feedTitle"
 
 class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
-    FeedItemsAdapter.ListItemOnClickListener {
+    FeedItemsAdapter.ListItemOnClickListener,
+    FeedItemsAdapter.FavoriteButtonOnClickListener {
 
     private val presenter: FeedItemsContract.Presenter by currentScope.inject()
     private val screenTitleProvider: ScreenTitleProvider by inject()
@@ -75,7 +76,7 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
     }
 
     private fun setupRecyclerView() {
-        feedItemsAdapter = FeedItemsAdapter(mutableListOf(), this)
+        feedItemsAdapter = FeedItemsAdapter(mutableListOf(), this, this)
 
         feed_items_recycler_view.layoutManager = LinearLayoutManager(context)
         feed_items_recycler_view.adapter = feedItemsAdapter
@@ -92,6 +93,6 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
         presenter.showFeedItemDetails(clickedFeedItem)
     }
 
-    override fun toggleIsNewStatus(feedItemViewModel: FeedItemViewModel) =
-        feedItemsAdapter.toggleIsNewStatus(feedItemViewModel)
+    override fun onFavoriteButtonClicked(clickedFeedItem: FeedItemViewModel) =
+        presenter.updateFeedItemIsFavoriteStatus(clickedFeedItem, !clickedFeedItem.isFavorite)
 }

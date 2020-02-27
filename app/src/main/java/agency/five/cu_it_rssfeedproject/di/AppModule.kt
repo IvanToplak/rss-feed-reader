@@ -57,6 +57,7 @@ val appModule = module {
                 getScope(MAIN_ACTIVITY_SCOPE_ID).get(),
                 get(),
                 get(),
+                get(),
                 get()
             )
         }
