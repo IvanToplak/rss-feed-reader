@@ -8,5 +8,6 @@ data class FeedItem(
     val title: String = "",
     val publicationDate: Date?,
     val link: String = "",
-    val isNew: Boolean = true
+    val isNew: Boolean = true,
+    val isFavorite: Boolean = false
 )

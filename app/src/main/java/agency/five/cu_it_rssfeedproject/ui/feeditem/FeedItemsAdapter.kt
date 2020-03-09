@@ -14,11 +14,16 @@ private const val DATE_PATTERN = "MMM d"
 
 class FeedItemsAdapter(
     private val feedItems: MutableList<FeedItemViewModel>,
-    private val listItemOnClickListener: ListItemOnClickListener
+    private val listItemOnClickListener: ListItemOnClickListener,
+    private val favoriteButtonOnClickListener: FavoriteButtonOnClickListener
 ) : RecyclerView.Adapter<FeedItemsAdapter.ViewHolder>() {
 
     interface ListItemOnClickListener {
         fun onFeedItemClicked(clickedFeedItem: FeedItemViewModel)
+    }
+
+    interface FavoriteButtonOnClickListener {
+        fun onFavoriteButtonClicked(clickedFeedItem: FeedItemViewModel)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
@@ -36,15 +41,6 @@ class FeedItemsAdapter(
         notifyDataSetChanged()
     }
 
-    fun toggleIsNewStatus(clickedFeedItem: FeedItemViewModel) {
-        val position = feedItems.indexOf(clickedFeedItem)
-        if (position == -1) return
-        feedItems[position].isNew = !feedItems[position].isNew
-        notifyItemChanged(position)
-    }
-
-    fun allItemsRead() = feedItems.all { item -> !item.isNew }
-
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private lateinit var feedItem: FeedItemViewModel
@@ -56,9 +52,18 @@ class FeedItemsAdapter(
             itemView.feed_item_date_text_view.text =
                 feedItem.publicationDate?.toString(DATE_PATTERN)
             itemView.feed_item_new_item_indicator_text_view.show(feedItem.isNew)
+
             itemView.setOnClickListener {
                 listItemOnClickListener.onFeedItemClicked(feedItem)
             }
+
+            itemView.feed_item_favorite_item_button.setOnClickListener {
+                favoriteButtonOnClickListener.onFavoriteButtonClicked(feedItem)
+            }
+
+            val favoriteImageResId =
+                if (feedItem.isFavorite) R.drawable.favorite_fill_24dp else R.drawable.favorite_border_empty_24dp
+            itemView.feed_item_favorite_item_button.setImageResource(favoriteImageResId)
         }
     }
 }

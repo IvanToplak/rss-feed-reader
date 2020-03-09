@@ -8,12 +8,15 @@ interface FeedItemsContract {
     interface View {
         fun showFeedItems(feedItems: List<FeedItemViewModel>)
         fun updateFeed(feedId: Int, feedTitle: String)
-        fun toggleIsNewStatus(feedItemViewModel: FeedItemViewModel)
     }
 
     interface Presenter : ViewPresenter<View> {
         fun getFeedItems(feedId: Int)
         fun showFeedItemDetails(feedItemViewModel: FeedItemViewModel)
         fun updateFeedItemIsNewStatus(feedItemViewModel: FeedItemViewModel, isNew: Boolean)
+        fun updateFeedItemIsFavoriteStatus(
+            feedItemViewModel: FeedItemViewModel,
+            isFavorite: Boolean
+        )
     }
 }

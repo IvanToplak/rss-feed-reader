@@ -29,7 +29,7 @@
             android:layout_marginEnd="@dimen/margin_standard"
             android:textColor="@android:color/black"
             android:textSize="@dimen/feed_item_title_text_size"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/feed_item_favorite_item_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="What features do you hate or miss on current smartphones?" />
@@ -53,16 +53,31 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_standard"
             android:layout_marginTop="@dimen/margin_half"
-            android:layout_marginEnd="@dimen/margin_standard"
             android:layout_marginBottom="@dimen/margin_standard"
             android:text="@string/feed_item_new_item_indicator_text"
             android:textColor="@color/colorAccent"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/feed_item_title_text_view"
             app:layout_constraintStart_toEndOf="@+id/feed_item_date_text_view"
             app:layout_constraintTop_toBottomOf="@+id/feed_item_title_text_view"
             tools:visibility="visible" />
+
+        <ImageButton
+            android:id="@+id/feed_item_favorite_item_button"
+            android:layout_width="@dimen/feed_item_favorite_item_button_width"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:layout_marginEnd="@dimen/margin_standard"
+            android:layout_marginBottom="@dimen/margin_standard"
+            android:background="@android:color/transparent"
+            android:tint="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.100000024"
+            tools:src="@drawable/favorite_border_empty_24dp"
+            android:contentDescription="@string/favorite_item_button_content_description" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

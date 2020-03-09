@@ -2,6 +2,7 @@ package agency.five.cu_it_rssfeedproject.data.db.dao
 
 import agency.five.cu_it_rssfeedproject.data.db.model.DbFeed
 import agency.five.cu_it_rssfeedproject.data.db.model.DbFeedItem
+import agency.five.cu_it_rssfeedproject.data.db.partialentities.DbFeedItemIsFavorite
 import agency.five.cu_it_rssfeedproject.data.db.partialentities.DbFeedItemIsNew
 import androidx.room.*
 import io.reactivex.Completable
@@ -33,4 +34,7 @@ interface FeedDao {
 
     @Query("SELECT feed_id FROM feed_item WHERE isNew = 1 GROUP BY feed_id")
     fun getFeedIdsWithNewFeedItems(): Flowable<List<Int>>
+
+    @Update(entity = DbFeedItem::class)
+    fun updateFeedItemIsFavoriteStatus(isFavorite: DbFeedItemIsFavorite): Completable
 }

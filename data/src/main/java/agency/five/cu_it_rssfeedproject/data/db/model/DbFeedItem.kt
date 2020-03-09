@@ -13,7 +13,7 @@ import java.util.*
         onDelete = CASCADE
     )],
     indices = [Index("feed_id", "link", unique = true),
-    Index("publication_date")]
+        Index("publication_date")]
 )
 data class DbFeedItem(
     @PrimaryKey(autoGenerate = true)
@@ -22,5 +22,6 @@ data class DbFeedItem(
     @ColumnInfo(defaultValue = "") val title: String = "",
     @ColumnInfo(name = "publication_date") val publicationDate: Date?,
     @ColumnInfo(defaultValue = "") val link: String = "",
-    @ColumnInfo(defaultValue = "1") val isNew: Boolean = true
+    @ColumnInfo(defaultValue = "1") val isNew: Boolean = true,
+    @ColumnInfo(defaultValue = "0") val isFavorite: Boolean = false
 )

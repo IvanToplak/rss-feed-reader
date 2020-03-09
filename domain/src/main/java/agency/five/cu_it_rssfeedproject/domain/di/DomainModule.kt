@@ -18,4 +18,6 @@ val domainModule = module {
     single { UpdateFeedItemIsNewStatusUseCase(get()) }
 
     single { GetFeedIdsWithNewFeedItemsUseCase(get()) }
+
+    single { UpdateFeedItemIsFavoriteStatusUseCase(get()) }
 }

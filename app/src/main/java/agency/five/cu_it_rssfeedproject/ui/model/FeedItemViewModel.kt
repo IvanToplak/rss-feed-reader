@@ -8,7 +8,8 @@ data class FeedItemViewModel(
     val title: String = "",
     val publicationDate: Date?,
     val link: String = "",
-    var isNew: Boolean = true
+    val isNew: Boolean = true,
+    val isFavorite: Boolean = true
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
