@@ -35,15 +35,37 @@ class RouterImpl(private val fragmentManager: FragmentManager) : Router {
     }
 
     override fun showFeedItemsScreen(feedId: Int, feedTitle: String) {
+        showFeedItemsScreenInternal(feedId, feedTitle)
+    }
+
+    override fun showFavoriteFeedItems() {
+        showFeedItemsScreenInternal(showFavoritesOnly = true)
+    }
+
+    private fun showFeedItemsScreenInternal(
+        feedId: Int? = null,
+        feedTitle: String? = null,
+        showFavoritesOnly: Boolean = false
+    ) {
         val feedItemsFrag =
             fragmentManager.findFragmentByTag(FeedItemsFragment.TAG) as? FeedItemsFragment
         if (feedItemsFrag == null) {
+            var fragment: FeedItemsFragment? = null
+
+            if (showFavoritesOnly) {
+                fragment = FeedItemsFragment.newFavoriteFeedItemsInstance()
+            } else if (feedId != null && feedTitle != null) {
+                fragment = FeedItemsFragment.newInstance(feedId, feedTitle)
+
+            }
+
+            if (fragment == null) return
             fragmentManager
                 .beginTransaction()
                 .addToBackStack(null)
                 .add(
                     R.id.container_layout,
-                    FeedItemsFragment.newInstance(feedId, feedTitle),
+                    fragment,
                     FeedItemsFragment.TAG
                 )
                 .commit()

@@ -6,7 +6,6 @@ import agency.five.cu_it_rssfeedproject.data.db.partialentities.DbFeedItemIsNew
 import agency.five.cu_it_rssfeedproject.data.mappings.*
 import agency.five.cu_it_rssfeedproject.data.service.FeedService
 import agency.five.cu_it_rssfeedproject.domain.model.Feed
-import agency.five.cu_it_rssfeedproject.domain.model.FeedItem
 import agency.five.cu_it_rssfeedproject.domain.repository.FeedRepository
 import io.reactivex.Flowable
 
@@ -26,12 +25,7 @@ class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: 
 
     override fun deleteFeed(feed: Feed) = feedDao.delete(mapFeedToDbFeed(feed))
 
-    override fun getFeedItems(feedId: Int): Flowable<List<FeedItem>> =
-        feedDao.getFeedItems(feedId).map { feedItems ->
-            feedItems.map { feedItem ->
-                mapDbFeedItemToFeedItem(feedItem)
-            }
-        }
+    override fun getFeedItems(feedId: Int) = mapDbFeedItemsToFeedItems(feedDao.getFeedItems(feedId))
 
     override fun addFeedItemsToFeed(feed: Feed) =
         feedService.getFeed(feed.url).flatMapCompletable { apiFeed ->
@@ -52,4 +46,6 @@ class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: 
 
     override fun updateFeedItemIsFavoriteStatus(feedItemId: Int, isFavorite: Boolean) =
         feedDao.updateFeedItemIsFavoriteStatus(DbFeedItemIsFavorite(feedItemId, isFavorite))
+
+    override fun getFavoriteFeedItems() = mapDbFeedItemsToFeedItems(feedDao.getFavoriteFeedItems())
 }

@@ -7,5 +7,6 @@
     <color name="addNewFeedBackground">#88676767</color>
     <color name="selectedFeed">#FFB0EC</color>
     <color name="favoriteFeedItemBorderEmpty">#CCCCCC</color>
+    <color name="menuFavoriteFeedItemBorderEmpty">#FFFFFF</color>
     <color name="favoriteFeedItemFill">#FFB0EC</color>
 </resources>

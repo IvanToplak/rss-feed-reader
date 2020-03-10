@@ -7,7 +7,6 @@ interface FeedItemsContract {
 
     interface View {
         fun showFeedItems(feedItems: List<FeedItemViewModel>)
-        fun updateFeed(feedId: Int, feedTitle: String)
     }
 
     interface Presenter : ViewPresenter<View> {
@@ -18,5 +17,6 @@ interface FeedItemsContract {
             feedItemViewModel: FeedItemViewModel,
             isFavorite: Boolean
         )
+        fun getFavoriteFeedItems()
     }
 }
