@@ -6,6 +6,7 @@ import agency.five.cu_it_rssfeedproject.ui.feed.NewFeedFragment
 import agency.five.cu_it_rssfeedproject.ui.feeditem.FeedItemsFragment
 import agency.five.cu_it_rssfeedproject.ui.feeditemdetails.FeedItemDetailsFragment
 import androidx.fragment.app.FragmentManager
+import java.lang.IllegalArgumentException
 
 class RouterImpl(private val fragmentManager: FragmentManager) : Router {
 
@@ -50,16 +51,14 @@ class RouterImpl(private val fragmentManager: FragmentManager) : Router {
         val feedItemsFrag =
             fragmentManager.findFragmentByTag(FeedItemsFragment.TAG) as? FeedItemsFragment
         if (feedItemsFrag == null) {
-            var fragment: FeedItemsFragment? = null
-
-            if (showFavoritesOnly) {
-                fragment = FeedItemsFragment.newFavoriteFeedItemsInstance()
-            } else if (feedId != null && feedTitle != null) {
-                fragment = FeedItemsFragment.newInstance(feedId, feedTitle)
-
+            val fragment = when {
+                showFavoritesOnly -> FeedItemsFragment.newFavoriteFeedItemsInstance()
+                feedId != null && feedTitle != null -> FeedItemsFragment.newInstance(
+                    feedId,
+                    feedTitle
+                )
+                else -> throw IllegalArgumentException()
             }
-
-            if (fragment == null) return
             fragmentManager
                 .beginTransaction()
                 .addToBackStack(null)

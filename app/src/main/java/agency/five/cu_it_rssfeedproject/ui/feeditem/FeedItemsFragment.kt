@@ -23,9 +23,8 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
     private val screenTitleProvider: ScreenTitleProvider by inject()
 
     private lateinit var feedItemsAdapter: FeedItemsAdapter
-    private var feedId: Int? = null
-    private var feedTitle: String? = null
-    private var favoriteFeedItemsOnly = false
+
+    private lateinit var feedItemsFunctionality: Functionality
 
     companion object {
         const val TAG = "feedItems"
@@ -47,9 +46,13 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
 
     override fun doOnCreate(savedInstanceState: Bundle?) {
         arguments?.let {
-            feedId = it.getInt(FEED_ID_KEY)
-            feedTitle = it.getString(FEED_TITLE_KEY)
-            favoriteFeedItemsOnly = it.getBoolean(FAVORITE_FEED_ITEMS_KEY)
+            feedItemsFunctionality = if (it.getBoolean(FAVORITE_FEED_ITEMS_KEY)) {
+                Functionality.FavouriteFeedItems
+            } else {
+                val feedId = it.getInt(FEED_ID_KEY)
+                val feedTitle = it.getString(FEED_TITLE_KEY)!!
+                Functionality.FeedItems(feedId, feedTitle)
+            }
         }
         presenter.onCreate()
         setHasOptionsMenu(true)
@@ -64,11 +67,12 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
         presenter.onViewCreated(this)
         setupRecyclerView()
 
-        if (favoriteFeedItemsOnly) {
-            getFavoriteFeedItems()
-        } else if (feedId != null && feedTitle != null) {
-            updateFeed(feedId!!, feedTitle!!)
-        }
+        requestViewData()
+    }
+
+    private fun requestViewData() = when (val func = feedItemsFunctionality) {
+        is Functionality.FeedItems -> updateFeed(func)
+        Functionality.FavouriteFeedItems -> getFavoriteFeedItems()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -77,7 +81,7 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
 
     override fun doOnDestroyView() {
         presenter.onDestroyView()
-        if (!favoriteFeedItemsOnly) {
+        if (feedItemsFunctionality is Functionality.FeedItems) {
             screenTitleProvider.removeTitle()
         }
     }
@@ -88,14 +92,12 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
         presenter.getFavoriteFeedItems()
     }
 
-    private fun updateFeed(feedId: Int, feedTitle: String) {
-        this.feedId = feedId
-        updateFeedTitle(if (feedTitle.isNotEmpty()) feedTitle else getString(R.string.app_name))
-        presenter.getFeedItems(feedId)
+    private fun updateFeed(feedItems: Functionality.FeedItems) {
+        updateFeedTitle(if (feedItems.feedTitle.isNotEmpty()) feedItems.feedTitle else getString(R.string.app_name))
+        presenter.getFeedItems(feedItems.feedId)
     }
 
     private fun updateFeedTitle(feedTitle: String) {
-        this.feedTitle = feedTitle
         screenTitleProvider.addTitle(feedTitle)
     }
 
@@ -119,4 +121,9 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
 
     override fun onFavoriteButtonClicked(clickedFeedItem: FeedItemViewModel) =
         presenter.updateFeedItemIsFavoriteStatus(clickedFeedItem, !clickedFeedItem.isFavorite)
+}
+
+sealed class Functionality {
+    data class FeedItems(val feedId: Int, val feedTitle: String) : Functionality()
+    object FavouriteFeedItems : Functionality()
 }
