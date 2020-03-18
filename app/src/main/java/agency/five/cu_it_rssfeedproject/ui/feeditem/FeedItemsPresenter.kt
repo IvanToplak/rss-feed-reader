@@ -1,14 +1,17 @@
 package agency.five.cu_it_rssfeedproject.ui.feeditem
 
+import agency.five.cu_it_rssfeedproject.domain.interactor.GetFavoriteFeedItemsUseCase
 import agency.five.cu_it_rssfeedproject.domain.interactor.GetFeedItemsUseCase
 import agency.five.cu_it_rssfeedproject.domain.interactor.UpdateFeedItemIsFavoriteStatusUseCase
 import agency.five.cu_it_rssfeedproject.domain.interactor.UpdateFeedItemIsNewStatusUseCase
+import agency.five.cu_it_rssfeedproject.domain.model.FeedItem
 import agency.five.cu_it_rssfeedproject.ui.common.AppSchedulers
 import agency.five.cu_it_rssfeedproject.ui.common.BasePresenter
 import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedItemToFeedItemViewModel
 import agency.five.cu_it_rssfeedproject.ui.model.FeedItemViewModel
 import agency.five.cu_it_rssfeedproject.ui.router.Router
 import android.util.Log
+import io.reactivex.Flowable
 import io.reactivex.rxkotlin.subscribeBy
 
 private const val TAG = "FeedItemsPresenter"
@@ -23,13 +26,24 @@ class FeedItemsPresenter(
     private val getFeedItemsUseCase: GetFeedItemsUseCase,
     private val updateFeedItemIsNewStatusUseCase: UpdateFeedItemIsNewStatusUseCase,
     private val updateFeedItemIsFavoriteStatusUseCase: UpdateFeedItemIsFavoriteStatusUseCase,
+    private val getFavoriteFeedItemsUseCase: GetFavoriteFeedItemsUseCase,
     private val schedulers: AppSchedulers
 ) :
     BasePresenter<FeedItemsContract.View>(), FeedItemsContract.Presenter {
 
-    override fun getFeedItems(feedId: Int) {
-        val subscription = getFeedItemsUseCase.execute(feedId)
-            .map { feedItems -> feedItems.map { feedItem -> mapFeedItemToFeedItemViewModel(feedItem) } }
+    override fun getFeedItems(feedId: Int) =
+        addDisposable(getFeedItemsSubscription(getFeedItemsUseCase.execute(feedId)))
+
+    override fun getFavoriteFeedItems() {
+        addDisposable(getFeedItemsSubscription(getFavoriteFeedItemsUseCase.execute()))
+    }
+
+    private fun getFeedItemsSubscription(flowable: Flowable<List<FeedItem>>) =
+        flowable.map { feedItems ->
+            feedItems.map { feedItem ->
+                mapFeedItemToFeedItemViewModel(feedItem)
+            }
+        }
             .observeOn(schedulers.main())
             .subscribeOn(schedulers.background())
             .subscribeBy(
@@ -44,8 +58,7 @@ class FeedItemsPresenter(
                     )
                 }
             )
-        addDisposable(subscription)
-    }
+
 
     override fun showFeedItemDetails(feedItemViewModel: FeedItemViewModel) {
         router.showFeedItemDetailsScreen(feedItemViewModel.link)

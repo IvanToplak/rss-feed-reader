@@ -37,4 +37,7 @@ interface FeedDao {
 
     @Update(entity = DbFeedItem::class)
     fun updateFeedItemIsFavoriteStatus(isFavorite: DbFeedItemIsFavorite): Completable
+
+    @Query("SELECT * FROM feed_item WHERE isFavorite = 1 ORDER BY feed_id ASC, publication_date DESC, id DESC")
+    fun getFavoriteFeedItems(): Flowable<List<DbFeedItem>>
 }

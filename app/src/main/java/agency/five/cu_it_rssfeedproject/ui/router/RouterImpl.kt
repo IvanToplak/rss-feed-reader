@@ -6,6 +6,7 @@ import agency.five.cu_it_rssfeedproject.ui.feed.NewFeedFragment
 import agency.five.cu_it_rssfeedproject.ui.feeditem.FeedItemsFragment
 import agency.five.cu_it_rssfeedproject.ui.feeditemdetails.FeedItemDetailsFragment
 import androidx.fragment.app.FragmentManager
+import java.lang.IllegalArgumentException
 
 class RouterImpl(private val fragmentManager: FragmentManager) : Router {
 
@@ -35,15 +36,35 @@ class RouterImpl(private val fragmentManager: FragmentManager) : Router {
     }
 
     override fun showFeedItemsScreen(feedId: Int, feedTitle: String) {
+        showFeedItemsScreenInternal(feedId, feedTitle)
+    }
+
+    override fun showFavoriteFeedItems() {
+        showFeedItemsScreenInternal(showFavoritesOnly = true)
+    }
+
+    private fun showFeedItemsScreenInternal(
+        feedId: Int? = null,
+        feedTitle: String? = null,
+        showFavoritesOnly: Boolean = false
+    ) {
         val feedItemsFrag =
             fragmentManager.findFragmentByTag(FeedItemsFragment.TAG) as? FeedItemsFragment
         if (feedItemsFrag == null) {
+            val fragment = when {
+                showFavoritesOnly -> FeedItemsFragment.newFavoriteFeedItemsInstance()
+                feedId != null && feedTitle != null -> FeedItemsFragment.newInstance(
+                    feedId,
+                    feedTitle
+                )
+                else -> throw IllegalArgumentException()
+            }
             fragmentManager
                 .beginTransaction()
                 .addToBackStack(null)
                 .add(
                     R.id.container_layout,
-                    FeedItemsFragment.newInstance(feedId, feedTitle),
+                    fragment,
                     FeedItemsFragment.TAG
                 )
                 .commit()

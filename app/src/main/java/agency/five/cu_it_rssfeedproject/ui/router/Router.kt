@@ -11,4 +11,6 @@ interface Router {
     fun showFeedItemsScreen(feedId: Int, feedTitle: String)
 
     fun showFeedItemDetailsScreen(feedItemUrl: String)
+
+    fun showFavoriteFeedItems()
 }
