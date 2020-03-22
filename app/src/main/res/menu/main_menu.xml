@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:id="@+id/action_items_group">
         <item
+            android:id="@+id/new_feed_items_notifications_button"
+            android:icon="@drawable/menu_notifications_none_white_24dp"
+            android:title="@string/main_menu_new_feed_items_notifications"
+            app:showAsAction="ifRoom" />
+        <item
             android:id="@+id/favorite_items_button"
             android:icon="@drawable/menu_favorite_border_empty_24dp"
             android:title="@string/main_menu_favorite_items"

@@ -31,6 +31,7 @@ ext {
     versionCode = 1
     versionName = "1.0"
     javaVersion = "8"
+    jvmTargetVersion = "1.8"
 
     //dependency versions
     appcompatVersion = "1.1.0"
@@ -48,6 +49,7 @@ ext {
     koinVersion = "2.0.1"
     rxKotlinVersion = "2.4.0"
     rxAndroidVersion = "2.1.1"
+    workVersion = "2.3.4"
 
     //dependency definitions
     commonDependencies = [
@@ -79,16 +81,22 @@ ext {
 
     //Koin dependencies
     koinDependencies = [
-             koinAndroid : "org.koin:koin-android:$koinVersion",
-             koinAndroidScope : "org.koin:koin-androidx-scope:$koinVersion",
-             koinTest : "org.koin:koin-test:$koinVersion"
+            koinAndroid     : "org.koin:koin-android:$koinVersion",
+            koinAndroidScope: "org.koin:koin-androidx-scope:$koinVersion",
+            koinTest        : "org.koin:koin-test:$koinVersion"
     ]
 
     //Rx dependencies
     rxDependencies = [
-            roomRxJava : "androidx.room:room-rxjava2:$roomVersion",
-            rxKotlin: "io.reactivex.rxjava2:rxkotlin:$rxKotlinVersion",
-            rxAndroid: "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+            roomRxJava: "androidx.room:room-rxjava2:$roomVersion",
+            rxKotlin  : "io.reactivex.rxjava2:rxkotlin:$rxKotlinVersion",
+            rxAndroid : "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+    ]
+
+    //WorkManager dependencies
+    workManagerDependencies = [
+            wmKotlin: "androidx.work:work-runtime-ktx:$workVersion",
+            wmRxJava: "androidx.work:work-rxjava2:$workVersion"
     ]
 }
 

@@ -1,6 +1,8 @@
 package agency.five.cu_it_rssfeedproject.data.di
 
 import agency.five.cu_it_rssfeedproject.data.db.database.FeedDatabase
+import agency.five.cu_it_rssfeedproject.data.prefs.SharedPrefs
+import agency.five.cu_it_rssfeedproject.data.prefs.SharedPrefsImpl
 import agency.five.cu_it_rssfeedproject.data.repository.FeedRepositoryImpl
 import agency.five.cu_it_rssfeedproject.data.service.FeedService
 import agency.five.cu_it_rssfeedproject.data.service.FeedServiceImpl
@@ -29,5 +31,7 @@ val dataModule = module {
 
     single<FeedService> { FeedServiceImpl(get(named(FEED_PARSER_TAG))) }
 
-    single<FeedRepository> { FeedRepositoryImpl(get(), get()) }
+    single<SharedPrefs> { SharedPrefsImpl(androidContext()) }
+
+    single<FeedRepository> { FeedRepositoryImpl(get(), get(), get()) }
 }

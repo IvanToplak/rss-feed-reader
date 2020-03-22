@@ -22,4 +22,12 @@ val domainModule = module {
     single { UpdateFeedItemIsFavoriteStatusUseCase(get()) }
 
     single { GetFavoriteFeedItemsUseCase(get()) }
+
+    single { GetNewFeedItemsNotificationPrefUseCase(get()) }
+
+    single { SetNewFeedItemsNotificationPrefUseCase(get()) }
+
+    single { EnableBackgroundFeedUpdatesUseCase(get()) }
+
+    single { DisableBackgroundFeedUpdatesUseCase(get()) }
 }
