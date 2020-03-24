@@ -58,4 +58,6 @@ class FeedRepositoryImpl(
 
     override fun setNewFeedItemsNotificationPref(newFeedItemsNotificationEnabled: Boolean) =
         sharedPrefs.setNewFeedItemsNotificationPref(newFeedItemsNotificationEnabled)
+
+    override fun getNewFeedItemsCount() = feedDao.getNewFeedItemsCount()
 }

@@ -28,4 +28,6 @@ interface FeedRepository {
     fun getNewFeedItemsNotificationPref(): Boolean
 
     fun setNewFeedItemsNotificationPref(newFeedItemsNotificationEnabled: Boolean)
+
+    fun getNewFeedItemsCount(): Flowable<Long>
 }

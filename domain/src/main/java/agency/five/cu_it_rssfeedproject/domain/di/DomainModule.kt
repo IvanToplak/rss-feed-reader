@@ -30,4 +30,6 @@ val domainModule = module {
     single { EnableBackgroundFeedUpdatesUseCase(get()) }
 
     single { DisableBackgroundFeedUpdatesUseCase(get()) }
+
+    single { GetNewFeedItemsCountUseCase(get()) }
 }

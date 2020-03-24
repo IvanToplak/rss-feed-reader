@@ -29,9 +29,6 @@ interface FeedDao {
     @Update(entity = DbFeedItem::class)
     fun updateFeedItemIsNewStatus(isNew: DbFeedItemIsNew): Completable
 
-    @Query("SELECT COUNT(*) FROM feed_item WHERE feed_id = :feedId AND isNew = 1")
-    fun getUnreadFeedItemsCount(feedId: Int): Long
-
     @Query("SELECT feed_id FROM feed_item WHERE isNew = 1 GROUP BY feed_id")
     fun getFeedIdsWithNewFeedItems(): Flowable<List<Int>>
 
@@ -40,4 +37,7 @@ interface FeedDao {
 
     @Query("SELECT * FROM feed_item WHERE isFavorite = 1 ORDER BY feed_id ASC, publication_date DESC, id DESC")
     fun getFavoriteFeedItems(): Flowable<List<DbFeedItem>>
+
+    @Query("SELECT COUNT(*) FROM feed_item WHERE isNew = 1")
+    fun getNewFeedItemsCount(): Flowable<Long>
 }
