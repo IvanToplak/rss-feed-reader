@@ -32,11 +32,7 @@ class FeedsUpdateWorker(context: Context, workerParams: WorkerParameters) :
             .flatMap { countBefore ->
                 getFeedsUseCase.execute().first(emptyList())
                     .flatMapCompletable { feeds ->
-                        Completable.merge {
-                            feeds.map { feed ->
-                                addFeedItemsToFeedUseCase.execute(feed)
-                            }
-                        }
+                        Completable.merge(feeds.map { feed -> addFeedItemsToFeedUseCase.execute(feed) })
                     }
                     .andThen(getNewFeedItemsCountUseCase.execute()
                         .firstOrError()
