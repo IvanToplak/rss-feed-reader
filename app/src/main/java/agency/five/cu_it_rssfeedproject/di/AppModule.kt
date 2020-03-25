@@ -98,6 +98,7 @@ val appModule = module {
      */
     single {
         val mainActivityIntent = Intent(androidContext(), MainActivity::class.java)
+        mainActivityIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         PendingIntent.getActivity(
             androidContext(),
             0,

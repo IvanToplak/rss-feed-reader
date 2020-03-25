@@ -9,6 +9,7 @@ import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 
 private const val NEW_FEED_ITEMS_NOTIFICATION_CHANNEL_NAME = "New feed items notification"
 private const val NEW_FEED_ITEMS_NOTIFICATION_CHANNEL_DESCRIPTION =
@@ -48,6 +49,7 @@ class NotificationFactoryImpl(
     private fun createNewFeedItemsNotificationInternal(contentIntent: PendingIntent) =
         NotificationCompat.Builder(context, NEW_FEED_ITEMS_NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.new_feed_items_notification_small_icon_16dp)
+            .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
             .setContentTitle(NEW_FEED_ITEMS_NOTIFICATION_TITLE)
             .setContentText(NEW_FEED_ITEMS_NOTIFICATION_TEXT)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
