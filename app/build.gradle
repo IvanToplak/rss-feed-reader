@@ -21,6 +21,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    kotlinOptions { jvmTarget = rootProject.jvmTargetVersion }
 }
 
 dependencies {
@@ -54,4 +55,8 @@ dependencies {
     //Rx dependencies
     implementation rxDependencies.rxKotlin
     implementation rxDependencies.rxAndroid
+
+    //WorkManager dependencies
+    implementation workManagerDependencies.wmKotlin
+    implementation workManagerDependencies.wmRxJava
 }

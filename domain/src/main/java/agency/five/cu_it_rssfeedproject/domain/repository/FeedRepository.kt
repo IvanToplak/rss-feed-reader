@@ -24,4 +24,10 @@ interface FeedRepository {
     fun updateFeedItemIsFavoriteStatus(feedItemId: Int, isFavorite: Boolean): Completable
 
     fun getFavoriteFeedItems(): Flowable<List<FeedItem>>
+
+    fun getNewFeedItemsNotificationPref(): Boolean
+
+    fun setNewFeedItemsNotificationPref(newFeedItemsNotificationEnabled: Boolean)
+
+    fun getNewFeedItemsCount(): Flowable<Long>
 }

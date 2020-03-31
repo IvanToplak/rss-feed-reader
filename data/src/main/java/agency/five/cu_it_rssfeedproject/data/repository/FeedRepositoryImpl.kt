@@ -4,12 +4,17 @@ import agency.five.cu_it_rssfeedproject.data.db.dao.FeedDao
 import agency.five.cu_it_rssfeedproject.data.db.partialentities.DbFeedItemIsFavorite
 import agency.five.cu_it_rssfeedproject.data.db.partialentities.DbFeedItemIsNew
 import agency.five.cu_it_rssfeedproject.data.mappings.*
+import agency.five.cu_it_rssfeedproject.data.prefs.SharedPrefs
 import agency.five.cu_it_rssfeedproject.data.service.FeedService
 import agency.five.cu_it_rssfeedproject.domain.model.Feed
 import agency.five.cu_it_rssfeedproject.domain.repository.FeedRepository
 import io.reactivex.Flowable
 
-class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: FeedService) :
+class FeedRepositoryImpl(
+    private val feedDao: FeedDao,
+    private val feedService: FeedService,
+    private val sharedPrefs: SharedPrefs
+) :
     FeedRepository {
 
     override fun insertFeed(feedUrl: String) =
@@ -48,4 +53,11 @@ class FeedRepositoryImpl(private val feedDao: FeedDao, private val feedService: 
         feedDao.updateFeedItemIsFavoriteStatus(DbFeedItemIsFavorite(feedItemId, isFavorite))
 
     override fun getFavoriteFeedItems() = mapDbFeedItemsToFeedItems(feedDao.getFavoriteFeedItems())
+
+    override fun getNewFeedItemsNotificationPref() = sharedPrefs.getNewFeedItemsNotificationPref()
+
+    override fun setNewFeedItemsNotificationPref(newFeedItemsNotificationEnabled: Boolean) =
+        sharedPrefs.setNewFeedItemsNotificationPref(newFeedItemsNotificationEnabled)
+
+    override fun getNewFeedItemsCount() = feedDao.getNewFeedItemsCount()
 }

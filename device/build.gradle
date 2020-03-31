@@ -35,4 +35,13 @@ dependencies {
     testImplementation commonDependencies.junit
     androidTestImplementation commonDependencies.androidTestJunit
     androidTestImplementation commonDependencies.androidTestEspresso
+
+    // Koin dependencies
+    implementation koinDependencies.koinAndroid
+    implementation koinDependencies.koinAndroidScope
+    testImplementation koinDependencies.koinTest
+
+    //WorkManager dependencies
+    implementation workManagerDependencies.wmKotlin
+    implementation workManagerDependencies.wmRxJava
 }

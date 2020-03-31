@@ -5,9 +5,7 @@ import agency.five.cu_it_rssfeedproject.app.show
 import agency.five.cu_it_rssfeedproject.ui.common.BaseFragment
 import agency.five.cu_it_rssfeedproject.ui.model.FeedViewModel
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_feeds.*
 import org.koin.androidx.scope.currentScope
@@ -26,7 +24,10 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
         fun newInstance() = FeedsFragment()
     }
 
-    override fun doOnCreate(savedInstanceState: Bundle?) = presenter.onCreate()
+    override fun doOnCreate(savedInstanceState: Bundle?) {
+        presenter.onCreate()
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +49,42 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
 
     override fun doOnViewStateRestored(savedInstanceState: Bundle?) {
         savedSelectedFeedId = savedInstanceState?.getInt(FEED_ID_KEY)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        val newFeedsNotificationItem = menu.findItem(R.id.new_feed_items_notifications_button)
+        newFeedsNotificationItem?.let {
+            setNewFeedItemsNotificationIcon(it)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.favorite_items_button -> {
+                presenter.showFavoriteFeedItems()
+                true
+            }
+            R.id.new_feed_items_notifications_button -> {
+                toggleNewFeedItemsNotification(item)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun setNewFeedItemsNotificationIcon(item: MenuItem) {
+        item.icon = resources.getDrawable(
+            if (presenter.getNewFeedItemsNotificationPref())
+                R.drawable.menu_notifications_active_white_24dp
+            else
+                R.drawable.menu_notifications_none_white_24dp,
+            null
+        )
+    }
+
+    private fun toggleNewFeedItemsNotification(item: MenuItem) {
+        presenter.toggleNewFeedItemsNotificationPref()
+        setNewFeedItemsNotificationIcon(item)
     }
 
     override fun doOnDestroyView() = presenter.onDestroyView()

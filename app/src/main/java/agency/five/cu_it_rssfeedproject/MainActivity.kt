@@ -6,7 +6,6 @@ import agency.five.cu_it_rssfeedproject.ui.common.ScreenTitleProvider
 import agency.five.cu_it_rssfeedproject.ui.router.Router
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.android.inject
@@ -51,16 +50,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.favorite_items_button -> {
-                router.showFavoriteFeedItems()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     override fun onDestroy() {

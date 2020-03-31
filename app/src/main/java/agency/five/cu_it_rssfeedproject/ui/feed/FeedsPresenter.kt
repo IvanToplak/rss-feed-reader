@@ -1,9 +1,6 @@
 package agency.five.cu_it_rssfeedproject.ui.feed
 
-import agency.five.cu_it_rssfeedproject.domain.interactor.AddFeedItemsToFeedUseCase
-import agency.five.cu_it_rssfeedproject.domain.interactor.DeleteFeedUseCase
-import agency.five.cu_it_rssfeedproject.domain.interactor.GetFeedIdsWithNewFeedItemsUseCase
-import agency.five.cu_it_rssfeedproject.domain.interactor.GetFeedsUseCase
+import agency.five.cu_it_rssfeedproject.domain.interactor.*
 import agency.five.cu_it_rssfeedproject.domain.model.Feed
 import agency.five.cu_it_rssfeedproject.ui.common.AppSchedulers
 import agency.five.cu_it_rssfeedproject.ui.common.BasePresenter
@@ -27,6 +24,10 @@ class FeedsPresenter(
     private val deleteFeedUseCase: DeleteFeedUseCase,
     private val addFeedItemsToFeedUseCase: AddFeedItemsToFeedUseCase,
     private val getFeedIdsWithNewFeedItemsUseCase: GetFeedIdsWithNewFeedItemsUseCase,
+    private val getNewFeedItemsNotificationPrefUseCase: GetNewFeedItemsNotificationPrefUseCase,
+    private val setNewFeedItemsNotificationPrefUseCase: SetNewFeedItemsNotificationPrefUseCase,
+    private val enableBackgroundFeedUpdatesUseCase: EnableBackgroundFeedUpdatesUseCase,
+    private val disableBackgroundFeedUpdatesUseCase: DisableBackgroundFeedUpdatesUseCase,
     private val schedulers: AppSchedulers
 ) : BasePresenter<FeedsContract.View>(), FeedsContract.Presenter {
 
@@ -93,13 +94,12 @@ class FeedsPresenter(
         }
     }
 
-    override fun showAddNewFeed() {
-        router.showAddNewFeedScreen()
-    }
+    override fun showAddNewFeed() = router.showAddNewFeedScreen()
 
-    override fun showFeedItems(feedViewModel: FeedViewModel) {
+    override fun showFeedItems(feedViewModel: FeedViewModel) =
         router.showFeedItemsScreen(feedViewModel.id, feedViewModel.title)
-    }
+
+    override fun showFavoriteFeedItems() = router.showFavoriteFeedItems()
 
     override fun deleteFeed(feedViewModel: FeedViewModel) {
         val subscription = deleteFeedUseCase.execute(
@@ -115,4 +115,17 @@ class FeedsPresenter(
                 })
         addDisposable(subscription)
     }
+
+    override fun toggleNewFeedItemsNotificationPref() {
+        val notificationEnabled = !getNewFeedItemsNotificationPref()
+        setNewFeedItemsNotificationPrefUseCase.execute(notificationEnabled)
+        if (notificationEnabled) {
+            enableBackgroundFeedUpdatesUseCase.execute()
+        } else {
+            disableBackgroundFeedUpdatesUseCase.execute()
+        }
+    }
+
+    override fun getNewFeedItemsNotificationPref(): Boolean =
+        getNewFeedItemsNotificationPrefUseCase.execute()
 }
