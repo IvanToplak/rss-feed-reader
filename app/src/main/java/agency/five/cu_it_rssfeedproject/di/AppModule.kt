@@ -14,6 +14,8 @@ import agency.five.cu_it_rssfeedproject.ui.notification.NotificationFactory
 import agency.five.cu_it_rssfeedproject.ui.notification.NotificationFactoryImpl
 import agency.five.cu_it_rssfeedproject.ui.router.Router
 import agency.five.cu_it_rssfeedproject.ui.router.RouterImpl
+import agency.five.cu_it_rssfeedproject.ui.router.RouterProvider
+import agency.five.cu_it_rssfeedproject.ui.router.RouterProviderImpl
 import android.app.PendingIntent
 import android.content.Intent
 import androidx.fragment.app.FragmentManager
@@ -40,8 +42,11 @@ val appModule = module {
         scoped<Router> { (fragmentManager: FragmentManager) -> RouterImpl(fragmentManager) }
     }
 
+    single<RouterProvider> { RouterProviderImpl() }
+
     viewModel {
         FeedsViewModel(
+            get(),
             get(),
             get(),
             get(),
@@ -57,12 +62,14 @@ val appModule = module {
     viewModel {
         NewFeedViewModel(
             get(),
+            get(),
             get()
         )
     }
 
     viewModel {
         FeedItemsViewModel(
+            get(),
             get(),
             get(),
             get(),

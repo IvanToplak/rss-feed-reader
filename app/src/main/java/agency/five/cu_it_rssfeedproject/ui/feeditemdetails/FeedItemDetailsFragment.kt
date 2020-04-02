@@ -37,14 +37,14 @@ class FeedItemDetailsFragment : BaseFragment(), FeedItemDetailsWebViewClient.Loa
     ): View? = inflater.inflate(R.layout.fragment_feed_item_details, container, false)
 
     override fun doOnViewCreated(view: View, savedInstanceState: Bundle?) {
-        getScreenTitleProvider().setTitleVisibility(false)
+        setScreenTitleVisibility(false)
         if (!feedItemUrl.isNullOrEmpty()) {
             setupWebView(feedItemUrl!!)
         }
     }
 
     override fun onDestroyView() {
-        getScreenTitleProvider().setTitleVisibility(true)
+        setScreenTitleVisibility(true)
         super.onDestroyView()
     }
 

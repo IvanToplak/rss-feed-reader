@@ -62,7 +62,7 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.favorite_items_button -> {
-                getRouter().showFavoriteFeedItemsScreen()
+                viewModel.showFavoriteFeedItems()
                 true
             }
             R.id.new_feed_items_notifications_button -> {
@@ -110,7 +110,7 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
                 viewModel.deleteFeed(selectedFeed)
                 selectedFeed = FeedViewModel()
             } else {
-                getRouter().showAddNewFeedScreen()
+                viewModel.showAddNewFeed()
             }
         }
     }
@@ -161,7 +161,7 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
         if (this.selectedFeed == clickedFeed) {
             clearSelection()
         }
-        getRouter().showFeedItemsScreen(clickedFeed.id, clickedFeed.title)
+        viewModel.showFeedItems(clickedFeed)
     }
 
     private fun clearSelection() {

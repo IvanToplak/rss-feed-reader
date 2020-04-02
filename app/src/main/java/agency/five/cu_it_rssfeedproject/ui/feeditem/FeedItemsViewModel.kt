@@ -9,6 +9,7 @@ import agency.five.cu_it_rssfeedproject.ui.common.AppSchedulers
 import agency.five.cu_it_rssfeedproject.ui.common.BaseViewModel
 import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedItemToFeedItemViewModel
 import agency.five.cu_it_rssfeedproject.ui.model.FeedItemViewModel
+import agency.five.cu_it_rssfeedproject.ui.router.RouterProvider
 import android.util.Log
 import io.reactivex.Flowable
 import io.reactivex.rxkotlin.subscribeBy
@@ -20,6 +21,7 @@ private const val UPDATE_FEED_ITEM_IS_FAVORITE_STATUS_ERROR_MESSAGE =
     "Error updating feed item's 'is favorite' status"
 
 class FeedItemsViewModel(
+    private val routerProvider: RouterProvider,
     private val getFeedItemsUseCase: GetFeedItemsUseCase,
     private val updateFeedItemIsNewStatusUseCase: UpdateFeedItemIsNewStatusUseCase,
     private val updateFeedItemIsFavoriteStatusUseCase: UpdateFeedItemIsFavoriteStatusUseCase,
@@ -76,4 +78,7 @@ class FeedItemsViewModel(
                     )
                 })
     )
+
+    override fun showFeedItemDetails(feedItemViewModel: FeedItemViewModel) =
+        routerProvider.getRouter().showFeedItemDetailsScreen(feedItemViewModel.link)
 }

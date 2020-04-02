@@ -92,7 +92,7 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
 
     override fun doOnDestroyView() {
         if (feedItemsFunctionality is Functionality.FeedItems) {
-            getScreenTitleProvider().removeTitle()
+            removeScreenTitle()
         }
     }
 
@@ -103,9 +103,7 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
         return viewModel.getFeedItems(feedItems.feedId)
     }
 
-    private fun updateFeedTitle(feedTitle: String) {
-        getScreenTitleProvider().addTitle(feedTitle)
-    }
+    private fun updateFeedTitle(feedTitle: String) = addScreenTitle(feedTitle)
 
     private fun setupRecyclerView() {
         feedItemsAdapter = FeedItemsAdapter(mutableListOf(), this, this)
@@ -122,7 +120,7 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
         if (clickedFeedItem.isNew) {
             viewModel.updateFeedItemIsNewStatus(clickedFeedItem, false)
         }
-        getRouter().showFeedItemDetailsScreen(clickedFeedItem.link)
+        viewModel.showFeedItemDetails(clickedFeedItem)
     }
 
     override fun onFavoriteButtonClicked(clickedFeedItem: FeedItemViewModel) =

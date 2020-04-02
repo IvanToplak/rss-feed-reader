@@ -12,5 +12,8 @@ interface FeedsContract {
         fun deleteFeed(feedViewModel: FeedViewModel)
         fun toggleNewFeedItemsNotificationPref()
         fun getNewFeedItemsNotificationPref(): Boolean
+        fun showAddNewFeed()
+        fun showFeedItems(feedViewModel: FeedViewModel)
+        fun showFavoriteFeedItems()
     }
 }

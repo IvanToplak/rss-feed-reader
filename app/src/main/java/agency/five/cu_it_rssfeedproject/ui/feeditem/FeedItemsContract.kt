@@ -15,5 +15,6 @@ interface FeedItemsContract {
             isFavorite: Boolean
         )
         fun getFavoriteFeedItems(): Flowable<List<FeedItemViewModel>>
+        fun showFeedItemDetails(feedItemViewModel: FeedItemViewModel)
     }
 }

@@ -1,27 +1,25 @@
 package agency.five.cu_it_rssfeedproject.ui.common
 
-import agency.five.cu_it_rssfeedproject.di.MAIN_ACTIVITY_SCOPE_ID
-import agency.five.cu_it_rssfeedproject.ui.router.Router
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.android.inject
 
 abstract class BaseFragment : Fragment() {
 
-    private val _screenTitleProvider: ScreenTitleProvider by inject()
-    private val _router: Router by getKoin().getScope(MAIN_ACTIVITY_SCOPE_ID).inject()
+    private val screenTitleProvider: ScreenTitleProvider by inject()
 
-    private var compositeDisposable: CompositeDisposable? = null
+    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    protected fun getScreenTitleProvider() = _screenTitleProvider
+    protected fun removeScreenTitle() = screenTitleProvider.removeTitle()
 
-    protected fun getRouter() = _router
+    protected fun addScreenTitle(title: String) = screenTitleProvider.addTitle(title)
 
-    protected fun addDisposable(disposable: Disposable) = compositeDisposable?.add(disposable)
+    protected fun setScreenTitleVisibility(show: Boolean) = screenTitleProvider.setTitleVisibility(show)
+
+    protected fun addDisposable(disposable: Disposable) = compositeDisposable.add(disposable)
 
     final override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +30,6 @@ abstract class BaseFragment : Fragment() {
 
     final override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        compositeDisposable = CompositeDisposable()
         doOnViewCreated(view, savedInstanceState)
     }
 
@@ -53,8 +50,7 @@ abstract class BaseFragment : Fragment() {
     protected open fun doOnViewStateRestored(savedInstanceState: Bundle?) {}
 
     override fun onDestroyView() {
-        compositeDisposable?.dispose()
-        compositeDisposable = null
+        compositeDisposable.clear()
         doOnDestroyView()
         super.onDestroyView()
     }

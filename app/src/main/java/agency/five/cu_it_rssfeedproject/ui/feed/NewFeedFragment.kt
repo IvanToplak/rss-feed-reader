@@ -30,13 +30,13 @@ class NewFeedFragment : BaseFragment(), NewFeedContract.View {
     override fun doOnViewCreated(view: View, savedInstanceState: Bundle?) {
         setupBackground()
         setupButtons()
-        showLoadingState(false)
+        showLoadingState(viewModel.getLoadingState())
         showErrorMessage(false)
     }
 
     private fun setupBackground() {
         new_feed_container.setOnClickListener {
-            getRouter().hideAddNewFeedScreen()
+            viewModel.back()
         }
     }
 
@@ -47,16 +47,16 @@ class NewFeedFragment : BaseFragment(), NewFeedContract.View {
     }
 
     private fun addNewFeed() {
-        showLoadingState()
+        setLoadingState()
         addDisposable(viewModel.addNewFeed(new_feed_url_edit_text.text.toString())
             .subscribeBy(
                 onComplete = {
-                    showLoadingState(false)
+                    setLoadingState(false)
                     showErrorMessage(false)
-                    getRouter().hideAddNewFeedScreen()
+                    viewModel.back()
                 },
                 onError = { error ->
-                    showLoadingState(false)
+                    setLoadingState(false)
                     showErrorMessage()
                     Log.e(
                         TAG,
@@ -77,5 +77,10 @@ class NewFeedFragment : BaseFragment(), NewFeedContract.View {
         new_feed_error_message_text_view?.show(!isLoading)
         new_feed_add_button?.isEnabled = !isLoading
         new_feed_url_edit_text?.isEnabled = !isLoading
+    }
+
+    private fun setLoadingState(isLoading: Boolean = true) {
+        viewModel.setLoadingState(isLoading)
+        showLoadingState(viewModel.getLoadingState())
     }
 }
