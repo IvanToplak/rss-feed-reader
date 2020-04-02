@@ -50,10 +50,10 @@ ext {
     rxKotlinVersion = "2.4.0"
     rxAndroidVersion = "2.1.1"
     workVersion = "2.3.4"
+    lifecycleVersion = "2.2.0"
 
     //dependency definitions
     commonDependencies = [
-            kotlinStdlibJdk7   : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
             kotlinStdlibJdk8   : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
             appcompat          : "androidx.appcompat:appcompat:$rootProject.appcompatVersion",
             androidCoreKtx     : "androidx.core:core-ktx:$rootProject.androidCoreKtxVersion",
@@ -64,7 +64,9 @@ ext {
             androidTestJunit   : "androidx.test.ext:junit:$rootProject.androidTestJunitVersion",
             androidTestEspresso: "androidx.test.espresso:espresso-core:$rootProject.androidTestEspressoVersion",
             materialComponents : "com.google.android.material:material:$rootProject.materialComponentsVersion",
-            picasso            : "com.squareup.picasso:picasso:$rootProject.picassoVersion"
+            picasso            : "com.squareup.picasso:picasso:$rootProject.picassoVersion",
+            viewModel          : "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion",
+            lifecycleCompiler  : "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
     ]
 
     //Room dependencies
@@ -81,9 +83,10 @@ ext {
 
     //Koin dependencies
     koinDependencies = [
-            koinAndroid     : "org.koin:koin-android:$koinVersion",
-            koinAndroidScope: "org.koin:koin-androidx-scope:$koinVersion",
-            koinTest        : "org.koin:koin-test:$koinVersion"
+            koinAndroid         : "org.koin:koin-android:$koinVersion",
+            koinAndroidScope    : "org.koin:koin-androidx-scope:$koinVersion",
+            koinAndroidViewModel: "org.koin:koin-android-viewmodel:$koinVersion",
+            koinTest            : "org.koin:koin-test:$koinVersion"
     ]
 
     //Rx dependencies

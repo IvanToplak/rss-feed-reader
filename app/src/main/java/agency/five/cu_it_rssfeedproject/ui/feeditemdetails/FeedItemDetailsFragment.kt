@@ -1,22 +1,17 @@
 package agency.five.cu_it_rssfeedproject.ui.feeditemdetails
 
-
 import agency.five.cu_it_rssfeedproject.R
 import agency.five.cu_it_rssfeedproject.app.show
 import agency.five.cu_it_rssfeedproject.ui.common.BaseFragment
-import agency.five.cu_it_rssfeedproject.ui.common.ScreenTitleProvider
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_feed_item_details.*
-import org.koin.android.ext.android.inject
 
 private const val FEED_ITEM_URL_KEY = "feedItemUrl"
 
 class FeedItemDetailsFragment : BaseFragment(), FeedItemDetailsWebViewClient.LoadingStateListener {
-
-    private val screenTitleProvider: ScreenTitleProvider by inject()
 
     private var feedItemUrl: String? = null
 
@@ -42,14 +37,14 @@ class FeedItemDetailsFragment : BaseFragment(), FeedItemDetailsWebViewClient.Loa
     ): View? = inflater.inflate(R.layout.fragment_feed_item_details, container, false)
 
     override fun doOnViewCreated(view: View, savedInstanceState: Bundle?) {
-        screenTitleProvider.setTitleVisibility(false)
+        getScreenTitleProvider().setTitleVisibility(false)
         if (!feedItemUrl.isNullOrEmpty()) {
             setupWebView(feedItemUrl!!)
         }
     }
 
     override fun onDestroyView() {
-        screenTitleProvider.setTitleVisibility(true)
+        getScreenTitleProvider().setTitleVisibility(true)
         super.onDestroyView()
     }
 

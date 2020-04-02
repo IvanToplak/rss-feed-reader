@@ -7,10 +7,9 @@ import agency.five.cu_it_rssfeedproject.ui.background.FeedsUpdateWorkRequestFact
 import agency.five.cu_it_rssfeedproject.ui.common.AppSchedulers
 import agency.five.cu_it_rssfeedproject.ui.common.ScreenTitleProvider
 import agency.five.cu_it_rssfeedproject.ui.common.ScreenTitleProviderImpl
-import agency.five.cu_it_rssfeedproject.ui.feed.*
-import agency.five.cu_it_rssfeedproject.ui.feeditem.FeedItemsContract
-import agency.five.cu_it_rssfeedproject.ui.feeditem.FeedItemsFragment
-import agency.five.cu_it_rssfeedproject.ui.feeditem.FeedItemsPresenter
+import agency.five.cu_it_rssfeedproject.ui.feed.FeedsViewModel
+import agency.five.cu_it_rssfeedproject.ui.feed.NewFeedViewModel
+import agency.five.cu_it_rssfeedproject.ui.feeditem.FeedItemsViewModel
 import agency.five.cu_it_rssfeedproject.ui.notification.NotificationFactory
 import agency.five.cu_it_rssfeedproject.ui.notification.NotificationFactoryImpl
 import agency.five.cu_it_rssfeedproject.ui.router.Router
@@ -20,6 +19,7 @@ import android.content.Intent
 import androidx.fragment.app.FragmentManager
 import androidx.work.WorkManager
 import org.koin.android.ext.koin.androidContext
+import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.util.concurrent.TimeUnit
@@ -40,44 +40,35 @@ val appModule = module {
         scoped<Router> { (fragmentManager: FragmentManager) -> RouterImpl(fragmentManager) }
     }
 
-    scope(named<FeedsFragment>()) {
-        scoped<FeedsContract.Presenter> {
-            FeedsPresenter(
-                getScope(MAIN_ACTIVITY_SCOPE_ID).get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get()
-            )
-        }
+    viewModel {
+        FeedsViewModel(
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get()
+        )
     }
 
-    scope(named<NewFeedFragment>()) {
-        scoped<NewFeedContract.Presenter> {
-            NewFeedPresenter(
-                getScope(MAIN_ACTIVITY_SCOPE_ID).get(),
-                get(),
-                get()
-            )
-        }
+    viewModel {
+        NewFeedViewModel(
+            get(),
+            get()
+        )
     }
 
-    scope(named<FeedItemsFragment>()) {
-        scoped<FeedItemsContract.Presenter> {
-            FeedItemsPresenter(
-                getScope(MAIN_ACTIVITY_SCOPE_ID).get(),
-                get(),
-                get(),
-                get(),
-                get(),
-                get()
-            )
-        }
+    viewModel {
+        FeedItemsViewModel(
+            get(),
+            get(),
+            get(),
+            get(),
+            get()
+        )
     }
 
     single { WorkManager.getInstance(androidContext()) }

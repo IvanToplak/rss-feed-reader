@@ -1,20 +1,14 @@
 package agency.five.cu_it_rssfeedproject.ui.feed
 
-import agency.five.cu_it_rssfeedproject.ui.common.ViewPresenter
 import agency.five.cu_it_rssfeedproject.ui.model.FeedViewModel
+import io.reactivex.Flowable
 
 interface FeedsContract {
 
-    interface View {
-        fun showFeeds(feeds: List<FeedViewModel>)
-        fun updateFeeds()
-    }
+    interface View
 
-    interface Presenter : ViewPresenter<View> {
-        fun getFeeds()
-        fun showAddNewFeed()
-        fun showFeedItems(feedViewModel: FeedViewModel)
-        fun showFavoriteFeedItems()
+    interface ViewModel {
+        fun getFeeds(): Flowable<List<FeedViewModel>>
         fun deleteFeed(feedViewModel: FeedViewModel)
         fun toggleNewFeedItemsNotificationPref()
         fun getNewFeedItemsNotificationPref(): Boolean

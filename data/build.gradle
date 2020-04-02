@@ -36,7 +36,7 @@ dependencies {
     implementation project(':domain')
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation commonDependencies.kotlinStdlibJdk7
+    implementation commonDependencies.kotlinStdlibJdk8
     implementation commonDependencies.appcompat
     implementation commonDependencies.androidCoreKtx
     testImplementation commonDependencies.junit
