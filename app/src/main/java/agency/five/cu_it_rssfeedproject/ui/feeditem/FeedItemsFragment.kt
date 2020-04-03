@@ -2,28 +2,28 @@ package agency.five.cu_it_rssfeedproject.ui.feeditem
 
 import agency.five.cu_it_rssfeedproject.R
 import agency.five.cu_it_rssfeedproject.ui.common.BaseFragment
-import agency.five.cu_it_rssfeedproject.ui.common.ScreenTitleProvider
 import agency.five.cu_it_rssfeedproject.ui.model.FeedItemViewModel
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.Flowable
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_feed_items.*
-import org.koin.android.ext.android.inject
-import org.koin.androidx.scope.currentScope
+import org.koin.android.viewmodel.ext.android.viewModel
 
 private const val FEED_ID_KEY = "feedId"
 private const val FEED_TITLE_KEY = "feedTitle"
 private const val FAVORITE_FEED_ITEMS_KEY = "favoriteFeedItems"
+private const val GET_FEED_ITEMS_ERROR_MESSAGE = "Error retrieving feed items"
 
 class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
     FeedItemsAdapter.ListItemOnClickListener,
     FeedItemsAdapter.FavoriteButtonOnClickListener {
 
-    private val presenter: FeedItemsContract.Presenter by currentScope.inject()
-    private val screenTitleProvider: ScreenTitleProvider by inject()
+    private val viewModel: FeedItemsContract.ViewModel by viewModel<FeedItemsViewModel>()
 
     private lateinit var feedItemsAdapter: FeedItemsAdapter
-
     private lateinit var feedItemsFunctionality: Functionality
 
     companion object {
@@ -54,7 +54,6 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
                 Functionality.FeedItems(feedId, feedTitle)
             }
         }
-        presenter.onCreate()
         setHasOptionsMenu(true)
     }
 
@@ -64,15 +63,27 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
     ): View? = inflater.inflate(R.layout.fragment_feed_items, container, false)
 
     override fun doOnViewCreated(view: View, savedInstanceState: Bundle?) {
-        presenter.onViewCreated(this)
         setupRecyclerView()
-
         requestViewData()
     }
 
-    private fun requestViewData() = when (val func = feedItemsFunctionality) {
-        is Functionality.FeedItems -> updateFeed(func)
-        Functionality.FavouriteFeedItems -> getFavoriteFeedItems()
+    private fun requestViewData() {
+        val flowable = when (val func = feedItemsFunctionality) {
+            is Functionality.FeedItems -> updateFeed(func)
+            Functionality.FavouriteFeedItems -> getFavoriteFeedItems()
+        }
+        addDisposable(flowable.subscribeBy(
+            onNext = { feedItems ->
+                showFeedItems(feedItems)
+            },
+            onError = { error ->
+                Log.e(
+                    TAG,
+                    GET_FEED_ITEMS_ERROR_MESSAGE,
+                    error
+                )
+            }
+        ))
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -80,26 +91,19 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
     }
 
     override fun doOnDestroyView() {
-        presenter.onDestroyView()
         if (feedItemsFunctionality is Functionality.FeedItems) {
-            screenTitleProvider.removeTitle()
+            removeScreenTitle()
         }
     }
 
-    override fun doOnDestroy() = presenter.onDestroy()
+    private fun getFavoriteFeedItems() = viewModel.getFavoriteFeedItems()
 
-    private fun getFavoriteFeedItems() {
-        presenter.getFavoriteFeedItems()
-    }
-
-    private fun updateFeed(feedItems: Functionality.FeedItems) {
+    private fun updateFeed(feedItems: Functionality.FeedItems): Flowable<List<FeedItemViewModel>> {
         updateFeedTitle(if (feedItems.feedTitle.isNotEmpty()) feedItems.feedTitle else getString(R.string.app_name))
-        presenter.getFeedItems(feedItems.feedId)
+        return viewModel.getFeedItems(feedItems.feedId)
     }
 
-    private fun updateFeedTitle(feedTitle: String) {
-        screenTitleProvider.addTitle(feedTitle)
-    }
+    private fun updateFeedTitle(feedTitle: String) = addScreenTitle(feedTitle)
 
     private fun setupRecyclerView() {
         feedItemsAdapter = FeedItemsAdapter(mutableListOf(), this, this)
@@ -108,19 +112,19 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
         feed_items_recycler_view.adapter = feedItemsAdapter
     }
 
-    override fun showFeedItems(feedItems: List<FeedItemViewModel>) =
+    private fun showFeedItems(feedItems: List<FeedItemViewModel>) =
         feedItemsAdapter.updateFeedItems(feedItems)
 
     override fun onFeedItemClicked(clickedFeedItem: FeedItemViewModel) {
         if (clickedFeedItem.link.isEmpty()) return
         if (clickedFeedItem.isNew) {
-            presenter.updateFeedItemIsNewStatus(clickedFeedItem, false)
+            viewModel.updateFeedItemIsNewStatus(clickedFeedItem, false)
         }
-        presenter.showFeedItemDetails(clickedFeedItem)
+        viewModel.showFeedItemDetails(clickedFeedItem)
     }
 
     override fun onFavoriteButtonClicked(clickedFeedItem: FeedItemViewModel) =
-        presenter.updateFeedItemIsFavoriteStatus(clickedFeedItem, !clickedFeedItem.isFavorite)
+        viewModel.updateFeedItemIsFavoriteStatus(clickedFeedItem, !clickedFeedItem.isFavorite)
 }
 
 sealed class Functionality {

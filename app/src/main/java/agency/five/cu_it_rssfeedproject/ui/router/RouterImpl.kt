@@ -6,7 +6,6 @@ import agency.five.cu_it_rssfeedproject.ui.feed.NewFeedFragment
 import agency.five.cu_it_rssfeedproject.ui.feeditem.FeedItemsFragment
 import agency.five.cu_it_rssfeedproject.ui.feeditemdetails.FeedItemDetailsFragment
 import androidx.fragment.app.FragmentManager
-import java.lang.IllegalArgumentException
 
 class RouterImpl(private val fragmentManager: FragmentManager) : Router {
 
@@ -35,13 +34,11 @@ class RouterImpl(private val fragmentManager: FragmentManager) : Router {
         }
     }
 
-    override fun showFeedItemsScreen(feedId: Int, feedTitle: String) {
+    override fun showFeedItemsScreen(feedId: Int, feedTitle: String) =
         showFeedItemsScreenInternal(feedId, feedTitle)
-    }
 
-    override fun showFavoriteFeedItems() {
+    override fun showFavoriteFeedItemsScreen() =
         showFeedItemsScreenInternal(showFavoritesOnly = true)
-    }
 
     private fun showFeedItemsScreenInternal(
         feedId: Int? = null,

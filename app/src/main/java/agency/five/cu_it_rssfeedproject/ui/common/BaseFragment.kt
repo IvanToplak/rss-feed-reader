@@ -3,8 +3,23 @@ package agency.five.cu_it_rssfeedproject.ui.common
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import org.koin.android.ext.android.inject
 
 abstract class BaseFragment : Fragment() {
+
+    private val screenTitleProvider: ScreenTitleProvider by inject()
+
+    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
+
+    protected fun removeScreenTitle() = screenTitleProvider.removeTitle()
+
+    protected fun addScreenTitle(title: String) = screenTitleProvider.addTitle(title)
+
+    protected fun setScreenTitleVisibility(show: Boolean) = screenTitleProvider.setTitleVisibility(show)
+
+    protected fun addDisposable(disposable: Disposable) = compositeDisposable.add(disposable)
 
     final override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +50,7 @@ abstract class BaseFragment : Fragment() {
     protected open fun doOnViewStateRestored(savedInstanceState: Bundle?) {}
 
     override fun onDestroyView() {
+        compositeDisposable.clear()
         doOnDestroyView()
         super.onDestroyView()
     }

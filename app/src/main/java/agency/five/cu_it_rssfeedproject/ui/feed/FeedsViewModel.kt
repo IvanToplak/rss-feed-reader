@@ -3,23 +3,23 @@ package agency.five.cu_it_rssfeedproject.ui.feed
 import agency.five.cu_it_rssfeedproject.domain.interactor.*
 import agency.five.cu_it_rssfeedproject.domain.model.Feed
 import agency.five.cu_it_rssfeedproject.ui.common.AppSchedulers
-import agency.five.cu_it_rssfeedproject.ui.common.BasePresenter
+import agency.five.cu_it_rssfeedproject.ui.common.BaseViewModel
 import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedToFeedViewModel
 import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedViewModelToFeed
 import agency.five.cu_it_rssfeedproject.ui.model.FeedViewModel
-import agency.five.cu_it_rssfeedproject.ui.router.Router
+import agency.five.cu_it_rssfeedproject.ui.router.RouterProvider
 import android.util.Log
 import io.reactivex.Flowable
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.subscribeBy
+import java.util.concurrent.TimeUnit
 
-private const val TAG = "FeedsPresenter"
-private const val GET_FEEDS_ERROR_MESSAGE = "Error retrieving feeds"
+private const val TAG = "FeedsViewModel"
 private const val DELETE_ERROR_MESSAGE = "Error deleting feed"
 private const val INSERT_FEED_ITEMS_ERROR_MESSAGE = "Error inserting feed items for feed"
 
-class FeedsPresenter(
-    private val router: Router,
+class FeedsViewModel(
+    private val routerProvider: RouterProvider,
     private val getFeedsUseCase: GetFeedsUseCase,
     private val deleteFeedUseCase: DeleteFeedUseCase,
     private val addFeedItemsToFeedUseCase: AddFeedItemsToFeedUseCase,
@@ -29,45 +29,29 @@ class FeedsPresenter(
     private val enableBackgroundFeedUpdatesUseCase: EnableBackgroundFeedUpdatesUseCase,
     private val disableBackgroundFeedUpdatesUseCase: DisableBackgroundFeedUpdatesUseCase,
     private val schedulers: AppSchedulers
-) : BasePresenter<FeedsContract.View>(), FeedsContract.Presenter {
+) : BaseViewModel(), FeedsContract.ViewModel {
+
+    private var feeds: Flowable<List<FeedViewModel>> = getFeedsInternal()
+        .doOnSubscribe { fetchFeedItems() }
+        .replay(1)
+        .refCount(1000, TimeUnit.MILLISECONDS)
 
     private var currentFeedCount = 0
 
-    override fun getFeeds() {
-        fetchFeedItems()
-        getFeedsInternal()
-    }
+    override fun getFeeds() = feeds
 
-    private fun fetchFeedItems() {
-        val subscription = getFeedsUseCase.execute()
-            .subscribeOn(schedulers.background())
-            .subscribe { feeds ->
-                if (feeds.isNotEmpty() && currentFeedCount <= feeds.count()) {
-                    addFeedItemsToFeeds(feeds)
-                }
-                currentFeedCount = feeds.count()
+    private fun fetchFeedItems() = addDisposable(getFeedsUseCase.execute()
+        .subscribeOn(schedulers.background())
+        .subscribe { feeds ->
+            if (feeds.isNotEmpty() && currentFeedCount <= feeds.count()) {
+                addFeedItemsToFeeds(feeds)
             }
-        addDisposable(subscription)
-    }
+            currentFeedCount = feeds.count()
+        })
 
-    private fun getFeedsInternal() {
-        val subscription =
-            getFeedViewModelsFlowable()
-                .observeOn(schedulers.main())
-                .subscribeOn(schedulers.background())
-                .subscribeBy(
-                    onNext = { feedViewModels ->
-                        withView { showFeeds(feedViewModels) }
-                    },
-                    onError = { error ->
-                        Log.e(
-                            TAG,
-                            GET_FEEDS_ERROR_MESSAGE,
-                            error
-                        )
-                    })
-        addDisposable(subscription)
-    }
+    private fun getFeedsInternal() = getFeedViewModelsFlowable()
+        .observeOn(schedulers.main())
+        .subscribeOn(schedulers.background())
 
     private fun getFeedViewModelsFlowable() =
         Flowable.combineLatest<List<Feed>, Set<Int>, List<FeedViewModel>>(
@@ -79,9 +63,9 @@ class FeedsPresenter(
                 }
             })
 
-    private fun addFeedItemsToFeeds(feeds: List<Feed>) {
-        feeds.forEach { feed ->
-            val subscription = addFeedItemsToFeedUseCase.execute(feed)
+    private fun addFeedItemsToFeeds(feeds: List<Feed>) = feeds.forEach { feed ->
+        addDisposable(
+            addFeedItemsToFeedUseCase.execute(feed)
                 .subscribeOn(schedulers.background())
                 .subscribeBy(onError = { error ->
                     Log.e(
@@ -90,19 +74,11 @@ class FeedsPresenter(
                         error
                     )
                 })
-            addDisposable(subscription)
-        }
+        )
     }
 
-    override fun showAddNewFeed() = router.showAddNewFeedScreen()
-
-    override fun showFeedItems(feedViewModel: FeedViewModel) =
-        router.showFeedItemsScreen(feedViewModel.id, feedViewModel.title)
-
-    override fun showFavoriteFeedItems() = router.showFavoriteFeedItems()
-
-    override fun deleteFeed(feedViewModel: FeedViewModel) {
-        val subscription = deleteFeedUseCase.execute(
+    override fun deleteFeed(feedViewModel: FeedViewModel) = addDisposable(
+        deleteFeedUseCase.execute(
             mapFeedViewModelToFeed(feedViewModel)
         ).subscribeOn(schedulers.background())
             .subscribeBy(
@@ -113,8 +89,7 @@ class FeedsPresenter(
                         error
                     )
                 })
-        addDisposable(subscription)
-    }
+    )
 
     override fun toggleNewFeedItemsNotificationPref() {
         val notificationEnabled = !getNewFeedItemsNotificationPref()
@@ -126,6 +101,13 @@ class FeedsPresenter(
         }
     }
 
-    override fun getNewFeedItemsNotificationPref(): Boolean =
+    override fun getNewFeedItemsNotificationPref() =
         getNewFeedItemsNotificationPrefUseCase.execute()
+
+    override fun showAddNewFeed() = routerProvider.getRouter().showAddNewFeedScreen()
+
+    override fun showFeedItems(feedViewModel: FeedViewModel) =
+        routerProvider.getRouter().showFeedItemsScreen(feedViewModel.id, feedViewModel.title)
+
+    override fun showFavoriteFeedItems() = routerProvider.getRouter().showFavoriteFeedItemsScreen()
 }

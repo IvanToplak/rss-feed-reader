@@ -1,16 +1,15 @@
 package agency.five.cu_it_rssfeedproject.ui.feed
 
-import agency.five.cu_it_rssfeedproject.ui.common.ViewPresenter
+import io.reactivex.Completable
 
 interface NewFeedContract {
 
-    interface View {
-        fun showErrorMessage(isError: Boolean = true)
-        fun showLoadingState(isLoading: Boolean = true)
-    }
+    interface View
 
-    interface Presenter : ViewPresenter<View> {
-        fun addNewFeed(feedUrl: String)
+    interface ViewModel {
+        fun addNewFeed(feedUrl: String): Completable
+        fun getLoadingState(): Boolean
+        fun setLoadingState(isLoading: Boolean)
         fun back()
     }
 }

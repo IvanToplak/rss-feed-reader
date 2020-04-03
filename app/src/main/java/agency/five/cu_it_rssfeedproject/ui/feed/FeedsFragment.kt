@@ -5,27 +5,29 @@ import agency.five.cu_it_rssfeedproject.app.show
 import agency.five.cu_it_rssfeedproject.ui.common.BaseFragment
 import agency.five.cu_it_rssfeedproject.ui.model.FeedViewModel
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_feeds.*
-import org.koin.androidx.scope.currentScope
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemOnLongClickListener,
     FeedsAdapter.ListItemOnClickListener {
 
     private lateinit var feedsAdapter: FeedsAdapter
-    private val presenter: FeedsContract.Presenter by currentScope.inject()
+    private val viewModel: FeedsContract.ViewModel by viewModel<FeedsViewModel>()
     private var selectedFeed: FeedViewModel = FeedViewModel()
     private var savedSelectedFeedId: Int? = null
 
     companion object {
         const val TAG = "feeds"
-        const val FEED_ID_KEY = "feedId"
+        private const val FEED_ID_KEY = "feedId"
+        private const val GET_FEEDS_ERROR_MESSAGE = "Error retrieving feeds"
         fun newInstance() = FeedsFragment()
     }
 
     override fun doOnCreate(savedInstanceState: Bundle?) {
-        presenter.onCreate()
         setHasOptionsMenu(true)
     }
 
@@ -35,7 +37,6 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
     ): View? = inflater.inflate(R.layout.fragment_feeds, container, false)
 
     override fun doOnViewCreated(view: View, savedInstanceState: Bundle?) {
-        presenter.onViewCreated(this)
         setupRecyclerView()
         setupButtons()
         updateFeeds()
@@ -61,7 +62,7 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.favorite_items_button -> {
-                presenter.showFavoriteFeedItems()
+                viewModel.showFavoriteFeedItems()
                 true
             }
             R.id.new_feed_items_notifications_button -> {
@@ -72,9 +73,24 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
         }
     }
 
+    private fun updateFeeds() = addDisposable(
+        viewModel.getFeeds()
+            .subscribeBy(
+                onNext = { feedViewModels ->
+                    showFeeds(feedViewModels)
+                },
+                onError = { error ->
+                    Log.e(
+                        TAG,
+                        GET_FEEDS_ERROR_MESSAGE,
+                        error
+                    )
+                })
+    )
+
     private fun setNewFeedItemsNotificationIcon(item: MenuItem) {
         item.icon = resources.getDrawable(
-            if (presenter.getNewFeedItemsNotificationPref())
+            if (viewModel.getNewFeedItemsNotificationPref())
                 R.drawable.menu_notifications_active_white_24dp
             else
                 R.drawable.menu_notifications_none_white_24dp,
@@ -83,22 +99,18 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
     }
 
     private fun toggleNewFeedItemsNotification(item: MenuItem) {
-        presenter.toggleNewFeedItemsNotificationPref()
+        viewModel.toggleNewFeedItemsNotificationPref()
         setNewFeedItemsNotificationIcon(item)
     }
-
-    override fun doOnDestroyView() = presenter.onDestroyView()
-
-    override fun doOnDestroy() = presenter.onDestroy()
 
     private fun setupButtons() {
         add_new_or_delete_feed_button.setOnClickListener {
             if (!selectedFeed.isEmpty()) {
                 feedsAdapter.toggleSelection(selectedFeed)
-                presenter.deleteFeed(selectedFeed)
+                viewModel.deleteFeed(selectedFeed)
                 selectedFeed = FeedViewModel()
             } else {
-                presenter.showAddNewFeed()
+                viewModel.showAddNewFeed()
             }
         }
     }
@@ -116,7 +128,7 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
     private fun setDeleteFeedButton() =
         add_new_or_delete_feed_button.setImageResource(R.drawable.baseline_delete_white_18)
 
-    override fun showFeeds(feeds: List<FeedViewModel>) {
+    private fun showFeeds(feeds: List<FeedViewModel>) {
         feedsAdapter.updateFeeds(feeds)
         empty_state_message_text_view?.show(feeds.isEmpty())
         if (savedSelectedFeedId != null) {
@@ -126,8 +138,6 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
             setAddNewFeedButton()
         }
     }
-
-    override fun updateFeeds() = presenter.getFeeds()
 
     override fun onFeedSelected(selectedFeed: FeedViewModel) {
         when {
@@ -151,7 +161,7 @@ class FeedsFragment : BaseFragment(), FeedsContract.View, FeedsAdapter.ListItemO
         if (this.selectedFeed == clickedFeed) {
             clearSelection()
         }
-        presenter.showFeedItems(clickedFeed)
+        viewModel.showFeedItems(clickedFeed)
     }
 
     private fun clearSelection() {
