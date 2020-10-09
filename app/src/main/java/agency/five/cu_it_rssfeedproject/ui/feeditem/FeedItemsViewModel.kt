@@ -7,9 +7,8 @@ import agency.five.cu_it_rssfeedproject.domain.interactor.UpdateFeedItemIsNewSta
 import agency.five.cu_it_rssfeedproject.domain.model.FeedItem
 import agency.five.cu_it_rssfeedproject.ui.common.AppSchedulers
 import agency.five.cu_it_rssfeedproject.ui.common.BaseViewModel
-import agency.five.cu_it_rssfeedproject.ui.mappings.mapFeedItemToFeedItemViewModel
-import agency.five.cu_it_rssfeedproject.ui.model.FeedItemViewModel
-import agency.five.cu_it_rssfeedproject.ui.router.RouterProvider
+import agency.five.cu_it_rssfeedproject.ui.mappings.toFeedItemViewData
+import agency.five.cu_it_rssfeedproject.ui.model.FeedItemViewData
 import android.util.Log
 import io.reactivex.Flowable
 import io.reactivex.rxkotlin.subscribeBy
@@ -21,7 +20,6 @@ private const val UPDATE_FEED_ITEM_IS_FAVORITE_STATUS_ERROR_MESSAGE =
     "Error updating feed item's 'is favorite' status"
 
 class FeedItemsViewModel(
-    private val routerProvider: RouterProvider,
     private val getFeedItemsUseCase: GetFeedItemsUseCase,
     private val updateFeedItemIsNewStatusUseCase: UpdateFeedItemIsNewStatusUseCase,
     private val updateFeedItemIsFavoriteStatusUseCase: UpdateFeedItemIsFavoriteStatusUseCase,
@@ -30,8 +28,8 @@ class FeedItemsViewModel(
 ) :
     BaseViewModel(), FeedItemsContract.ViewModel {
 
-    private var feedItems: Flowable<List<FeedItemViewModel>>? = null
-    private var favoriteFeedItems: Flowable<List<FeedItemViewModel>>? = null
+    private var feedItems: Flowable<List<FeedItemViewData>>? = null
+    private var favoriteFeedItems: Flowable<List<FeedItemViewData>>? = null
 
     override fun getFeedItems(feedId: Int) =
         feedItems ?: getFeedItemsSubscription(getFeedItemsUseCase.execute(feedId))
@@ -42,16 +40,14 @@ class FeedItemsViewModel(
 
     private fun getFeedItemsSubscription(flowable: Flowable<List<FeedItem>>) =
         flowable.map { feedItems ->
-            feedItems.map { feedItem ->
-                mapFeedItemToFeedItemViewModel(feedItem)
-            }
+            feedItems.map { feedItem -> feedItem.toFeedItemViewData() }
         }
             .observeOn(schedulers.main())
             .subscribeOn(schedulers.background())
 
-    override fun updateFeedItemIsNewStatus(feedItemViewModel: FeedItemViewModel, isNew: Boolean) =
+    override fun updateFeedItemIsNewStatus(feedItemViewData: FeedItemViewData, isNew: Boolean) =
         addDisposable(
-            updateFeedItemIsNewStatusUseCase.execute(feedItemViewModel.id, isNew)
+            updateFeedItemIsNewStatusUseCase.execute(feedItemViewData.id, isNew)
                 .subscribeOn(schedulers.background())
                 .subscribeBy(
                     onError = { error ->
@@ -64,10 +60,10 @@ class FeedItemsViewModel(
         )
 
     override fun updateFeedItemIsFavoriteStatus(
-        feedItemViewModel: FeedItemViewModel,
+        feedItemViewData: FeedItemViewData,
         isFavorite: Boolean
     ) = addDisposable(
-        updateFeedItemIsFavoriteStatusUseCase.execute(feedItemViewModel.id, isFavorite)
+        updateFeedItemIsFavoriteStatusUseCase.execute(feedItemViewData.id, isFavorite)
             .subscribeOn(schedulers.background())
             .subscribeBy(
                 onError = { error ->
@@ -78,7 +74,4 @@ class FeedItemsViewModel(
                     )
                 })
     )
-
-    override fun showFeedItemDetails(feedItemViewModel: FeedItemViewModel) =
-        routerProvider.getRouter().showFeedItemDetailsScreen(feedItemViewModel.link)
 }

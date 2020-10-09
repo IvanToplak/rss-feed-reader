@@ -1,8 +1,8 @@
 package agency.five.cu_it_rssfeedproject.ui.feeditem
 
 import agency.five.cu_it_rssfeedproject.R
-import agency.five.cu_it_rssfeedproject.ui.common.BaseFragment
-import agency.five.cu_it_rssfeedproject.ui.model.FeedItemViewModel
+import agency.five.cu_it_rssfeedproject.ui.common.KoinFragment
+import agency.five.cu_it_rssfeedproject.ui.model.FeedItemViewData
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.Flowable
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_feed_items.*
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val FEED_ID_KEY = "feedId"
 private const val FEED_TITLE_KEY = "feedTitle"
 private const val FAVORITE_FEED_ITEMS_KEY = "favoriteFeedItems"
 private const val GET_FEED_ITEMS_ERROR_MESSAGE = "Error retrieving feed items"
 
-class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
+class FeedItemsFragment : KoinFragment(), FeedItemsContract.View,
     FeedItemsAdapter.ListItemOnClickListener,
     FeedItemsAdapter.FavoriteButtonOnClickListener {
 
@@ -98,7 +98,7 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
 
     private fun getFavoriteFeedItems() = viewModel.getFavoriteFeedItems()
 
-    private fun updateFeed(feedItems: Functionality.FeedItems): Flowable<List<FeedItemViewModel>> {
+    private fun updateFeed(feedItems: Functionality.FeedItems): Flowable<List<FeedItemViewData>> {
         updateFeedTitle(if (feedItems.feedTitle.isNotEmpty()) feedItems.feedTitle else getString(R.string.app_name))
         return viewModel.getFeedItems(feedItems.feedId)
     }
@@ -112,18 +112,18 @@ class FeedItemsFragment : BaseFragment(), FeedItemsContract.View,
         feed_items_recycler_view.adapter = feedItemsAdapter
     }
 
-    private fun showFeedItems(feedItems: List<FeedItemViewModel>) =
+    private fun showFeedItems(feedItems: List<FeedItemViewData>) =
         feedItemsAdapter.updateFeedItems(feedItems)
 
-    override fun onFeedItemClicked(clickedFeedItem: FeedItemViewModel) {
+    override fun onFeedItemClicked(clickedFeedItem: FeedItemViewData) {
         if (clickedFeedItem.link.isEmpty()) return
         if (clickedFeedItem.isNew) {
             viewModel.updateFeedItemIsNewStatus(clickedFeedItem, false)
         }
-        viewModel.showFeedItemDetails(clickedFeedItem)
+        router.showFeedItemDetailsScreen(clickedFeedItem.link)
     }
 
-    override fun onFavoriteButtonClicked(clickedFeedItem: FeedItemViewModel) =
+    override fun onFavoriteButtonClicked(clickedFeedItem: FeedItemViewData) =
         viewModel.updateFeedItemIsFavoriteStatus(clickedFeedItem, !clickedFeedItem.isFavorite)
 }
 

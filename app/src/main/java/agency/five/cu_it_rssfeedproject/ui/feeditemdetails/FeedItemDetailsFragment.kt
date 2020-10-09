@@ -2,7 +2,7 @@ package agency.five.cu_it_rssfeedproject.ui.feeditemdetails
 
 import agency.five.cu_it_rssfeedproject.R
 import agency.five.cu_it_rssfeedproject.app.show
-import agency.five.cu_it_rssfeedproject.ui.common.BaseFragment
+import agency.five.cu_it_rssfeedproject.ui.common.KoinFragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.fragment_feed_item_details.*
 
 private const val FEED_ITEM_URL_KEY = "feedItemUrl"
 
-class FeedItemDetailsFragment : BaseFragment(), FeedItemDetailsWebViewClient.LoadingStateListener {
+class FeedItemDetailsFragment : KoinFragment(), FeedItemDetailsWebViewClient.LoadingStateListener {
 
     private var feedItemUrl: String? = null
 

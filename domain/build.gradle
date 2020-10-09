@@ -6,7 +6,6 @@ dependencies {
 
     // Koin dependencies
     implementation koinDependencies.koinAndroid
-    implementation koinDependencies.koinAndroidScope
     testImplementation koinDependencies.koinTest
 
     //Rx dependencies

@@ -3,7 +3,7 @@ package agency.five.cu_it_rssfeedproject.ui.feed
 import agency.five.cu_it_rssfeedproject.R
 import agency.five.cu_it_rssfeedproject.app.inflate
 import agency.five.cu_it_rssfeedproject.app.show
-import agency.five.cu_it_rssfeedproject.ui.model.FeedViewModel
+import agency.five.cu_it_rssfeedproject.ui.model.FeedViewData
 import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
@@ -13,18 +13,18 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_item_feed_card.view.*
 
 class FeedsAdapter(
-    private val feeds: MutableList<FeedViewModel>,
+    private val feeds: MutableList<FeedViewData>,
     private val listItemOnLongClickListener: ListItemOnLongClickListener,
     private val listItemOnClickListener: ListItemOnClickListener
 ) :
     RecyclerView.Adapter<FeedsAdapter.ViewHolder>() {
 
     interface ListItemOnLongClickListener {
-        fun onFeedSelected(selectedFeed: FeedViewModel)
+        fun onFeedSelected(selectedFeed: FeedViewData)
     }
 
     interface ListItemOnClickListener {
-        fun onFeedClicked(clickedFeed: FeedViewModel)
+        fun onFeedClicked(clickedFeed: FeedViewData)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
@@ -36,13 +36,13 @@ class FeedsAdapter(
         holder.bind(feeds[position])
     }
 
-    fun updateFeeds(feeds: List<FeedViewModel>) {
+    fun updateFeeds(feeds: List<FeedViewData>) {
         this.feeds.clear()
         this.feeds.addAll(feeds)
         notifyDataSetChanged()
     }
 
-    fun toggleSelection(selectedFeed: FeedViewModel) {
+    fun toggleSelection(selectedFeed: FeedViewData) {
         if (selectedFeed.isEmpty()) return
         val position = feeds.indexOf(selectedFeed)
         if (position == -1) return
@@ -50,21 +50,21 @@ class FeedsAdapter(
         notifyItemChanged(position)
     }
 
-    fun selectFeed(feedId: Int): FeedViewModel {
+    fun selectFeed(feedId: Int): FeedViewData {
         val feed = feeds.firstOrNull { it.id == feedId }
         return if (feed != null) {
             if (!feed.isSelected) {
                 toggleSelection(feed)
             }
             feed
-        } else FeedViewModel()
+        } else FeedViewData()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private lateinit var feed: FeedViewModel
+        private lateinit var feed: FeedViewData
 
-        fun bind(feed: FeedViewModel) {
+        fun bind(feed: FeedViewData) {
             this.feed = feed
 
             //load feed image from image url or use default if blank

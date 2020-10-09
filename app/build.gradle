@@ -21,6 +21,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
     kotlinOptions { jvmTarget = rootProject.jvmTargetVersion }
 }
 
@@ -34,7 +40,6 @@ dependencies {
     implementation commonDependencies.appcompat
     implementation commonDependencies.androidCoreKtx
     implementation commonDependencies.constraintlayout
-    implementation commonDependencies.legacySupport
     implementation commonDependencies.recyclerView
     implementation commonDependencies.materialComponents
     implementation commonDependencies.picasso

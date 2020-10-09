@@ -2,7 +2,7 @@ package agency.five.cu_it_rssfeedproject.ui.feed
 
 import agency.five.cu_it_rssfeedproject.R
 import agency.five.cu_it_rssfeedproject.app.show
-import agency.five.cu_it_rssfeedproject.ui.common.BaseFragment
+import agency.five.cu_it_rssfeedproject.ui.common.KoinFragment
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,9 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_new_feed.*
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class NewFeedFragment : BaseFragment(), NewFeedContract.View {
+class NewFeedFragment : KoinFragment(), NewFeedContract.View {
 
     private val viewModel: NewFeedContract.ViewModel by viewModel<NewFeedViewModel>()
 
@@ -36,7 +36,7 @@ class NewFeedFragment : BaseFragment(), NewFeedContract.View {
 
     private fun setupBackground() {
         new_feed_container.setOnClickListener {
-            viewModel.back()
+            router.hideAddNewFeedScreen()
         }
     }
 
@@ -53,7 +53,7 @@ class NewFeedFragment : BaseFragment(), NewFeedContract.View {
                 onComplete = {
                     setLoadingState(false)
                     showErrorMessage(false)
-                    viewModel.back()
+                    router.hideAddNewFeedScreen()
                 },
                 onError = { error ->
                     setLoadingState(false)

@@ -10,6 +10,5 @@ interface NewFeedContract {
         fun addNewFeed(feedUrl: String): Completable
         fun getLoadingState(): Boolean
         fun setLoadingState(isLoading: Boolean)
-        fun back()
     }
 }
