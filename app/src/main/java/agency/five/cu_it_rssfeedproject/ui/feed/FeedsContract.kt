@@ -8,6 +8,7 @@ interface FeedsContract {
     interface View
 
     interface ViewModel {
+        var selectedFeed: FeedViewData?
         fun getFeeds(): Flowable<List<FeedViewData>>
         fun deleteFeed(feedViewData: FeedViewData)
         fun toggleNewFeedItemsNotificationPref()

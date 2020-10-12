@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="RssFeedReader" parent="Base.RssFeedReader">
+        <item name="colorPrimary">@color/darkPrimaryColor</item>
+        <item name="colorSecondary">@color/darkSecondaryColor</item>
+        <item name="colorSurface">@color/darkSurfaceColor</item>
+        <item name="elevationOverlayEnabled">false</item>
+    </style>
+
+</resources>

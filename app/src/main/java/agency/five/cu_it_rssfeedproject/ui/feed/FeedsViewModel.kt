@@ -37,6 +37,8 @@ class FeedsViewModel(
 
     override fun getFeeds() = feeds
 
+    override var selectedFeed: FeedViewData? = null
+
     private fun fetchFeedItems() = addDisposable(getFeedsUseCase.execute()
         .subscribeOn(schedulers.background())
         .subscribe { feeds ->

@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list_item_feed_card"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/margin_quarter"
-    android:layout_marginTop="@dimen/margin_quarter"
-    android:layout_marginEnd="@dimen/margin_quarter"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    tools:cardCornerRadius="@dimen/card_corner_radius"
-    tools:cardElevation="@dimen/card_elevation">
+    style="@style/CardView.RssFeedReader.RecyclerView.Items"
+    android:checkable="true"
+    android:clickable="true"
+    android:focusable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/list_item_feed_container"
@@ -30,7 +23,7 @@
             android:scaleType="centerInside"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/baseline_rss_feed_black_48" />
+            tools:srcCompat="@drawable/ic_rss_feed_48" />
 
         <TextView
             android:id="@+id/feed_title_text_view"
@@ -39,7 +32,7 @@
             android:layout_marginStart="@dimen/margin_standard"
             android:layout_marginTop="@dimen/margin_standard"
             android:layout_marginEnd="@dimen/margin_standard"
-            android:textSize="@dimen/feed_title_text_size"
+            android:textAppearance="?attr/textAppearanceHeadline6"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/feed_image"
@@ -54,6 +47,7 @@
             android:layout_marginTop="@dimen/margin_half"
             android:layout_marginEnd="@dimen/margin_standard"
             android:layout_marginBottom="@dimen/margin_standard"
+            android:textAppearance="?attr/textAppearanceBody2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/feed_image"
@@ -63,15 +57,11 @@
 
         <TextView
             android:id="@+id/feed_new_feed_items_indicator_text_view"
-            android:layout_width="@dimen/feed_new_item_indicator_width"
-            android:layout_height="wrap_content"
+            style="@style/TextView.RssFeedReader.NewItemIndicator"
             android:layout_marginStart="@dimen/margin_standard"
             android:layout_marginTop="@dimen/margin_half"
             android:layout_marginEnd="@dimen/margin_standard"
             android:layout_marginBottom="@dimen/margin_standard"
-            android:text="@string/feed_item_new_item_indicator_text"
-            android:textColor="@color/colorAccent"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/feed_description_text_view"
             app:layout_constraintStart_toStartOf="parent"
@@ -81,5 +71,5 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
 

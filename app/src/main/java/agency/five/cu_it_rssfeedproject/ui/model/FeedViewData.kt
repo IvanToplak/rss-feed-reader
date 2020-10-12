@@ -23,8 +23,4 @@ data class FeedViewData(
     override fun hashCode(): Int {
         return id
     }
-
-    fun isEmpty(): Boolean {
-        return id == 0 && title.isEmpty() && description.isEmpty() && url.isEmpty() && imageUrl.isEmpty()
-    }
 }

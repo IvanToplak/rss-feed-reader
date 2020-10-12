@@ -7,6 +7,7 @@ import agency.five.cu_it_rssfeedproject.ui.model.FeedViewData
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_feeds.*
@@ -17,12 +18,9 @@ class FeedsFragment : KoinFragment(), FeedsContract.View, FeedsAdapter.ListItemO
 
     private lateinit var feedsAdapter: FeedsAdapter
     private val viewModel: FeedsContract.ViewModel by viewModel<FeedsViewModel>()
-    private var selectedFeed: FeedViewData = FeedViewData()
-    private var savedSelectedFeedId: Int? = null
 
     companion object {
         const val TAG = "feeds"
-        private const val FEED_ID_KEY = "feedId"
         private const val GET_FEEDS_ERROR_MESSAGE = "Error retrieving feeds"
         fun newInstance() = FeedsFragment()
     }
@@ -40,16 +38,6 @@ class FeedsFragment : KoinFragment(), FeedsContract.View, FeedsAdapter.ListItemO
         setupRecyclerView()
         setupButtons()
         updateFeeds()
-    }
-
-    override fun doOnSaveInstanceState(outState: Bundle) {
-        if (!selectedFeed.isEmpty()) {
-            outState.putInt(FEED_ID_KEY, selectedFeed.id)
-        }
-    }
-
-    override fun doOnViewStateRestored(savedInstanceState: Bundle?) {
-        savedSelectedFeedId = savedInstanceState?.getInt(FEED_ID_KEY)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -89,13 +77,11 @@ class FeedsFragment : KoinFragment(), FeedsContract.View, FeedsAdapter.ListItemO
     )
 
     private fun setNewFeedItemsNotificationIcon(item: MenuItem) {
-        item.icon = resources.getDrawable(
-            if (viewModel.getNewFeedItemsNotificationPref())
-                R.drawable.menu_notifications_active_white_24dp
-            else
-                R.drawable.menu_notifications_none_white_24dp,
-            null
-        )
+        val resId = if (viewModel.getNewFeedItemsNotificationPref())
+            R.drawable.menu_notifications_active_white_24dp
+        else
+            R.drawable.menu_notifications_none_white_24dp
+        item.icon = ResourcesCompat.getDrawable(resources, resId, activity?.theme)
     }
 
     private fun toggleNewFeedItemsNotification(item: MenuItem) {
@@ -105,10 +91,11 @@ class FeedsFragment : KoinFragment(), FeedsContract.View, FeedsAdapter.ListItemO
 
     private fun setupButtons() {
         add_new_or_delete_feed_button.setOnClickListener {
-            if (!selectedFeed.isEmpty()) {
+            val selectedFeed = viewModel.selectedFeed
+            if (selectedFeed != null) {
                 feedsAdapter.toggleSelection(selectedFeed)
                 viewModel.deleteFeed(selectedFeed)
-                selectedFeed = FeedViewData()
+                viewModel.selectedFeed = null
             } else {
                 router.showAddNewFeedScreen()
             }
@@ -123,50 +110,61 @@ class FeedsFragment : KoinFragment(), FeedsContract.View, FeedsAdapter.ListItemO
     }
 
     private fun setAddNewFeedButton() =
-        add_new_or_delete_feed_button.setImageResource(R.drawable.baseline_add_white_18)
+        add_new_or_delete_feed_button.setImageResource(R.drawable.ic_add_18)
 
     private fun setDeleteFeedButton() =
-        add_new_or_delete_feed_button.setImageResource(R.drawable.baseline_delete_white_18)
+        add_new_or_delete_feed_button.setImageResource(R.drawable.ic_delete_18)
 
     private fun showFeeds(feeds: List<FeedViewData>) {
         feedsAdapter.updateFeeds(feeds)
         empty_state_message_text_view?.show(feeds.isEmpty())
-        if (savedSelectedFeedId != null) {
-            onFeedSelected(feedsAdapter.selectFeed(savedSelectedFeedId ?: 0))
-            savedSelectedFeedId = null
+        if (viewModel.selectedFeed != null) {
+            feedsAdapter.clearSelection()
+            val selectedFeed = feedsAdapter.selectFeed(viewModel.selectedFeed?.id ?: 0)
+            if (selectedFeed != null) {
+                setDeleteFeedButton()
+            } else {
+                viewModel.selectedFeed = null
+                setAddNewFeedButton()
+            }
         } else {
             setAddNewFeedButton()
         }
     }
 
-    override fun onFeedSelected(selectedFeed: FeedViewData) {
-        when {
-            selectedFeed.isEmpty() -> setAddNewFeedButton()
-            this.selectedFeed == selectedFeed -> {
-                clearSelection()
+    override fun onFeedSelected(selectedFeed: FeedViewData) = when (viewModel.selectedFeed) {
+        null -> {
+            selectFeed(selectedFeed)
+        }
+        selectedFeed -> {
+            deselectFeed(selectedFeed)
+        }
+        else -> {
+            viewModel.selectedFeed?.let { previouslySelected ->
+                feedsAdapter.toggleSelection(previouslySelected)
             }
-            else -> {
-                feedsAdapter.toggleSelection(this.selectedFeed)
-                if (!selectedFeed.isSelected) {
-                    feedsAdapter.toggleSelection(selectedFeed)
-                }
-                this.selectedFeed = selectedFeed
-                setDeleteFeedButton()
-            }
+            selectFeed(selectedFeed)
         }
     }
 
     override fun onFeedClicked(clickedFeed: FeedViewData) {
-        if (clickedFeed.isEmpty()) return
-        if (this.selectedFeed == clickedFeed) {
-            clearSelection()
+        viewModel.selectedFeed?.let { selectedFeed ->
+            if (selectedFeed == clickedFeed) {
+                deselectFeed(selectedFeed)
+            }
         }
         router.showFeedItemsScreen(clickedFeed.id, clickedFeed.title)
     }
 
-    private fun clearSelection() {
-        feedsAdapter.toggleSelection(this.selectedFeed)
-        this.selectedFeed = FeedViewData()
+    private fun selectFeed(selectedFeed: FeedViewData) {
+        viewModel.selectedFeed = selectedFeed
+        feedsAdapter.toggleSelection(selectedFeed)
+        setDeleteFeedButton()
+    }
+
+    private fun deselectFeed(selectedFeed: FeedViewData) {
+        viewModel.selectedFeed = null
+        feedsAdapter.toggleSelection(selectedFeed)
         setAddNewFeedButton()
     }
 }

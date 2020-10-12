@@ -14,6 +14,12 @@ class MainActivity : KoinActivity() {
 
         router = get(parameters = { parametersOf(supportFragmentManager) })
 
+        // Switch from splash screen theme to main app theme with delay of 400 ms to avoid UI flashing
+        if (savedInstanceState == null) {
+            Thread.sleep(400)
+        }
+        setTheme(R.style.RssFeedReader)
+
         setupTitleProvider()
 
         super.onCreate(savedInstanceState)
