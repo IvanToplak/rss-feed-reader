@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.list_item_feed_item_card.view.*
 
 private const val DATE_PATTERN = "MMM d"
+const val FEED_ITEM_TO_DETAILS_TRANSITION_NAME = "feed_item_to_details"
 
 class FeedItemsAdapter(
     private val feedItems: MutableList<FeedItemViewData>,
@@ -19,7 +20,7 @@ class FeedItemsAdapter(
 ) : RecyclerView.Adapter<FeedItemsAdapter.ViewHolder>() {
 
     interface ListItemOnClickListener {
-        fun onFeedItemClicked(clickedFeedItem: FeedItemViewData)
+        fun onFeedItemClicked(clickedFeedItem: FeedItemViewData, clickedView: View)
     }
 
     interface FavoriteButtonOnClickListener {
@@ -53,8 +54,10 @@ class FeedItemsAdapter(
                 feedItem.publicationDate?.toString(DATE_PATTERN)
             itemView.feed_item_new_item_indicator_text_view.show(feedItem.isNew)
 
+            itemView.list_item_feed_item_card.transitionName = "${FEED_ITEM_TO_DETAILS_TRANSITION_NAME}_${feedItem.id}"
+
             itemView.setOnClickListener {
-                listItemOnClickListener.onFeedItemClicked(feedItem)
+                listItemOnClickListener.onFeedItemClicked(feedItem, itemView.list_item_feed_item_card)
             }
 
             itemView.feed_item_favorite_item_button.setOnClickListener {

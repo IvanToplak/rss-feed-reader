@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialElevationScale
 import io.reactivex.Flowable
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_feed_items.*
@@ -45,12 +47,16 @@ class FeedItemsFragment : KoinFragment(), FeedItemsContract.View,
     }
 
     override fun doOnCreate(savedInstanceState: Bundle?) {
+        exitTransition = MaterialElevationScale(false)
+        reenterTransition = MaterialElevationScale(true)
         arguments?.let {
             feedItemsFunctionality = if (it.getBoolean(FAVORITE_FEED_ITEMS_KEY)) {
+                enterTransition = MaterialElevationScale(true)
                 Functionality.FavouriteFeedItems
             } else {
                 val feedId = it.getInt(FEED_ID_KEY)
                 val feedTitle = it.getString(FEED_TITLE_KEY)!!
+                sharedElementEnterTransition = MaterialContainerTransform()
                 Functionality.FeedItems(feedId, feedTitle)
             }
         }
@@ -115,12 +121,12 @@ class FeedItemsFragment : KoinFragment(), FeedItemsContract.View,
     private fun showFeedItems(feedItems: List<FeedItemViewData>) =
         feedItemsAdapter.updateFeedItems(feedItems)
 
-    override fun onFeedItemClicked(clickedFeedItem: FeedItemViewData) {
+    override fun onFeedItemClicked(clickedFeedItem: FeedItemViewData, clickedView: View) {
         if (clickedFeedItem.link.isEmpty()) return
         if (clickedFeedItem.isNew) {
             viewModel.updateFeedItemIsNewStatus(clickedFeedItem, false)
         }
-        router.showFeedItemDetailsScreen(clickedFeedItem.link)
+        router.showFeedItemDetailsScreen(clickedFeedItem.link, clickedView)
     }
 
     override fun onFavoriteButtonClicked(clickedFeedItem: FeedItemViewData) =

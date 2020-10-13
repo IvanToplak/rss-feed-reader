@@ -8,7 +8,8 @@
     <WebView
         android:id="@+id/feed_item_details_web_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:transitionName="feed_item_to_details"/>
 
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/page_loading_progress_bar"

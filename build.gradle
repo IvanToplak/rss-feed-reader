@@ -50,6 +50,7 @@ ext {
     rxAndroidVersion = "2.1.1"
     workVersion = "2.3.4"
     lifecycleVersion = "2.2.0"
+    fragmentKtxVersion = "1.2.5"
 
     //dependency definitions
     commonDependencies = [
@@ -64,7 +65,8 @@ ext {
             materialComponents : "com.google.android.material:material:$rootProject.materialComponentsVersion",
             picasso            : "com.squareup.picasso:picasso:$rootProject.picassoVersion",
             viewModel          : "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion",
-            lifecycleCompiler  : "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
+            lifecycleCompiler  : "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion",
+            fragmentKtx        : "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
     ]
 
     //Room dependencies

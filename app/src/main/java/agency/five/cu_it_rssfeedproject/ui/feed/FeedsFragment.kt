@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.transition.MaterialElevationScale
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_feeds.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -26,6 +27,8 @@ class FeedsFragment : KoinFragment(), FeedsContract.View, FeedsAdapter.ListItemO
     }
 
     override fun doOnCreate(savedInstanceState: Bundle?) {
+        exitTransition = MaterialElevationScale(false)
+        reenterTransition = MaterialElevationScale(true)
         setHasOptionsMenu(true)
     }
 
@@ -147,13 +150,13 @@ class FeedsFragment : KoinFragment(), FeedsContract.View, FeedsAdapter.ListItemO
         }
     }
 
-    override fun onFeedClicked(clickedFeed: FeedViewData) {
+    override fun onFeedClicked(clickedFeed: FeedViewData, clickedView: View) {
         viewModel.selectedFeed?.let { selectedFeed ->
             if (selectedFeed == clickedFeed) {
                 deselectFeed(selectedFeed)
             }
         }
-        router.showFeedItemsScreen(clickedFeed.id, clickedFeed.title)
+        router.showFeedItemsScreen(clickedFeed.id, clickedFeed.title, clickedView)
     }
 
     private fun selectFeed(selectedFeed: FeedViewData) {

@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.transition.Fade
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_new_feed.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -20,6 +21,10 @@ class NewFeedFragment : KoinFragment(), NewFeedContract.View {
         const val TAG = "newFeed"
         private const val INSERT_ERROR_MESSAGE = "Error inserting feed"
         fun newInstance() = NewFeedFragment()
+    }
+
+    override fun doOnCreate(savedInstanceState: Bundle?) {
+        enterTransition = Fade()
     }
 
     override fun onCreateView(
