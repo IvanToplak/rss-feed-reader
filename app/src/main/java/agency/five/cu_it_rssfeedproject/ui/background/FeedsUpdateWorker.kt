@@ -11,11 +11,13 @@ import androidx.work.RxWorker
 import androidx.work.WorkerParameters
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinApiExtension
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 private const val NEW_FEED_ITEMS_NOTIFICATION_ID = 1234
 
+@KoinApiExtension
 class FeedsUpdateWorker(context: Context, workerParams: WorkerParameters) :
     RxWorker(context, workerParams), KoinComponent {
 

@@ -1,28 +1,24 @@
 package agency.five.cu_it_rssfeedproject.ui.common
 
+import agency.five.cu_it_rssfeedproject.ui.router.Router
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import org.koin.android.ext.android.inject
+import org.koin.androidx.scope.ScopeFragment
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment : ScopeFragment() {
 
-    private val screenTitleProvider: ScreenTitleProvider by inject()
+    protected lateinit var router: Router
+        private set
 
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-
-    protected fun removeScreenTitle() = screenTitleProvider.removeTitle()
-
-    protected fun addScreenTitle(title: String) = screenTitleProvider.addTitle(title)
-
-    protected fun setScreenTitleVisibility(show: Boolean) = screenTitleProvider.setTitleVisibility(show)
 
     protected fun addDisposable(disposable: Disposable) = compositeDisposable.add(disposable)
 
     final override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        router = requireNotNull(scopeActivity).get()
         doOnCreate(savedInstanceState)
     }
 

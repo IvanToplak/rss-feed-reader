@@ -1,21 +1,21 @@
 package agency.five.cu_it_rssfeedproject.ui.mappings
 
 import agency.five.cu_it_rssfeedproject.domain.model.Feed
-import agency.five.cu_it_rssfeedproject.ui.model.FeedViewModel
+import agency.five.cu_it_rssfeedproject.ui.model.FeedViewData
 
-fun mapFeedToFeedViewModel(feed: Feed, hasUnreadItems: Boolean) = FeedViewModel(
-    feed.id,
-    feed.title,
-    feed.description,
-    feed.url,
-    feed.imageUrl,
+fun Feed.toFeedViewData(hasUnreadItems: Boolean) = FeedViewData(
+    id = id,
+    title = title,
+    description = description,
+    url = url,
+    imageUrl = imageUrl,
     hasUnreadItems = hasUnreadItems
 )
 
-fun mapFeedViewModelToFeed(feedViewModel: FeedViewModel) = Feed(
-    feedViewModel.id,
-    feedViewModel.title,
-    feedViewModel.description,
-    feedViewModel.url,
-    feedViewModel.imageUrl
+fun FeedViewData.toFeed() = Feed(
+    id = id,
+    title = title,
+    description = description,
+    url = url,
+    imageUrl = imageUrl
 )

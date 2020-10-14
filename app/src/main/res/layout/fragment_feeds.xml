@@ -5,6 +5,7 @@
     android:id="@+id/feeds_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:transitionGroup="true"
     tools:context=".ui.feed.FeedsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -25,11 +26,12 @@
         android:layout_marginEnd="@dimen/margin_double"
         android:text="@string/empty_state_message"
         android:textAlignment="center"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="@dimen/empty_state_message_text_size"
+        android:textAppearance="?attr/textAppearanceHeadline4"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_new_or_delete_feed_button"
@@ -39,7 +41,7 @@
         android:layout_marginBottom="@dimen/margin_standard"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/baseline_add_white_18"
+        android:src="@drawable/ic_add_18"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

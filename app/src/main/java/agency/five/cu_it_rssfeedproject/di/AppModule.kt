@@ -7,29 +7,30 @@ import agency.five.cu_it_rssfeedproject.ui.background.FeedsUpdateWorkRequestFact
 import agency.five.cu_it_rssfeedproject.ui.common.AppSchedulers
 import agency.five.cu_it_rssfeedproject.ui.common.ScreenTitleProvider
 import agency.five.cu_it_rssfeedproject.ui.common.ScreenTitleProviderImpl
+import agency.five.cu_it_rssfeedproject.ui.feed.FeedsFragment
 import agency.five.cu_it_rssfeedproject.ui.feed.FeedsViewModel
+import agency.five.cu_it_rssfeedproject.ui.feed.NewFeedFragment
 import agency.five.cu_it_rssfeedproject.ui.feed.NewFeedViewModel
+import agency.five.cu_it_rssfeedproject.ui.feeditem.FeedItemsFragment
 import agency.five.cu_it_rssfeedproject.ui.feeditem.FeedItemsViewModel
+import agency.five.cu_it_rssfeedproject.ui.feeditemdetails.FeedItemDetailsFragment
 import agency.five.cu_it_rssfeedproject.ui.notification.NotificationFactory
 import agency.five.cu_it_rssfeedproject.ui.notification.NotificationFactoryImpl
 import agency.five.cu_it_rssfeedproject.ui.router.Router
 import agency.five.cu_it_rssfeedproject.ui.router.RouterImpl
-import agency.five.cu_it_rssfeedproject.ui.router.RouterProvider
-import agency.five.cu_it_rssfeedproject.ui.router.RouterProviderImpl
 import android.app.PendingIntent
 import android.content.Intent
 import androidx.fragment.app.FragmentManager
 import androidx.work.WorkManager
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.viewmodel.dsl.viewModel
-import org.koin.core.qualifier.named
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.component.KoinApiExtension
 import org.koin.dsl.module
 import java.util.concurrent.TimeUnit
 
-const val MAIN_ACTIVITY_SCOPE = "mainActivity"
-const val MAIN_ACTIVITY_SCOPE_ID = "mainActivityScopeId"
 private const val FEEDS_UPDATE_REPEAT_INTERVAL = 15L
 
+@OptIn(KoinApiExtension::class)
 val appModule = module {
 
     single {
@@ -38,11 +39,14 @@ val appModule = module {
 
     single<ScreenTitleProvider> { ScreenTitleProviderImpl() }
 
-    scope(named(MAIN_ACTIVITY_SCOPE)) {
+    scope<MainActivity> {
         scoped<Router> { (fragmentManager: FragmentManager) -> RouterImpl(fragmentManager) }
     }
 
-    single<RouterProvider> { RouterProviderImpl() }
+    scope<FeedsFragment> { scoped<Unit> { get() } }
+    scope<NewFeedFragment> { scoped<Unit> { get() } }
+    scope<FeedItemsFragment> { scoped<Unit> { get() } }
+    scope<FeedItemDetailsFragment> { scoped<Unit> { get() } }
 
     viewModel {
         FeedsViewModel(
@@ -55,7 +59,6 @@ val appModule = module {
             get(),
             get(),
             get(),
-            get()
         )
     }
 
@@ -63,7 +66,6 @@ val appModule = module {
         NewFeedViewModel(
             get(),
             get(),
-            get()
         )
     }
 
@@ -74,7 +76,6 @@ val appModule = module {
             get(),
             get(),
             get(),
-            get()
         )
     }
 

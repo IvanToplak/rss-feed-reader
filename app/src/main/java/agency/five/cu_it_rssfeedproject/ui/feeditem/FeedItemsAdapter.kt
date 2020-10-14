@@ -4,26 +4,27 @@ import agency.five.cu_it_rssfeedproject.R
 import agency.five.cu_it_rssfeedproject.app.inflate
 import agency.five.cu_it_rssfeedproject.app.show
 import agency.five.cu_it_rssfeedproject.app.toString
-import agency.five.cu_it_rssfeedproject.ui.model.FeedItemViewModel
+import agency.five.cu_it_rssfeedproject.ui.model.FeedItemViewData
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.list_item_feed_item_card.view.*
 
 private const val DATE_PATTERN = "MMM d"
+const val FEED_ITEM_TO_DETAILS_TRANSITION_NAME = "feed_item_to_details"
 
 class FeedItemsAdapter(
-    private val feedItems: MutableList<FeedItemViewModel>,
+    private val feedItems: MutableList<FeedItemViewData>,
     private val listItemOnClickListener: ListItemOnClickListener,
     private val favoriteButtonOnClickListener: FavoriteButtonOnClickListener
 ) : RecyclerView.Adapter<FeedItemsAdapter.ViewHolder>() {
 
     interface ListItemOnClickListener {
-        fun onFeedItemClicked(clickedFeedItem: FeedItemViewModel)
+        fun onFeedItemClicked(clickedFeedItem: FeedItemViewData, clickedView: View)
     }
 
     interface FavoriteButtonOnClickListener {
-        fun onFavoriteButtonClicked(clickedFeedItem: FeedItemViewModel)
+        fun onFavoriteButtonClicked(clickedFeedItem: FeedItemViewData)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
@@ -35,7 +36,7 @@ class FeedItemsAdapter(
         holder.bind(feedItems[position])
     }
 
-    fun updateFeedItems(feedItems: List<FeedItemViewModel>) {
+    fun updateFeedItems(feedItems: List<FeedItemViewData>) {
         this.feedItems.clear()
         this.feedItems.addAll(feedItems)
         notifyDataSetChanged()
@@ -43,9 +44,9 @@ class FeedItemsAdapter(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private lateinit var feedItem: FeedItemViewModel
+        private lateinit var feedItem: FeedItemViewData
 
-        fun bind(feedItem: FeedItemViewModel) {
+        fun bind(feedItem: FeedItemViewData) {
             this.feedItem = feedItem
 
             itemView.feed_item_title_text_view.text = feedItem.title
@@ -53,8 +54,10 @@ class FeedItemsAdapter(
                 feedItem.publicationDate?.toString(DATE_PATTERN)
             itemView.feed_item_new_item_indicator_text_view.show(feedItem.isNew)
 
+            itemView.list_item_feed_item_card.transitionName = "${FEED_ITEM_TO_DETAILS_TRANSITION_NAME}_${feedItem.id}"
+
             itemView.setOnClickListener {
-                listItemOnClickListener.onFeedItemClicked(feedItem)
+                listItemOnClickListener.onFeedItemClicked(feedItem, itemView.list_item_feed_item_card)
             }
 
             itemView.feed_item_favorite_item_button.setOnClickListener {

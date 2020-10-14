@@ -1,3 +1,3 @@
-# CU-IT - RSS Feed project
+# RSS Feed Reader
 # 
 

@@ -1,5 +1,7 @@
 package agency.five.cu_it_rssfeedproject.ui.router
 
+import android.view.View
+
 interface Router {
 
     fun showAllFeedsScreen()
@@ -8,9 +10,9 @@ interface Router {
 
     fun hideAddNewFeedScreen()
 
-    fun showFeedItemsScreen(feedId: Int, feedTitle: String)
+    fun showFeedItemsScreen(feedId: Int, feedTitle: String, itemView: View)
 
-    fun showFeedItemDetailsScreen(feedItemUrl: String)
+    fun showFeedItemDetailsScreen(feedItemUrl: String, itemView: View)
 
     fun showFavoriteFeedItemsScreen()
 }

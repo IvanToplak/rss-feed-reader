@@ -5,13 +5,15 @@
     android:id="@+id/feeds_items_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:transitionGroup="true"
     tools:context=".ui.feeditem.FeedItemsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/feed_items_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:drawable/screen_background_light"
+        android:background="?android:attr/colorBackground"
+        android:transitionName="feed_to_feed_items"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

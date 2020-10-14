@@ -1,19 +1,21 @@
 package agency.five.cu_it_rssfeedproject.ui.model
 
-data class FeedViewModel(
+import java.util.*
+
+data class FeedItemViewData(
     val id: Int = 0,
+    val feedId: Int = 0,
     val title: String = "",
-    val description: String = "",
-    val url: String = "",
-    val imageUrl: String = "",
-    var isSelected: Boolean = false,
-    val hasUnreadItems: Boolean = true
+    val publicationDate: Date?,
+    val link: String = "",
+    val isNew: Boolean = true,
+    val isFavorite: Boolean = true
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as FeedViewModel
+        other as FeedItemViewData
 
         if (id != other.id) return false
 
@@ -22,9 +24,5 @@ data class FeedViewModel(
 
     override fun hashCode(): Int {
         return id
-    }
-
-    fun isEmpty(): Boolean {
-        return id == 0 && title.isEmpty() && description.isEmpty() && url.isEmpty() && imageUrl.isEmpty()
     }
 }

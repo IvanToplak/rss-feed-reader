@@ -4,10 +4,12 @@ import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkRequest
+import org.koin.core.component.KoinApiExtension
 import java.util.concurrent.TimeUnit
 
 object FeedsUpdateWorkRequestFactory {
 
+    @KoinApiExtension
     fun createWorkRequest(repeatInterval: Long, repeatIntervalTimeUnit: TimeUnit): WorkRequest {
 
         val constraints = Constraints.Builder()
